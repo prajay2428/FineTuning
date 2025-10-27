@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fine Tuner</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: #faf9f7;
+      min-height: 100vh;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid #e8e5e0;
+      box-shadow: 0 10px 40px rgba(139, 112, 87, 0.08);
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #8b7057;
+      margin-bottom: 10px;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #a0916d;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    .clear-all-container {
+      text-align: center;
+      margin-bottom: 35px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #e8e5e0;
+    }
+
+    .clear-all-btn {
+      background: #f7f5f3;
+      color: #8b7057;
+      border: 1px solid #d4c4a8;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+
+    .clear-all-btn:hover {
+      background: #f0ebe4;
+      border-color: #8b7057;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(139, 112, 87, 0.1);
+    }
+
+    textarea {
+      width: 100%;
+      height: 160px;
+      font-size: 14px;
+      padding: 16px;
+      white-space: pre-wrap;
+      resize: vertical;
+      margin: 12px 0;
+      border: 1px solid #e0d5c7;
+      border-radius: 12px;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+      background: #fefdfb;
+      color: #5d5043;
+      transition: all 0.2s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #c4a484;
+      box-shadow: 0 0 0 3px rgba(196, 164, 132, 0.1);
+      background: #ffffff;
+    }
+
+    textarea::placeholder {
+      color: #b8a990;
+    }
+    .editable {
+  min-height: 160px;
+  border: 1px solid #e0d5c7;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'SF Mono', Monaco, monospace;
+  background: #fefdfb;
+  white-space: pre-wrap;
+  overflow-y: auto;
+}
+
+/* Placeholder imitation */
+.editable:empty:before {
+  content: attr(data-placeholder);
+  color: #aaa;
+}
+
+
+    button {
+      padding: 10px 18px;
+      margin-right: 10px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid #e0d5c7;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      background: #fefdfb;
+      color: #8b7057;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: #f7f5f3;
+      border-color: #c4a484;
+      box-shadow: 0 3px 10px rgba(139, 112, 87, 0.1);
+    }
+
+    .paste-btn {
+      border-color: #c4a484;
+      color: #8b7057;
+      background: #f9f7f4;
+    }
+
+    .paste-btn:hover {
+      background: #f5f1ed;
+      border-color: #a08967;
+    }
+
+    .copy-btn {
+      border-color: #b8a990;
+      color: #8b7057;
+      background: #f7f5f3;
+    }
+
+    .copy-btn:hover {
+      background: #f2ede6;
+      border-color: #9d8670;
+    }
+
+    .clear-btn {
+      border-color: #d4c4a8;
+      color: #a0916d;
+      background: #faf9f7;
+    }
+
+    .clear-btn:hover {
+      background: #f5f2ee;
+      border-color: #b8a990;
+    }
+
+    .followup-btn {
+      border-color: #a08967;
+      color: #6b5b47;
+      background: #f9f7f4;
+    }
+
+    .followup-btn:hover {
+      background: #f0ebe4;
+      border-color: #8b7057;
+    }
+
+    .step {
+      background: #ffffff;
+      padding: 28px;
+      margin-bottom: 24px;
+      border-radius: 16px;
+      border: 1px solid #f0ebe4;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 12px rgba(139, 112, 87, 0.04);
+    }
+
+    .step:hover {
+      border-color: #e0d5c7;
+      background: #fefdfb;
+      box-shadow: 0 4px 20px rgba(139, 112, 87, 0.08);
+    }
+
+    .step h3 {
+      margin: 0 0 18px 0;
+      color: #5d5043;
+      font-size: 1.3rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-number {
+      background: #8b7057;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .ai-name {
+      background: #f7f5f3;
+      color: #8b7057;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-left: auto;
+      border: 1px solid #e8e5e0;
+    }
+
+    .step-description {
+      background: #f9f7f4;
+      color: #6b5b47;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+      padding: 16px 18px;
+      border-radius: 10px;
+      border-left: 3px solid #c4a484;
+    }
+
+    .step-result {
+      background: #f5f2ee;
+      color: #7a6b56;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      padding: 16px 18px;
+      border-radius: 10px;
+      border-left: 3px solid #a08967;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .convert-btn {
+  border-color: #b8a990;
+  color: #8b7057;
+  background: #f7f5f3;
+}
+.convert-btn:hover {
+  background: #f2ede6;
+  border-color: #9d8670;
+}
+
+
+    /* ======= New Part Section Styling ======= */
+    .part-section {
+      padding: 25px;
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+
+    .part-section h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      text-align: center;
+      border-bottom: 2px solid rgba(0,0,0,0.1);
+      padding-bottom: 10px;
+    }
+
+    
+
+.part4 { background: #f9f3ff; border-left: 5px solid #9b59b6; }
+.part4 h3 { color: #9b59b6; }
+
+    /* ======================================== */
+
+    #message {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #ffffff;
+      color: #5d5043;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 500;
+      border: 1px solid #e0d5c7;
+      box-shadow: 0 6px 20px rgba(139, 112, 87, 0.15);
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      font-size: 0.9rem;
+    }
+
+    #message.show {
+      transform: translateX(0);
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: #e8e5e0;
+      margin: 30px 0;
+      border-radius: 1px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 25px;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      .step {
+        padding: 20px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        margin-right: 0;
+        width: 100%;
+      }
+    }
+
+    script[type="text/plain"] {
+      display: none;
+    }
+
+  /* ======= New Highlighter Tool Styling (Updated) ======= */
+.highlight-tool-container { /* Renamed for clarity */
+  /* This class will now be a part-section */
+}
+
+/* New styling for the blue-themed Part section */
+.part5 { background: #f0f7ff; border-left: 5px solid #4a90e2; }
+.part5 h3 { color: #4a90e2; }
+
+/* style for highlighting color */
+
+
+
+.yellow-highlight {
+  background-color: #fbfb00; /* A soft, pleasant yellow */
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+/* ======= Scroll to Top Button Styling (Updated) ======= */
+/* ======= Scroll to Top Button Styling (Corrected) ======= */
+#scrollToTopBtn {
+  /* Start with the button being invisible but still taking up space */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Can't be clicked when hidden */
+
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999;
+  border: none;
+  outline: none;
+  background-color: #8b7057;
+  color: white;
+  cursor: pointer;
+  
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  
+  /* This is the key for centering and will no longer be overridden */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 5px 15px rgba(139, 112, 87, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* This new class will be toggled by JavaScript to show the button */
+#scrollToTopBtn.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #5d5043;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(139, 112, 87, 0.4);
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
+/* ========================================================= */
+/* =========================================== */
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Fine Tune </h2>
+    <p class="subtitle">One space for Fine Tuning your Translation</p>
+
+    <div class="clear-all-container">
+      <button class="clear-all-btn" onclick="clearAllInputs()">🗑️ Clear All Input Boxes</button>
+    </div>
+
+    <hr>
+
+    <div id="stepsContainer"></div>
+
+    <div id="message"></div>
+  </div>
+
+  <!-- Prompts -->
+  <!-- (keep your existing prompt scripts unchanged) -->
+  
+  <script type="text/plain" id="prompt5">Fine Tuning Needed Sentences:
+
+    Instructions for Fine Tuning:
+    
+    Below is the Transcript of an English Talk by sadhguru addressing Audience.
+    The talk is made up of blocks of points.
+    Each point is made up of blocks of thoughts.
+    Each thought is made up of blocks of information.
+    
+  We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas.
+  
+  … indicates a pause in between the sentences.
+  , indicates a pause between meaningful chunks that make up the sentence.
+  ; indicates connected sentences.
+  - indicates additional information related to the main idea of the sentence.
+  
+  
+  I am also giving the telugu translation for the same.Now in the telugu translation I have added some tags.
+  <Gesture> </Gesture> indicates the portion of the sentences for which there is a corresponding significant body language shown in the video.
+  
+  <Context> </Context> indicates the portion of the sentences for which i am looking for a more contextual word or phrase. 
+  
+  <Intention> </Intention> indicates the portion of the sentences for which i am looking for a sentence that expresses the actual intent behind using that sentence or words.
+  
+  Below are the instructions for the the tag <Context> </Context>:
+  Assume you are very good at telugu language, basically good at finding the right telugu words for a particular english word based on the context in which the word occurs. you also explain what this word is conveying here in this context in English.
+  
+  
+  
+  Below are the instructions for the the tag <Intention> </Intention>:
+  
+  Based on the context in which this sentence is occurring, and based on the picture that is being created before and after this sentence, identify the intention of the speaker. what he actually is trying to convey. Rather than just relying on the words and doing the word to word translation, grasp the intention based on the context and express it directly in telugu in a colloquial way. No need to follow the exact word to word based translation. The intention needs to be expressed here.
+  
+  
+  
+  Below i am giving some Examples of identifying the intention:
+  Example 1
+  
+  
+  English:
+  love is not profitable.
+  It’s a… a very conscious, <Intention>loss making venture</Intention>; 
+  
+  Telugu:
+  ప్రేమ లాభ పడేందుకు కాదు
+  అది స్పృహతో, <Intention>నష్ట పోయేందుకు చేసే ప్రయత్నం</Intention>
+  
+  Optimized:
+  ప్రేమ లాభసాటి కాదు
+  అది - <Intention>నష్టం తెచ్చేదని తెలిసి కూడా</Intention> కోరునే విషయం
+  
+  Description:
+  Here the effort is not to make a loss. 
+  He is saying its nature is ‘loss making’, and still we choose it consciously.
+  
+  
+  
+  
+  
+  
+  
+  Example 2
+  
+  
+  English:
+  30 times the idiot shoots at you and misses you; I am so glad; I hope <Intention>they </Intention>keep missing like that.
+  
+  Telugu:
+  <Intention>వాడలా </Intention>గురి తప్పాలనే కోరుకుంటున్నాను.
+  
+  Optimized:
+  <Intention>వాళ్ళలానే </Intention>గురి తప్పాలని కోరుకుంటున్నాను.
+  
+  Description:
+  Here sadhguru is not speaking about that single person who missed.
+  He is speaking about the enemies  in general. So we made it into  plural 
+  
+  
+  
+  
+  Example 3
+  
+  
+  English:
+  Yes sir, because uh… he is always wide open and waiting; it's the people who are <Intention>far away, in their own world.</Intention>
+  
+  
+  Telugu:
+  ఉన్నాయండి, కానీ, ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా, తమ లోకంలో ఉన్నారు.</Intention>
+  
+  Optimized:
+  ఉన్నాయండి! 
+  ఎందుకంటే ..  ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా ఉన్నారు … తమ సొంత లోకంలో!</Intention>
+  
+  Description:
+  Here we just made it into two clauses. As it is expressed as two details in English. 
+  
+  
+  
+  
+  Example 4
+  
+  
+  English:
+  "I do my Om Namo Shivaya jap <Intention>and everything</Intention>,
+  
+  Telugu:
+  ఓం నమః శివాయ’’ <Intention>జపం లాంటివన్నీ</Intention> చేస్తాను
+  
+  Optimized:
+  ఓం నమః శివాయ’’ <Intention>జపం మొదలైనవన్నీ</Intention> చేస్తాను
+  
+  Description:
+  Here he is not saying that he is doing things that are alike to jap 
+  He is saying he is doing jap and things like that.
+  
+  
+  
+  
+  Example 5
+  
+  
+  English:
+  You take some fenugreek, boil it, and the decoction that comes out of it, you mix honey with it and you can drink it. Lot of people drink it like coffee, but you need special kind of <Intention>taste buds</Intention> or you need tremendous acceptance. 
+  
+  Telugu:
+  మెంతులు ... మరిగించి... వడకట్టి... తేనె కలుపుకుని తాగొచ్చు; 
+  చాలామంది దాన్ని కాఫీ లాగా తాగుతారు, కానీ దానికి ఓ ప్రత్యేకమైన <Intention>నాలుక </Intention>ఉండాలి, లేదా చాలా సహనం ఉండాలి. 
+  
+  
+  Optimized:
+  అలా తాగడాలంటే ఓ ప్రత్యేకమైన <Intention>అభిరుచి </Intention>ఉండాలి
+  
+  Description:
+  Here he is not talking about the tongue literally, he is speaking about their preference and patience to take such coffee.
+  
+  
+  
+  
+  Example 6
+  
+  
+  English:
+  She said, "I hear that monks are looking for shelter in many homes; <Intention>why don't you come and stay in my house</Intention>?"
+  
+  Telugu:
+  ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; <Intention>నువ్వెందుకు నా ఇంట్లో ఉండకూడదు</Intention>?" అంది. 
+  
+  Optimized:
+  ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; నువ్వు  <Intention>వచ్చి నా ఇంట్లో ఉండొచ్చు కదా?</Intention>" అంది. 
+  
+  Description:
+  Here the translation was literal, like grammar based. 
+  But in telugu the intention is conveyed differently, not in the same grammar syntax to syntax translation.
+  
+  
+  
+  
+  Example 7
+  
+  
+  English:
+  Right now in the world, a whole lot of people think <Intention>only in misery you can be profound</Intention>;
+  
+  Telugu:
+  ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>బాధను మాత్రమే తీవ్రంగా అనుభవించగలమని అనుకుంటారు</Intention>;
+  
+  Optimized:
+  ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>కేవలం బాధలో మాత్రమే ప్రగాఢత అనుభూతి చెందగలమనుకుంటారు;</Intention>
+  
+  Description:
+  Here he is not talking about experiencing the pain profoundly. 
+  He is saying about how we will go to profound intensity when it comes to pain.
+  
+  
+  
+  
+  Example 8
+  
+  
+  English:
+  <Intention>Because</Intention> there is not much possibility, there is not much misery either.
+  
+  Telugu:
+  <Intention>ఎందుకంటే </Intention>అక్కడ పెద్దగా అవకాశాలు లేవు కాబట్టి; అంత బాధ కూడా ఉండదు.
+  
+  Optimized:
+  సంభావ్యతలు పెద్దగా లేవు <Intention>కాబట్టి</Intention>, బాధ కూడా అంతగా ఉండదు.
+  
+  Description:
+  Here he is conveying the point in cause and effect format. First he is telling the cause and then he is telling the effect.
+  So the because at the beginning here indicates that this is the cause. Not to literally place <Intention>ఎందుకంటే </Intention>at the begining in the telugu also.
+  
+  
+  
+  
+  Example 9
+  
+  
+  English:
+  You don't see other creatures of the planet suffering like human beings. Their suffering is purely physical. If they're physically harmed, <Intention>they are in pain. </Intention>
+  
+  Even in pain, they do not know the kind of suffering that a human being knows.
+  
+  
+  
+  Telugu:
+  ఈ భూమి మీద ఉన్న ఇతర జీవులు మనుషుల్లా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>అవి బాధ పడతాయి. </Intention>
+  
+  బాధ ఉన్నా కూడా, ఒక మనిషికి తెలిసినంత బాధ వాటికి తెలీదు.
+  
+  
+  
+  
+  Optimized:
+  ఈ భూమ్మీది ఇతర జీవులు మనుషులంతగా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>నొప్పికి గురవుతాయి.</Intention>
+  
+  నొప్పి విషయంలో కూడా, మనిషికి తెలిసినంతటి బాధ వాటికి తెలీదు.  
+  
+  
+  Description:
+  Here pain and suffering are different and he is using the word pain when he is referring to the physical pain. That is not caught in the translation. So we replaced బాధ పడతాయి with  నొప్పికి గురవుతాయి.
+  
+  
+  
+  
+  Example 10
+  
+  
+  English:
+  Human being knows this suffering<Intention> not because creation gave this suffering to you</Intention>; creation just gave you the freedom... to make whatever you wish to out of yourself.
+  
+  Telugu:
+  మనిషికి బాధ ఉంది - <Intention>కానీ దాన్ని మీకు ఇచ్చింది సృష్టి కాదు</Intention>; సృష్టి కేవలం మీకు స్వేచ్ఛ నిచ్చింది... మిమ్మల్ని మీరు ఎలా కావాలంటే అలా మలుచుకోవడానికి. 
+  
+  Optimized:
+  మనిషికి ఇంతటి బాధ తెలియడానికి కారణం - <Intention>సృష్టి ఆ బాధను మీకు ఇవ్వడం వల్ల కాదు</Intention> - సృష్టి మీకు స్వేచ్ఛని ఇచ్చింది - మిమ్మల్ని, మీకు ఎలా కావాలంటే అలా చేసుకునే స్వేచ్ఛనిచ్చింది! 
+  
+  Description:
+  Here he is not talking about whether it was given by creation or not. By using the phrase  ‘not because’ he is telling that it was not the cause.
+  
+  
+  
+  Example 11
+  
+  
+  English:
+  we do the same things what the other animals do; It is just that all that the animal can do; we do the same things but we can do it consciously -<Intention> that's a big difference.</Intention>
+  
+  Telugu:
+  జంతువులు చేసే పనులే మనం కూడా చేస్తాం; కాకపోతే ఏంటంటే, జంతువు చేయగలిగినదంతా మనం కూడా చేస్తాం -  కానీ దాన్ని మనం స్పృహతో చేయగలం - <Intention>అదే మనకి వాటికీ ఉన్న పెద్ద తేడా.</Intention>
+  
+  
+  
+  Optimized:
+  <Intention>అది చాలా పెద్ద తేడా!</Intention>
+  
+  
+  Description:
+  Here he is not talking about whether it is the big difference or not.
+  He is talking about how big a difference it is.
+  
+  
+  
+  Example 12
+  
+  
+  English:
+  <Intention>This is also a way, for me to demonstrate to people</Intention>; whatever life throws at us, it's not in our hands; what we make out of it is 100% in our hands. 
+  
+  
+  Telugu:
+  <Intention>ప్రజలకు చూపించడానికి ఇది కూడా ఒక మార్గం;</Intention> జీవితం మనపై ఏది వేస్తారనేది, అది మన చేతుల్లో లేదు; దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+  
+  
+  
+  Optimized:
+  <Intention>ఇది ప్రజలకు ఆచరణాత్మకంగా చూపించేందుకు ఒక మార్గం కూడా</Intention>; అదేంటంటే - జీవితం మనపై ఏం విసురుతుందనేది మన చేతుల్లో ఉండదు; అయితే దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+  
+  
+  
+  Description:
+  Here he is not telling that this is also a one more way to demonstrate to people.
+  He is telling that, apart from other purposes that it serves, it also acts a way to demonstrate to people.
+  
+  
+  
+  Example 13
+  
+  
+  English:
+  That is true; that is true. Uh, yeah, yeah, <Intention>you can never be cautious enough</Intention>, but I think, uh, you've just proven that if you keep your head about you, uh, all the time this is possible.
+  
+  Telugu:
+  అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>మనం ఎప్పటికీ తగినంత జాగ్రత్తగా ఉండలేం</Intention>, కానీ,  మీ బుర్ర మీ దగ్గరే పెట్టుకుంటే,  అన్ని వేళలా ఇది సాధ్యమేనని మీరు నిరూపించారనుకుంటున్నాను.
+  
+  Optimized:
+  అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>ఎంత శ్రద్ధ పెట్టినా అది సరిపోదు</Intention>; కానీ మీరిది నిరూపించారనుకుంటున్నాను - అప్రమత్తతో ఉంటే,  అన్ని వేళలా ఇది సాధ్యమేనని!
+  
+  Description:
+  It is translated literally. 
+  It is about whether we can be cautious or not. His intention is that we have to be very cautious as much as possible.
+  
+  
+  
+  
+  
+  
+  Example 14
+  
+  
+  English:
+  because, uh, <Intention>the altitude was not like this</Intention>, but, uh, the weather, was even worse than this actually, in many ways. 
+  
+  
+  Telugu:
+  ఎందుకంటే - <Intention>అక్కడ ఎత్తు ఇలా లేదు</Intention>; కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+  
+  Optimized:
+  ఎందుకంటే -<Intention> అది ఇంత ఎత్తైన ప్రదేశం కాదు</Intention> - కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+  
+  
+  Description:
+  Here the translation is literal.
+  While he used altitude as a subject here, in reality he was comparing the height of the place. So we wrote the actual intention instead of just literal translation.
+  
+  
+  
+  Example 15
+  
+  
+  English:
+  <Intention>Such a</Intention> lovely idea Guruji.
+  
+  Telugu:
+  <Intention>అలాంటి </Intention>ఒక చక్కని ఆలోచన గురూజీ
+  
+  Optimized:
+  <Intention>భలే </Intention>చక్కని ఆలోచన గురూజీ
+  
+  Description:
+  Here the translation is literal. To convey the actual intention, literal word to word translation wont do justice. So first I grasped the intention, then I directly expressed that intention in Telugu - without referring to the words used in English.
+  
+  
+  
+  
+  
+  Example 16
+  
+  
+  English:
+  Everything that we are right now - every breath that we take, every experience that we go through is <Intention>only valuable, because</Intention> we are on a limited lease of time;
+  
+  Telugu:
+  మనమిప్పుడున్న ప్రతిదీ - మనం తీసుకునే ప్రతి శ్వాస, మనం పొందే ప్రతి అనుభవం కేవలం<Intention> విలువైనదే, ఎందుకంటే </Intention>మనం పరిమిత కాలపు గడువుపై ఉన్నాం;
+  
+  
+  Optimized:
+  ప్రస్తుతం మనకు సంబంధించిన ప్రతిదీ - తీసుకునే ప్రతీ శ్వాసా,  పొందే ప్రతీ అనుభవం <Intention>విలువైనవి కావడానికి కారణం - మన సమయం పరిమితం కాబట్టే! </Intention>
+  
+  Description:
+  Here by using the combination of words, only and because, he is establishing a cause and effect. So we have optimised the translation also into a cause and effect format.
+  
+  
+  Below are the instructions for the the tag <Gesture> </Gesture>:
+  Nothing to do actually, just not that these phrases correspond to the gestures in the video.
+  
+  
+  Now give the output in the below format:
+  
+  For Each <Context> tag:
+  
+  Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase.
+  Explain what this Word is conveying here in this context in English.
+  Also give 6 more closer words in addition to the best word.
+  
+  
+  
+  Example Output:
+  అంకితమైన
+  అధిదేవత 
+  The word "అంకితమైన" translates to "dedicated to." While grammatically correct, it is a general term. In this specific context, Sadhguru is referring to Dhanvantri as the deity who presides over health and well-being. The Telugu word "అధిదేవత" more accurately conveys this idea of a "presiding deity" or the specific godhead responsible for a particular domain, making it a richer and more precise choice.
+  ప్రతీకమైన - symbolic of
+  కారకుడైన - the causal one for
+  అధిపతి అయిన - the lord of
+  ప్రసాదించే - the one who bestows
+  సంరక్షకుడైన - the protector of
+  బాధ్యత వహించే - the one responsible for
+  
+  
+  
+  
+  For Each <Intention> tag:
+  
+  Give the actual tagged Word/Phrase/Sentence as heading (no need to mention the tag itself). (No heading needed for points 2,3,4)
+  Give the Word/Phrase/Sentence that actually expresses the intention of the speaker in natural Colloquial Telugu flow
+  Give another alternative which expresses the intention, but at the same time follows the sentence structure like length, number of clauses or meaningful chunks, number of segments in the sentence with gaps between them etc.
+  Give a third alternative assuming that this tagged position is absent or lost and you have to bridge the gap based on the context that is going on and based on the previous sentences and the later sentences.
+  
+  
+  
+  Example output:
+  మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉండాలి
+  మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించారనేది నా ఉద్దేశం...
+  మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉంటారని నేను భావిస్తున్నాను...
+  ఎందుకంటే మనుషులుగా మనం ఆ పరిమితులను దాటగలం...
+  
+  
+  Give the results in the same order in which the tags appear in the script.
+  
+  Below are the English and Telugu scripts.
+</script>
+  
+
+  
+
+<script>
+  // All your existing JS logic remains unchanged from the original file
+  // Only UI grouping changes added below
+
+  const message = document.getElementById('message');
+  let Punctuated_Transcript = "";
+  let Gemini_Translation = "";
+
+  const descriptions = {
+   
+    5: "Paste result from previous step → Copy Prompt → Paste in Gemini AI → Run the prompt"
+  };
+
+  const results = {
+   
+    5: "Fine-tuned translation with tags"
+  };
+
+  const stepNames = {
+    
+    5: "Gemini 2.5 Pro"
+  };
+
+  const aiNames = {
+   
+    5: "Fine Tuning"
+  };
+  
+  // ================== FIX 1: ADD THE MISSING getPrompt FUNCTION ==================
+  function getPrompt(step) {
+    const promptElement = document.getElementById(`prompt${step}`);
+    if (promptElement) {
+      return promptElement.textContent.trim();
+    }
+    console.error(`Prompt for step ${step} not found!`);
+    return ""; // Return empty string if prompt is not found
+  }
+  // ==============================================================================
+
+
+  // ================== FIX 2: USE THE CORRECT, SINGLE handlePaste FUNCTION ==================
+ // REPLACE THE OLD handlePaste FUNCTION WITH THIS
+
+function handlePaste(step, boxNumber = 1) {
+    navigator.clipboard.read().then(items => {
+        let foundHtml = false;
+        for (const item of items) {
+            if (item.types.includes('text/html')) {
+                item.getType('text/html').then(blob => {
+                    blob.text().then(html => {
+                        let targetBox;
+                        if (step === 5) {
+                            targetBox = document.getElementById(`input5_${boxNumber}`);
+                        } else {
+                            targetBox = document.getElementById(`input${step}_1`);
+                        }
+
+                        if (targetBox) {
+                            targetBox.innerHTML = html;
+                            showMessage(`✅ Pasted rich text into Step ${step}, Box ${boxNumber}`);
+                        }
+                    });
+                });
+                foundHtml = true;
+                break;
+            }
+        }
+        if (!foundHtml) {
+            navigator.clipboard.readText().then(text => {
+                let targetBox;
+                if (step === 5) {
+                    targetBox = document.getElementById(`input5_${boxNumber}`);
+                } else if (step === 4) {
+                     targetBox = document.getElementById(`input4_1`);
+                } else {
+                    targetBox = document.getElementById(`input${step}`);
+                }
+                
+                if (targetBox) {
+                   if(targetBox.nodeName === "TEXTAREA") {
+                     targetBox.value = text;
+                   } else {
+                     targetBox.innerText = text;
+                   }
+                   showMessage(`✅ Pasted plain text into Step ${step}`);
+                }
+            });
+        }
+    }).catch(err => {
+        console.error('Failed to read clipboard contents: ', err);
+        showMessage("❌ Could not paste from clipboard.");
+    });
+}
+  // ======================================================================================
+
+  
+// REPLACE YOUR OLD clearAllInputs FUNCTION WITH THIS
+
+// --- ADD THESE TWO FUNCTIONS BACK INTO YOUR SCRIPT ---
+
+function handleClear(step) {
+  if (step === 5) {
+    const box1 = document.getElementById('input5_1');
+    const box2 = document.getElementById('input5_2');
+    if (box1) box1.innerHTML = "";
+    if (box2) box2.innerHTML = "";
+  }
+  showMessage("🗑️ Cleared Step " + step);
+}
+
+function clearAllInputs() {
+  // Handle only Step 5 (div + div)
+  const box1 = document.getElementById('input5_1');
+  const box2 = document.getElementById('input5_2');
+  if (box1) box1.innerHTML = "";
+  if (box2) box2.innerHTML = "";
+
+  // Clear the dual highlighter tool
+  const dualHighlighterBox = document.getElementById('dual-highlight-box');
+  if (dualHighlighterBox) {
+    dualHighlighterBox.innerHTML = '';
+  }
+
+  showMessage("🗑️ All input boxes cleared");
+}
+
+
+  function copyFollowUp(step) {
+    let text = "";
+    if (step === 1) {
+      text = "Have you carefully considered the length of the pauses and placed the ... accordingly?";
+    }
+    navigator.clipboard.writeText(text);
+    showMessage("💬 Follow-up prompt copied!");
+  }
+
+  // REPLACE THE OLD handleCopy FUNCTION WITH THIS
+
+function handleCopy(step) {
+    let finalText = "";
+
+    if (step === 4) {
+      // Special case for Step 9
+      const inputBox1 = document.getElementById(`input${step}_1`);
+      const inputBox2 = document.getElementById(`input${step}_2`);
+      const text1 = inputBox1 ? inputBox1.innerText.trim() : ""; 
+      const text2 = inputBox2 ? inputBox2.value.trim() : "";
+      finalText =
+        getPrompt(step) +
+        "\n \n" +
+        text1 
+    } else if (step === 5) {
+      // --- UPDATED: Special case for Step 10 ---
+      const inputBox1 = document.getElementById(`input${step}_1`); // The div
+      const inputBox2 = document.getElementById(`input${step}_2`); // The textarea
+      const text1 = inputBox1 ? inputBox1.innerText.trim() : ""; // Use .innerText for the div
+      const text2 = inputBox2 ? inputBox2.innerText.trim() : "";   // Use .value for the textarea
+      finalText =
+        getPrompt(step) +
+        "\n\nEnglish Script:\n" +
+        text1 +
+        "\n\nTagged Telugu Script:\n" +
+        text2;
+    } 
+     else {
+      // Standard handling for all other steps
+      const inputBox = document.getElementById(`input${step}`);
+      const userInput = inputBox ? inputBox.value.trim() : "";
+      finalText = getPrompt(step) + "\n" + userInput;
+    }
+
+    navigator.clipboard.writeText(finalText).then(() => {
+      showMessage("📋 Prompt copied from Step " + step);
+    });
+
+    
+  }
+
+  function showMessage(msg) {
+    message.textContent = msg;
+    message.classList.add('show');
+    clearTimeout(showMessage.timeout);
+    showMessage.timeout = setTimeout(() => {
+      message.classList.remove('show');
+    }, 3000);
+  }
+  
+ 
+
+function transformStep10() {
+  const editableDiv = document.getElementById('input5_1');
+  if (!editableDiv) {
+    showMessage("⚠️ No editable field found for Step 5");
+    return;
+  }
+
+  let html = editableDiv.innerHTML;
+
+  // --- Step 1: Replace Italic tags with <intention> markers ---
+  // We use temporary, unique markers to handle nested or complex formatting.
+  // Regex for <i> and <em> tags
+  html = html.replace(/<(i|em)\b[^>]*>(.*?)<\/\1>/gi, '§§I_START§§$2§§I_END§§');
+  // Regex for spans styled with font-style: italic
+  html = html.replace(/<span\b[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '§§I_START§§$1§§I_END§§');
+
+  // --- Step 2: Replace Bold tags with <context> markers ---
+  // Regex for <b> and <strong> tags
+  html = html.replace(/<(b|strong)\b[^>]*>(.*?)<\/\1>/gi, '§§C_START§§$2§§C_END§§');
+  // Regex for spans styled with font-weight: bold
+  html = html.replace(/<span\b[^>]*font-weight:\s*(?:bold|700|800|900)[^>]*>(.*?)<\/span>/gi, '§§C_START§§$1§§C_END§§');
+
+  // --- Step 3: Clean up the HTML structure to get plain text ---
+  // This is the same cleaning logic used in the Step 9 function.
+  html = html.replace(/<br\s*\/?>/gi, '\n');
+  html = html.replace(/<\/p>\s*<p[^>]*>/gi, '\n\n');
+  html = html.replace(/<p[^>]*>/gi, '');
+  html = html.replace(/<\/p>/gi, '\n\n');
+  html = html.replace(/<\/div>\s*<div[^>]*>/gi, '\n');
+  html = html.replace(/<div[^>]*>/gi, '');
+  html = html.replace(/<\/div>/gi, '\n');
+  
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  let textContent = tempDiv.textContent || tempDiv.innerText;
+
+  // --- Step 4: Replace the markers with the final target tags ---
+  textContent = textContent.replace(/§§I_START§§(.*?)§§I_END§§/g, '<intention>$1</intention>');
+  textContent = textContent.replace(/§§C_START§§(.*?)§§C_END§§/g, '<context>$1</context>');
+
+  // --- Step 5: Clean up any excessive newlines and update the div ---
+  textContent = textContent.replace(/\n{3,}/g, '\n\n');
+  editableDiv.innerText = textContent.trim(); // Using .innerText ensures it's set as plain text
+
+  showMessage("✨ Converted bold to <context> and italic to <intention>!");
+}
+// --- ADD THIS NEW FUNCTION ---
+
+// REPLACE THE OLD transformTeluguTags FUNCTION WITH THIS
+// REPLACE THE ENTIRE transformTeluguTags FUNCTION WITH THIS CORRECTED VERSION
+
+function transformTeluguTags() {
+  // Target the second contenteditable div in Step 10
+  const editableDiv = document.getElementById('input5_2');
+  if (!editableDiv) {
+    showMessage("⚠️ No editable field found for Step 5 Box 2");
+    return;
+  }
+
+  let html = editableDiv.innerHTML;
+
+  // --- Step 1: Replace formatting with temporary, non-HTML markers ---
+  // This prevents them from being stripped out in the next step.
+
+  // Replace Italic tags with <intention> markers
+  html = html.replace(/<(i|em)\b[^>]*>(.*?)<\/\1>/gi, '§§I_START§§$2§§I_END§§');
+  html = html.replace(/<span\b[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '§§I_START§§$1§§I_END§§');
+
+  // Replace Bold tags with <context> markers
+  html = html.replace(/<(b|strong)\b[^>]*>(.*?)<\/\1>/gi, '§§C_START§§$2§§C_END§§');
+  html = html.replace(/<span\b[^>]*font-weight:\s*(?:bold|700|800|900)[^>]*>(.*?)<\/span>/gi, '§§C_START§§$1§§C_END§§');
+
+  // --- Step 2: Clean up all remaining HTML to get plain text with our markers ---
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  let textContent = tempDiv.textContent || tempDiv.innerText;
+
+  // --- Step 3: Replace the markers with the final, visible tags ---
+  // The 'g' flag is crucial to replace all occurrences.
+  textContent = textContent.replace(/§§I_START§§/g, '<intention>').replace(/§§I_END§§/g, '</intention>');
+  textContent = textContent.replace(/§§C_START§§/g, '<context>').replace(/§§C_END§§/g, '</context>');
+
+  // --- Step 4: Update the div with the final tagged text ---
+  // We use .innerText to ensure the tags are displayed as text, not rendered as HTML.
+  editableDiv.innerText = textContent.trim();
+
+  showMessage("✨ Applied tags to Telugu script!");
+}
+
+
+function pasteIntoDualHighlighter() {
+  const box = document.getElementById('dual-highlight-box');
+  if (box) {
+    box.focus();
+    navigator.clipboard.read().then(items => {
+      for (const item of items) {
+        if (item.types.includes('text/html')) {
+          item.getType('text/html').then(blob => blob.text().then(html => {
+            box.innerHTML = html;
+            showMessage('✅ Pasted rich text!');
+          }));
+          return;
+        }
+      }
+      navigator.clipboard.readText().then(text => {
+        box.innerText = text;
+        showMessage('✅ Pasted plain text!');
+      });
+    });
+  }
+}
+
+// REPLACE THE ENTIRE applyDualHighlight FUNCTION WITH THIS CORRECTED VERSION
+
+function applyDualHighlight() {
+  const box = document.getElementById('dual-highlight-box');
+  if (!box || !box.innerHTML.trim()) {
+    showMessage('⚠️ Box is empty. Paste some content first.');
+    return;
+  }
+
+  // Define the colors we will apply directly as inline styles
+  const greenColor = '#05fd05';
+  const yellowColor = '#fbfb00';
+
+  // --- Start of Correct, Surgical DOM-Based Logic ---
+
+  // We get ALL spans in the box to check them for styles.
+  const allSpans = Array.from(box.querySelectorAll('span'));
+
+  allSpans.forEach(span => {
+    // Check for BOLD styling
+    if (span.style.fontWeight === 'bold' || parseInt(span.style.fontWeight) >= 700) {
+      // Un-bold the text
+      span.style.fontWeight = 'normal';
+      // Apply the green highlight directly
+      span.style.backgroundColor = greenColor;
+    }
+    
+    // Check for ITALIC styling
+    if (span.style.fontStyle === 'italic') {
+      // Un-italicize the text
+      span.style.fontStyle = 'normal';
+      // Apply the yellow highlight directly
+      span.style.backgroundColor = yellowColor;
+    }
+  });
+
+  // Now, handle the simple fallback tags (<b>, <i>, etc.)
+  
+  // Handle <b> and <strong>
+  const boldTags = Array.from(box.querySelectorAll('b, strong'));
+  boldTags.forEach(tag => {
+    const newSpan = document.createElement('span');
+    newSpan.style.backgroundColor = greenColor;
+    newSpan.innerHTML = tag.innerHTML;
+    tag.parentNode.replaceChild(newSpan, tag);
+  });
+  
+  // Handle <i> and <em>
+  const italicTags = Array.from(box.querySelectorAll('i, em'));
+  italicTags.forEach(tag => {
+    const newSpan = document.createElement('span');
+    newSpan.style.backgroundColor = yellowColor;
+    newSpan.innerHTML = tag.innerHTML;
+    tag.parentNode.replaceChild(newSpan, tag);
+  });
+
+  showMessage('✨ Highlights applied! (Bold: Green, Italic: Yellow)');
+}
+
+
+function clearDualHighlighter() {
+  const box = document.getElementById('dual-highlight-box');
+  if (box) {
+    box.innerHTML = '';
+    showMessage('🗑️ Dual highlighter box cleared.');
+  }
+}
+
+function copyFromDualHighlighter() {
+  const box = document.getElementById('dual-highlight-box');
+  if (!box || !box.innerHTML.trim()) {
+    showMessage('⚠️ Box is empty, nothing to copy.');
+    return;
+  }
+  
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = box.innerHTML;
+
+  // Add inline styles for both green and yellow highlights
+  tempDiv.querySelectorAll('.green-highlight').forEach(span => {
+    span.style.backgroundColor = '#05fd05';
+  });
+  tempDiv.querySelectorAll('.yellow-highlight').forEach(span => {
+    span.style.backgroundColor = '#fbfb00';
+  });
+  
+  // Clean up all class attributes before copying
+  tempDiv.querySelectorAll('span').forEach(span => span.removeAttribute('class'));
+
+  try {
+    const htmlContent = tempDiv.innerHTML;
+    const textContent = box.innerText;
+    const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+    const blobText = new Blob([textContent], { type: 'text/plain' });
+    const clipboardItem = new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText });
+    navigator.clipboard.write([clipboardItem]).then(() => {
+      showMessage('✅ Copied dual-highlighted text!');
+    });
+  } catch (error) {
+    console.error('Failed to copy rich text:', error);
+    showMessage('❌ Could not copy content.');
+  }
+}
+
+// --- ADD THIS NEW FUNCTION AFTER applyHighlight ---
+
+
+
+  // Build UI dynamically with grouped parts
+  const container = document.getElementById('stepsContainer');
+
+  function createPart(title, steps, className) {
+    const partDiv = document.createElement('div');
+    partDiv.className = `part-section ${className}`;
+    partDiv.innerHTML = `<h3>${title}</h3>`;
+    steps.forEach(i => partDiv.appendChild(createStep(i)));
+    return partDiv;
+  }
+
+// REPLACE YOUR ENTIRE createStep FUNCTION IN test.html WITH THIS CORRECTED VERSION
+
+// REPLACE YOUR ENTIRE createStep FUNCTION WITH THIS
+
+function createStep(i) {
+    const stepDiv = document.createElement('div');
+    stepDiv.className = 'step';
+    let copyButtonText = (i === 1 || i === 4) ? "📋 Copy Prompt (attach audio file)" : "📋 Copy Prompt";
+
+    let textarea = "";
+    if (i === 4) {
+      textarea = `
+        <div id="input4_1" class="editable" contenteditable="true" data-placeholder="Paste Punctuated English Script..."></div>
+        
+      `;
+    } else if (i === 5) {
+      textarea = `
+        <div id="input5_1" class="editable" contenteditable="true" data-placeholder="Paste English script with bold/italic here..."></div>
+        <div id="input5_2" class="editable" contenteditable="true" data-placeholder="Paste Telugu script with bold/italic for tagging..."></div>
+      `;
+    } else if (i !== 1) {
+      textarea = `<textarea id="input${i}" placeholder="Paste or type content for Step ${i}..."></textarea>`;
+    }
+
+    // Default button group WITHOUT the Paste button
+    let buttonGroup = `
+      <div class="button-group">
+        <button class="copy-btn" onclick="handleCopy(${i})">${copyButtonText}</button>
+        ${followUpButtonHTML(i)}
+        ${i !== 1 ? `<button class="clear-btn" onclick="handleClear(${i})">🗑️ Clear</button>` : ''}
+      </div>`;
+
+    if (i === 4) {
+      // Buttons for Step 9 WITHOUT the Paste button
+      buttonGroup = `
+        <div class="button-group">
+          <button class="convert-btn" onclick="wrapBoldWithGesture(${i})">🔤 Convert Bold → Gesture</button>
+          <button class="copy-btn" onclick="handleCopy(${i})">${copyButtonText}</button>
+          <button class="clear-btn" onclick="handleClear(${i})">🗑️ Clear</button>
+        </div>`;
+    }
+
+    if (i === 5) {
+      // Buttons for Step 5 WITHOUT the Paste buttons
+      buttonGroup = `
+        <div class="button-group">
+          <button class="convert-btn" onclick="transformTeluguTags()">🔤 Convert Telugu B/I → Tags</button>
+          <button class="copy-btn" onclick="handleCopy(${i})">${copyButtonText}</button> 
+          <button class="clear-btn" onclick="handleClear(${i})">🗑️ Clear</button>
+        </div>`;
+    }
+
+    stepDiv.innerHTML = `
+      <h3>
+        <span class="step-number">${i}</span>
+        <span>${stepNames[i]}</span>
+        <span class="ai-name">${aiNames[i]}</span>
+      </h3>
+      <div class="step-description"><strong>📋 Instructions:</strong> ${descriptions[i]}</div>
+      <div class="step-result"><strong>📤 Expected Output:</strong> ${results[i]}</div>
+      ${textarea}
+      ${buttonGroup}
+    `;
+    return stepDiv;
+  }
+
+  function followUpButtonHTML(i) {
+    if (i === 1) {
+      return `<button class="followup-btn" onclick="copyFollowUp(${i})">💬 Follow-up Prompt</button>`;
+    }
+    return '';
+  }
+
+
+
+function createDualHighlighterTool() {
+  const toolDiv = document.createElement('div');
+  toolDiv.className = 'part-section part3'; // Using the orange theme
+  toolDiv.innerHTML = `
+    <h3>Dual Style Highlighter</h3>
+    <div id="dual-highlight-box" class="editable" contenteditable="true" data-placeholder="Paste script with bold/italic text here..."></div>
+    <div class="button-group" style="justify-content: center; margin-top: 20px;">
+      <button class="convert-btn" style="background-color: #f5a623; color: white; border-color: #c48b20;" onclick="applyDualHighlight()">🎨 Apply Highlights</button>
+      <button class="clear-btn" onclick="clearDualHighlighter()">🗑️ Clear</button>
+    </div>
+  `;
+  return toolDiv;
+}
+
+container.appendChild(createPart("Part 3: Fine Tuning", [5], "part4"));
+
+
+
+//container.appendChild(createPart("Part 4: Fine Tuning", [5], "part4"));
+
+// ADD THE SECOND HIGHLIGHTER TOOL AFTER STEP 10
+container.appendChild(createDualHighlighterTool());
+
+
+
+// --- Scroll to Top Button Logic ---
+// Wait for the DOM to be fully loaded before running this script
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+  // We must check if the button actually exists before adding listeners to it
+  if (scrollToTopBtn) {
+    // Show the button when the user scrolls down 200px from the top
+   
+    // Show the button by adding/removing the 'visible' class
+    window.onscroll = function() {
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        scrollToTopBtn.classList.add("visible");
+      } else {
+        scrollToTopBtn.classList.remove("visible");
+      }
+    };
+
+    // When the user clicks on the button, scroll to the first part smoothly
+    scrollToTopBtn.addEventListener('click', () => {
+      const firstPart = document.querySelector('.part1');
+      if (firstPart) {
+        firstPart.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  }
+});
+</script>
+
+<button id="scrollToTopBtn" title="Scroll to Top">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<!-- Bottom Clear All Button -->
+<div style="text-align: center; margin: 40px 0; padding: 30px 0; border-top: 2px solid #e8e5e0;">
+  <button class="clear-all-btn" onclick="clearAllInputs()" style="font-size: 1.1rem; padding: 14px 32px;">
+    🗑️ Clear All Input Boxes
+  </button>
+</div>
+
+</body>
+</html>
