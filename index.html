@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Fine Tuner</title>
+  <title>Review Tool</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,7 +19,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1200px; /* Increased width from 1000px */
       margin: 0 auto;
       background: #ffffff;
       border-radius: 20px;
@@ -28,7 +29,7 @@
     }
 
     .editable {
-      min-height: 250px; /* Increased height from 160px */
+      min-height: 550px; /* Increased height from 400px */
       border: 1px solid #e0d5c7;
       border-radius: 12px;
       padding: 16px;
@@ -169,15 +170,6 @@
       color: #9b59b6; 
     }
 
-    .part5 { 
-      background: #f0f7ff; 
-      border-left: 5px solid #4a90e2; 
-    }
-    
-    .part5 h3 { 
-      color: #4a90e2; 
-    }
-
     .yellow-highlight {
       background-color: #fbfb00;
       border-radius: 4px;
@@ -203,14 +195,6 @@
 
     #message.show {
       transform: translateX(0);
-    }
-
-    hr {
-      border: none;
-      height: 1px;
-      background: #e8e5e0;
-      margin: 30px 0;
-      border-radius: 1px;
     }
     
     .input-boxes-container {
@@ -715,10 +699,6 @@ Give the results in the same order in which the tags appear in the script.
 
 Below are the English and Telugu scripts.
 
-
-
-
-
 </script>
 
 <script>
@@ -733,39 +713,6 @@ Below are the English and Telugu scripts.
     return "";
   }
 
-  function handlePaste(step, boxNumber = 1) {
-    navigator.clipboard.read().then(items => {
-      let foundHtml = false;
-      for (const item of items) {
-        if (item.types.includes('text/html')) {
-          item.getType('text/html').then(blob => {
-            blob.text().then(html => {
-              let targetBox = document.getElementById(`input5_${boxNumber}`);
-              if (targetBox) {
-                targetBox.innerHTML = html;
-                showMessage(`✅ Pasted rich text into Box ${boxNumber}`);
-              }
-            });
-          });
-          foundHtml = true;
-          break;
-        }
-      }
-      if (!foundHtml) {
-        navigator.clipboard.readText().then(text => {
-          let targetBox = document.getElementById(`input5_${boxNumber}`);
-          if (targetBox) {
-            targetBox.innerText = text;
-            showMessage(`✅ Pasted plain text into Box ${boxNumber}`);
-          }
-        });
-      }
-    }).catch(err => {
-      console.error('Failed to read clipboard contents: ', err);
-      showMessage("❌ Could not paste from clipboard.");
-    });
-  }
-
   function handleClear(step) {
     if (step === 5) {
       const box1 = document.getElementById('input5_1');
@@ -774,51 +721,6 @@ Below are the English and Telugu scripts.
       if (box2) box2.innerHTML = "";
     }
     showMessage("🗑️ Cleared input boxes");
-  }
-
-  function clearAllInputs() {
-    const box1 = document.getElementById('input5_1');
-    const box2 = document.getElementById('input5_2');
-    if (box1) box1.innerHTML = "";
-    if (box2) box2.innerHTML = "";
-
-    const dualHighlighterBox = document.getElementById('dual-highlight-box');
-    if (dualHighlighterBox) {
-      dualHighlighterBox.innerHTML = '';
-    }
-
-    showMessage("🗑️ All input boxes cleared");
-  }
-
-  function handleCopy(step) {
-    if (step !== 5) return; 
-
-    // Action 1: Handle Dual Highlighter
-    const teluguInputBox = document.getElementById('input5_2');
-    const dualHighlighterBox = document.getElementById('dual-highlight-box');
-    if (teluguInputBox && dualHighlighterBox) {
-      dualHighlighterBox.innerHTML = teluguInputBox.innerHTML;
-      applyDualHighlight();
-    }
-
-    // Action 2: Transform Telugu tags in the input box itself
-    transformTeluguTags();
-
-    // Action 3: Perform the copy action
-    const inputBox1 = document.getElementById(`input${step}_1`);
-    const inputBox2 = document.getElementById(`input${step}_2`);
-    const text1 = inputBox1 ? inputBox1.innerText.trim() : "";
-    const text2 = inputBox2 ? inputBox2.innerText.trim() : "";
-    const finalText =
-      getPrompt(step) +
-      "\n\nEnglish Script:\n" +
-      text1 +
-      "\n\nTagged Telugu Script:\n" +
-      text2;
-
-    navigator.clipboard.writeText(finalText).then(() => {
-      showMessage("✅ Highlights applied, tags converted & prompt copied!");
-    });
   }
 
   function showMessage(msg) {
@@ -830,19 +732,18 @@ Below are the English and Telugu scripts.
     }, 3000);
   }
 
-  function transformTeluguTags() {
-    const editableDiv = document.getElementById('input5_2');
-    if (!editableDiv) {
-      return;
-    }
-
-    let html = editableDiv.innerHTML;
+  /**
+   * Takes HTML with bold/italic formatting and converts it to a plain text
+   * string with <context> and <intention> tags.
+   */
+  function transformTeluguHTMLForClipboard(html) {
+    if (!html) return "";
 
     // Preserve existing tags by replacing them with placeholders
     html = html.replace(/<context>/gi, '§§C_START§§').replace(/<\/context>/gi, '§§C_END§§');
     html = html.replace(/<intention>/gi, '§§I_START§§').replace(/<\/intention>/gi, '§§I_END§§');
 
-    // Convert B/I/SPAN tags to placeholders
+    // Convert formatting tags to placeholders
     html = html.replace(/<(i|em)\b[^>]*>(.*?)<\/\1>/gi, '§§I_START§§$2§§I_END§§');
     html = html.replace(/<span\b[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '§§I_START§§$1§§I_END§§');
     html = html.replace(/<(b|strong)\b[^>]*>(.*?)<\/\1>/gi, '§§C_START§§$2§§C_END§§');
@@ -857,111 +758,92 @@ Below are the English and Telugu scripts.
     textContent = textContent.replace(/§§I_START§§/g, '<intention>').replace(/§§I_END§§/g, '</intention>');
     textContent = textContent.replace(/§§C_START§§/g, '<context>').replace(/§§C_END§§/g, '</context>');
 
-    editableDiv.innerText = textContent.trim();
+    return textContent.trim();
   }
 
-  function pasteIntoDualHighlighter() {
-    const box = document.getElementById('dual-highlight-box');
-    if (box) {
-      box.focus();
-      navigator.clipboard.read().then(items => {
-        for (const item of items) {
-          if (item.types.includes('text/html')) {
-            item.getType('text/html').then(blob => blob.text().then(html => {
-              box.innerHTML = html;
-              showMessage('✅ Pasted rich text!');
-            }));
-            return;
-          }
-        }
-        navigator.clipboard.readText().then(text => {
-          box.innerText = text;
-          showMessage('✅ Pasted plain text!');
-        });
-      });
-    }
-  }
+  /**
+   * Takes HTML with bold/italic formatting and converts it to HTML
+   * with green and yellow background highlights.
+   */
+  function applyHighlighting(html) {
+    if (!html) return "";
 
-  function applyDualHighlight() {
-    const box = document.getElementById('dual-highlight-box');
-    if (!box || !box.innerHTML.trim()) {
-      return;
-    }
+    const greenColor = '#05fd05'; // For bold / <context>
+    const yellowColor = '#fbfb00'; // For italic / <intention>
 
-    const greenColor = '#05fd05';
-    const yellowColor = '#fbfb00';
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
 
-    const allSpans = Array.from(box.querySelectorAll('span'));
-
-    allSpans.forEach(span => {
+    // Process SPAN tags with style attributes
+    tempDiv.querySelectorAll('span').forEach(span => {
       if (span.style.fontWeight === 'bold' || parseInt(span.style.fontWeight) >= 700) {
         span.style.fontWeight = 'normal';
         span.style.backgroundColor = greenColor;
       }
-      
       if (span.style.fontStyle === 'italic') {
         span.style.fontStyle = 'normal';
         span.style.backgroundColor = yellowColor;
       }
     });
 
-    const boldTags = Array.from(box.querySelectorAll('b, strong'));
-    boldTags.forEach(tag => {
+    // Process <b> and <strong> tags
+    tempDiv.querySelectorAll('b, strong').forEach(tag => {
       const newSpan = document.createElement('span');
       newSpan.style.backgroundColor = greenColor;
       newSpan.innerHTML = tag.innerHTML;
       tag.parentNode.replaceChild(newSpan, tag);
     });
     
-    const italicTags = Array.from(box.querySelectorAll('i, em'));
-    italicTags.forEach(tag => {
+    // Process <i> and <em> tags
+    tempDiv.querySelectorAll('i, em').forEach(tag => {
       const newSpan = document.createElement('span');
       newSpan.style.backgroundColor = yellowColor;
       newSpan.innerHTML = tag.innerHTML;
       tag.parentNode.replaceChild(newSpan, tag);
     });
+
+    return tempDiv.innerHTML;
   }
 
-  function clearDualHighlighter() {
-    const box = document.getElementById('dual-highlight-box');
-    if (box) {
-      box.innerHTML = '';
-      showMessage('🗑️ Dual highlighter box cleared.');
-    }
-  }
+  function handleCopy(step) {
+    if (step !== 5) return;
 
-  function copyFromDualHighlighter() {
-    const box = document.getElementById('dual-highlight-box');
-    if (!box || !box.innerHTML.trim()) {
-      showMessage('⚠️ Box is empty, nothing to copy.');
-      return;
+    const englishInputBox = document.getElementById('input5_1');
+    const teluguInputBox = document.getElementById('input5_2');
+
+    if (!englishInputBox || !teluguInputBox) {
+        console.error("Input boxes not found!");
+        return;
     }
+
+    // 1. Get original rich text HTML from the Telugu input box.
+    const originalTeluguHTML = teluguInputBox.innerHTML;
+
+    // 2. Create a version for the clipboard with <context>/<intention> tags.
+    const textForClipboard = transformTeluguHTMLForClipboard(originalTeluguHTML);
     
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = box.innerHTML;
-
-    tempDiv.querySelectorAll('.green-highlight').forEach(span => {
-      span.style.backgroundColor = '#05fd05';
-    });
-    tempDiv.querySelectorAll('.yellow-highlight').forEach(span => {
-      span.style.backgroundColor = '#fbfb00';
-    });
+    // 3. Create a version for display with green/yellow highlights.
+    const highlightedHTMLForDisplay = applyHighlighting(originalTeluguHTML);
     
-    tempDiv.querySelectorAll('span').forEach(span => span.removeAttribute('class'));
-
-    try {
-      const htmlContent = tempDiv.innerHTML;
-      const textContent = box.innerText;
-      const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-      const blobText = new Blob([textContent], { type: 'text/plain' });
-      const clipboardItem = new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText });
-      navigator.clipboard.write([clipboardItem]).then(() => {
-        showMessage('✅ Copied dual-highlighted text!');
-      });
-    } catch (error) {
-      console.error('Failed to copy rich text:', error);
-      showMessage('❌ Could not copy content.');
-    }
+    // 4. Update the Telugu input box with the highlighted version.
+    teluguInputBox.innerHTML = highlightedHTMLForDisplay;
+    
+    // 5. Construct the final text for the clipboard.
+    const englishText = englishInputBox.innerText.trim();
+    const finalText =
+      getPrompt(step) +
+      "\n\nEnglish Script:\n" +
+      englishText +
+      "\n\nTagged Telugu Script:\n" +
+      textForClipboard;
+      
+    // 6. Copy to clipboard and show message.
+    navigator.clipboard.writeText(finalText).then(() => {
+      showMessage("✅ Highlights applied & prompt copied!");
+    }).catch(err => {
+        console.error("Failed to copy:", err);
+        showMessage("❌ Failed to copy prompt.");
+    });
   }
 
   const container = document.getElementById('stepsContainer');
@@ -1004,22 +886,7 @@ Below are the English and Telugu scripts.
     return stepDiv;
   }
 
-  function createDualHighlighterTool() {
-    const toolDiv = document.createElement('div');
-    toolDiv.className = 'part-section part5';
-    toolDiv.innerHTML = `
-      <h3>Dual Style Highlighter</h3>
-      <div id="dual-highlight-box" class="editable" contenteditable="true" data-placeholder="Your Telugu script with highlights will appear here automatically..."></div>
-      <div class="button-group" style="justify-content: center; margin-top: 20px;">
-        
-        <button class="clear-btn" onclick="clearDualHighlighter()">🗑️ Clear</button>
-      </div>
-    `;
-    return toolDiv;
-  }
-
   container.appendChild(createPart("Fine Tuning Tool", [5], "part4"));
-  container.appendChild(createDualHighlighterTool());
 
   document.addEventListener('DOMContentLoaded', function() {
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
@@ -1054,3 +921,4 @@ Below are the English and Telugu scripts.
 
 </body>
 </html>
+
