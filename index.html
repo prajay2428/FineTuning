@@ -312,35 +312,413 @@
     Each point is made up of blocks of thoughts.
     Each thought is made up of blocks of information.
     
-  We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas.
-  
-  … indicates a pause in between the sentences.
-  , indicates a pause between meaningful chunks that make up the sentence.
-  ; indicates connected sentences.
-  - indicates additional information related to the main idea of the sentence.
-  
-  
-  I am also giving the telugu translation for the same.Now in the telugu translation I have added some tags.
-  <Gesture> </Gesture> indicates the portion of the sentences for which there is a corresponding significant body language shown in the video.
-  
-  <Context> </Context> indicates the portion of the sentences for which i am looking for a more contextual word or phrase. 
-  
-  <Intention> </Intention> indicates the portion of the sentences for which i am looking for a sentence that expresses the actual intent behind using that sentence or words.
-  
-  Below are the instructions for the the tag <Context> </Context>:
-  Assume you are very good at telugu language, basically good at finding the right telugu words for a particular english word based on the context in which the word occurs. you also explain what this word is conveying here in this context in English.
-  
-  
-  
-  Below are the instructions for the the tag <Intention> </Intention>:
-  
-  Based on the context in which this sentence is occurring, and based on the picture that is being created before and after this sentence, identify the intention of the speaker. what he actually is trying to convey. Rather than just relying on the words and doing the word to word translation, grasp the intention based on the context and express it directly in telugu in a colloquial way. No need to follow the exact word to word based translation. The intention needs to be expressed here.
-  
-  [... REST OF THE PROMPT CONTENT REMAINS THE SAME ...]
-  
-  Give the results in the same order in which the tags appear in the script.
-  
-  Below are the English and Telugu scripts.
+ We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas.
+
+… indicates a pause in between the sentences.
+, indicates a pause between meaningful chunks that make up the sentence.
+; indicates connected sentences.
+- indicates additional information related to the main idea of the sentence.
+
+
+I am also giving the telugu translation for the same.Now in the telugu translation I have added some tags.
+<Gesture> </Gesture> indicates the portion of the sentences for which there is a corresponding significant body language shown in the video.
+
+<Context> </Context> indicates the portion of the sentences for which i am looking for a more contextual word or phrase. 
+
+<Intention> </Intention> indicates the portion of the sentences for which i am looking for a sentence that expresses the actual intent behind using that sentence or words.
+
+Below are the instructions for the the tag <Context> </Context>:
+Assume you are very good at telugu language, basically good at finding the right telugu words for a particular english word based on the context in which the word occurs. you also explain what this word is conveying here in this context in English.
+
+
+
+Below are the instructions for the the tag <Intention> </Intention>:
+
+Based on the context in which this sentence is occurring, and based on the picture that is being created before and after this sentence, identify the intention of the speaker. what he actually is trying to convey. Rather than just relying on the words and doing the word to word translation, grasp the intention based on the context and express it directly in telugu in a colloquial way. No need to follow the exact word to word based translation. The intention needs to be expressed here.
+
+
+
+Below i am giving some Examples of identifying the intention:
+Example 1
+
+
+English:
+ love is not profitable.
+ It’s a… a very conscious, <Intention>loss making venture</Intention>; 
+
+Telugu:
+ప్రేమ లాభ పడేందుకు కాదు
+అది స్పృహతో, <Intention>నష్ట పోయేందుకు చేసే ప్రయత్నం</Intention>
+
+Optimized:
+ప్రేమ లాభసాటి కాదు
+అది - <Intention>నష్టం తెచ్చేదని తెలిసి కూడా</Intention> కోరునే విషయం
+
+Description:
+Here the effort is not to make a loss. 
+He is saying its nature is ‘loss making’, and still we choose it consciously.
+
+
+
+
+
+
+
+Example 2
+
+
+English:
+30 times the idiot shoots at you and misses you; I am so glad; I hope <Intention>they </Intention>keep missing like that.
+
+Telugu:
+<Intention>వాడలా </Intention>గురి తప్పాలనే కోరుకుంటున్నాను.
+
+Optimized:
+<Intention>వాళ్ళలానే </Intention>గురి తప్పాలని కోరుకుంటున్నాను.
+
+Description:
+Here sadhguru is not speaking about that single person who missed.
+He is speaking about the enemies  in general. So we made it into  plural 
+
+
+
+
+Example 3
+
+
+English:
+Yes sir, because uh… he is always wide open and waiting; it's the people who are <Intention>far away, in their own world.</Intention>
+
+
+Telugu:
+ఉన్నాయండి, కానీ, ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా, తమ లోకంలో ఉన్నారు.</Intention>
+
+Optimized:
+ఉన్నాయండి! 
+ఎందుకంటే ..  ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా ఉన్నారు … తమ సొంత లోకంలో!</Intention>
+
+Description:
+Here we just made it into two clauses. As it is expressed as two details in English. 
+
+
+
+
+Example 4
+
+
+English:
+"I do my Om Namo Shivaya jap <Intention>and everything</Intention>,
+
+Telugu:
+ ఓం నమః శివాయ’’ <Intention>జపం లాంటివన్నీ</Intention> చేస్తాను
+
+Optimized:
+ ఓం నమః శివాయ’’ <Intention>జపం మొదలైనవన్నీ</Intention> చేస్తాను
+
+Description:
+Here he is not saying that he is doing things that are alike to jap 
+He is saying he is doing jap and things like that.
+
+
+
+
+Example 5
+
+
+English:
+You take some fenugreek, boil it, and the decoction that comes out of it, you mix honey with it and you can drink it. Lot of people drink it like coffee, but you need special kind of <Intention>taste buds</Intention> or you need tremendous acceptance. 
+
+Telugu:
+మెంతులు ... మరిగించి... వడకట్టి... తేనె కలుపుకుని తాగొచ్చు; 
+చాలామంది దాన్ని కాఫీ లాగా తాగుతారు, కానీ దానికి ఓ ప్రత్యేకమైన <Intention>నాలుక </Intention>ఉండాలి, లేదా చాలా సహనం ఉండాలి. 
+
+
+Optimized:
+అలా తాగడాలంటే ఓ ప్రత్యేకమైన <Intention>అభిరుచి </Intention>ఉండాలి
+
+Description:
+Here he is not talking about the tongue literally, he is speaking about their preference and patience to take such coffee.
+
+
+
+
+Example 6
+
+
+English:
+ She said, "I hear that monks are looking for shelter in many homes; <Intention>why don't you come and stay in my house</Intention>?"
+
+Telugu:
+ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; <Intention>నువ్వెందుకు నా ఇంట్లో ఉండకూడదు</Intention>?" అంది. 
+
+Optimized:
+ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; నువ్వు  <Intention>వచ్చి నా ఇంట్లో ఉండొచ్చు కదా?</Intention>" అంది. 
+
+Description:
+Here the translation was literal, like grammar based. 
+But in telugu the intention is conveyed differently, not in the same grammar syntax to syntax translation.
+
+
+
+
+Example 7
+
+
+English:
+Right now in the world, a whole lot of people think <Intention>only in misery you can be profound</Intention>;
+
+Telugu:
+ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>బాధను మాత్రమే తీవ్రంగా అనుభవించగలమని అనుకుంటారు</Intention>;
+
+Optimized:
+ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>కేవలం బాధలో మాత్రమే ప్రగాఢత అనుభూతి చెందగలమనుకుంటారు;</Intention>
+
+Description:
+Here he is not talking about experiencing the pain profoundly. 
+He is saying about how we will go to profound intensity when it comes to pain.
+
+
+
+
+Example 8
+
+
+English:
+<Intention>Because</Intention> there is not much possibility, there is not much misery either.
+
+Telugu:
+<Intention>ఎందుకంటే </Intention>అక్కడ పెద్దగా అవకాశాలు లేవు కాబట్టి; అంత బాధ కూడా ఉండదు.
+
+Optimized:
+సంభావ్యతలు పెద్దగా లేవు <Intention>కాబట్టి</Intention>, బాధ కూడా అంతగా ఉండదు.
+
+Description:
+Here he is conveying the point in cause and effect format. First he is telling the cause and then he is telling the effect.
+So the because at the beginning here indicates that this is the cause. Not to literally place <Intention>ఎందుకంటే </Intention>at the begining in the telugu also.
+
+
+
+
+Example 9
+
+
+English:
+You don't see other creatures of the planet suffering like human beings. Their suffering is purely physical. If they're physically harmed, <Intention>they are in pain. </Intention>
+
+Even in pain, they do not know the kind of suffering that a human being knows.
+
+
+
+Telugu:
+ఈ భూమి మీద ఉన్న ఇతర జీవులు మనుషుల్లా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>అవి బాధ పడతాయి. </Intention>
+
+బాధ ఉన్నా కూడా, ఒక మనిషికి తెలిసినంత బాధ వాటికి తెలీదు.
+
+
+
+
+Optimized:
+ఈ భూమ్మీది ఇతర జీవులు మనుషులంతగా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>నొప్పికి గురవుతాయి.</Intention>
+
+నొప్పి విషయంలో కూడా, మనిషికి తెలిసినంతటి బాధ వాటికి తెలీదు.  
+
+
+Description:
+Here pain and suffering are different and he is using the word pain when he is referring to the physical pain. That is not caught in the translation. So we replaced బాధ పడతాయి with  నొప్పికి గురవుతాయి.
+
+
+
+
+Example 10
+
+
+English:
+Human being knows this suffering<Intention> not because creation gave this suffering to you</Intention>; creation just gave you the freedom... to make whatever you wish to out of yourself.
+
+Telugu:
+మనిషికి బాధ ఉంది - <Intention>కానీ దాన్ని మీకు ఇచ్చింది సృష్టి కాదు</Intention>; సృష్టి కేవలం మీకు స్వేచ్ఛ నిచ్చింది... మిమ్మల్ని మీరు ఎలా కావాలంటే అలా మలుచుకోవడానికి. 
+
+Optimized:
+మనిషికి ఇంతటి బాధ తెలియడానికి కారణం - <Intention>సృష్టి ఆ బాధను మీకు ఇవ్వడం వల్ల కాదు</Intention> - సృష్టి మీకు స్వేచ్ఛని ఇచ్చింది - మిమ్మల్ని, మీకు ఎలా కావాలంటే అలా చేసుకునే స్వేచ్ఛనిచ్చింది! 
+
+Description:
+Here he is not talking about whether it was given by creation or not. By using the phrase  ‘not because’ he is telling that it was not the cause.
+
+
+
+Example 11
+
+
+English:
+we do the same things what the other animals do; It is just that all that the animal can do; we do the same things but we can do it consciously -<Intention> that's a big difference.</Intention>
+
+Telugu:
+జంతువులు చేసే పనులే మనం కూడా చేస్తాం; కాకపోతే ఏంటంటే, జంతువు చేయగలిగినదంతా మనం కూడా చేస్తాం -  కానీ దాన్ని మనం స్పృహతో చేయగలం - <Intention>అదే మనకి వాటికీ ఉన్న పెద్ద తేడా.</Intention>
+
+
+
+Optimized:
+<Intention>అది చాలా పెద్ద తేడా!</Intention>
+
+
+Description:
+Here he is not talking about whether it is the big difference or not.
+He is talking about how big a difference it is.
+
+
+
+Example 12
+
+
+English:
+<Intention>This is also a way, for me to demonstrate to people</Intention>; whatever life throws at us, it's not in our hands; what we make out of it is 100% in our hands. 
+
+
+Telugu:
+<Intention>ప్రజలకు చూపించడానికి ఇది కూడా ఒక మార్గం;</Intention> జీవితం మనపై ఏది వేస్తారనేది, అది మన చేతుల్లో లేదు; దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+
+
+
+Optimized:
+<Intention>ఇది ప్రజలకు ఆచరణాత్మకంగా చూపించేందుకు ఒక మార్గం కూడా</Intention>; అదేంటంటే - జీవితం మనపై ఏం విసురుతుందనేది మన చేతుల్లో ఉండదు; అయితే దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+
+
+
+Description:
+Here he is not telling that this is also a one more way to demonstrate to people.
+He is telling that, apart from other purposes that it serves, it also acts a way to demonstrate to people.
+
+
+
+Example 13
+
+
+English:
+That is true; that is true. Uh, yeah, yeah, <Intention>you can never be cautious enough</Intention>, but I think, uh, you've just proven that if you keep your head about you, uh, all the time this is possible.
+
+Telugu:
+అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>మనం ఎప్పటికీ తగినంత జాగ్రత్తగా ఉండలేం</Intention>, కానీ,  మీ బుర్ర మీ దగ్గరే పెట్టుకుంటే,  అన్ని వేళలా ఇది సాధ్యమేనని మీరు నిరూపించారనుకుంటున్నాను.
+
+Optimized:
+అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>ఎంత శ్రద్ధ పెట్టినా అది సరిపోదు</Intention>; కానీ మీరిది నిరూపించారనుకుంటున్నాను - అప్రమత్తతో ఉంటే,  అన్ని వేళలా ఇది సాధ్యమేనని!
+
+Description:
+It is translated literally. 
+It is about whether we can be cautious or not. His intention is that we have to be very cautious as much as possible.
+
+
+
+
+
+
+Example 14
+
+
+English:
+because, uh, <Intention>the altitude was not like this</Intention>, but, uh, the weather, was even worse than this actually, in many ways. 
+
+
+Telugu:
+ఎందుకంటే - <Intention>అక్కడ ఎత్తు ఇలా లేదు</Intention>; కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+
+Optimized:
+ఎందుకంటే -<Intention> అది ఇంత ఎత్తైన ప్రదేశం కాదు</Intention> - కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+
+
+Description:
+Here the translation is literal.
+While he used altitude as a subject here, in reality he was comparing the height of the place. So we wrote the actual intention instead of just literal translation.
+
+
+
+Example 15
+
+
+English:
+<Intention>Such a</Intention> lovely idea Guruji.
+
+Telugu:
+<Intention>అలాంటి </Intention>ఒక చక్కని ఆలోచన గురూజీ
+
+Optimized:
+<Intention>భలే </Intention>చక్కని ఆలోచన గురూజీ
+
+Description:
+Here the translation is literal. To convey the actual intention, literal word to word translation wont do justice. So first I grasped the intention, then I directly expressed that intention in Telugu - without referring to the words used in English.
+
+
+
+
+
+Example 16
+
+
+English:
+Everything that we are right now - every breath that we take, every experience that we go through is <Intention>only valuable, because</Intention> we are on a limited lease of time;
+
+Telugu:
+మనమిప్పుడున్న ప్రతిదీ - మనం తీసుకునే ప్రతి శ్వాస, మనం పొందే ప్రతి అనుభవం కేవలం<Intention> విలువైనదే, ఎందుకంటే </Intention>మనం పరిమిత కాలపు గడువుపై ఉన్నాం;
+
+
+Optimized:
+ప్రస్తుతం మనకు సంబంధించిన ప్రతిదీ - తీసుకునే ప్రతీ శ్వాసా,  పొందే ప్రతీ అనుభవం <Intention>విలువైనవి కావడానికి కారణం - మన సమయం పరిమితం కాబట్టే! </Intention>
+
+Description:
+ Here by using the combination of words, only and because, he is establishing a cause and effect. So we have optimised the translation also into a cause and effect format.
+
+
+Below are the instructions for the the tag <Gesture> </Gesture>:
+Nothing to do actually, just not that these phrases correspond to the gestures in the video.
+
+
+Now give the output in the below format:
+
+For Each <Context> tag:
+
+Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase.
+Explain what this Word is conveying here in this context in English.
+Also give 6 more closer words in addition to the best word.
+
+
+
+Example Output:
+అంకితమైన
+అధిదేవత 
+The word "అంకితమైన" translates to "dedicated to." While grammatically correct, it is a general term. In this specific context, Sadhguru is referring to Dhanvantri as the deity who presides over health and well-being. The Telugu word "అధిదేవత" more accurately conveys this idea of a "presiding deity" or the specific godhead responsible for a particular domain, making it a richer and more precise choice.
+ప్రతీకమైన - symbolic of
+కారకుడైన - the causal one for
+అధిపతి అయిన - the lord of
+ప్రసాదించే - the one who bestows
+సంరక్షకుడైన - the protector of
+బాధ్యత వహించే - the one responsible for
+
+
+
+
+For Each <Intention> tag:
+
+Give the actual tagged Word/Phrase/Sentence as heading (no need to mention the tag itself). (No heading needed for points 2,3,4)
+Give the Word/Phrase/Sentence that actually expresses the intention of the speaker in natural Colloquial Telugu flow
+Give another alternative which expresses the intention, but at the same time follows the sentence structure like length, number of clauses or meaningful chunks, number of segments in the sentence with gaps between them etc.
+Give a third alternative assuming that this tagged position is absent or lost and you have to bridge the gap based on the context that is going on and based on the previous sentences and the later sentences.
+
+
+
+Example output:
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉండాలి
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించారనేది నా ఉద్దేశం...
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉంటారని నేను భావిస్తున్నాను...
+ఎందుకంటే మనుషులుగా మనం ఆ పరిమితులను దాటగలం...
+
+
+Give the results in the same order in which the tags appear in the script.
+
+Below are the English and Telugu scripts.
+
+
+
+
+
 </script>
 
 <script>
