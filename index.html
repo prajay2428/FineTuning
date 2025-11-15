@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +28,8 @@
     }
 
     .editable {
-      min-height: 550px; /* Increased height from 400px */
+      /* MODIFIED: Changed min-height to height to fix the box size and enable scrolling */
+      height: 550px; 
       border: 1px solid #e0d5c7;
       border-radius: 12px;
       padding: 16px;
@@ -44,6 +44,30 @@
       content: attr(data-placeholder);
       color: #aaa;
     }
+
+    /* ===== Style the custom tags to be visible before highlighting ===== */
+    T1, T2, T3, T4 {
+      display: inline; /* Ensure they don't break lines */
+    }
+    T1::before, T2::before, T3::before, T4::before,
+    T1::after, T2::after, T3::after, T4::after {
+      color: #b8a990; /* A subtle color that fits the theme */
+      font-size: 0.8em;
+      font-weight: bold;
+      /* Prevent the user from selecting the pseudo-element text */
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+    }
+    T1::before { content: '<T1>'; }
+    T1::after  { content: '</T1>'; }
+    T2::before { content: '<T2>'; }
+    T2::after  { content: '</T2>'; }
+    T3::before { content: '<T3>'; }
+    T3::after  { content: '</T3>'; }
+    T4::before { content: '<T4>'; }
+    T4::after  { content: '</T4>'; }
+    /* ===== END NEW STYLES ===== */
 
     button {
       padding: 10px 18px;
@@ -170,12 +194,6 @@
       color: #9b59b6; 
     }
 
-    .yellow-highlight {
-      background-color: #fbfb00;
-      border-radius: 4px;
-      padding: 1px 4px;
-    }
-
     #message {
       position: fixed;
       top: 24px;
@@ -287,36 +305,171 @@
   </div>
 
   <!-- Prompts -->
-  <script type="text/plain" id="prompt5">Fine Tuning Needed Sentences:
+  <script type="text/plain" id="prompt5">
 
-    Instructions for Fine Tuning:
-    
-    Below is the Transcript of an English Talk by sadhguru addressing Audience.
+    Fine-tuning Telugu Translation
+
+   
+    Below is the Transcript of an English Talk by sadhguru addressing Audience, and its Telugu Dubbing Script.
+
     The talk is made up of blocks of points.
     Each point is made up of blocks of thoughts.
     Each thought is made up of blocks of information.
     
- We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas.
+    We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas - to hint the dubbing artist for proper modulation.
 
 … indicates a pause in between the sentences.
 , indicates a pause between meaningful chunks that make up the sentence.
 ; indicates connected sentences.
 - indicates additional information related to the main idea of the sentence.
 
-
-I am also giving the telugu translation for the same.Now in the telugu translation I have added some tags.
-<Gesture> </Gesture> indicates the portion of the sentences for which there is a corresponding significant body language shown in the video.
-
-<Context> </Context> indicates the portion of the sentences for which i am looking for a more contextual word or phrase. 
-
-<Intention> </Intention> indicates the portion of the sentences for which i am looking for a sentence that expresses the actual intent behind using that sentence or words.
-
-Below are the instructions for the the tag <Context> </Context>:
-Assume you are very good at telugu language, basically good at finding the right telugu words for a particular english word based on the context in which the word occurs. you also explain what this word is conveying here in this context in English.
+Even though these punctuations can be changed or removed as per grammar, please dont change or remove them as they are placed as markers for dubbing hints.
 
 
+Now i want improvement in the below areas.
+Contextual word.
+Actual intention the speaker is trying to convey.
+Matching the Audio and the gestures in the video.
+Shortening the sentences to fit in.
 
-Below are the instructions for the the tag <Intention> </Intention>:
+These four i am tagging the needed text as below.
+
+Contextual word: <T1>Sample text</T1>
+Actual intention the speaker is trying to convey: <T2>Sample text</T2>
+Matching the Audio and the gestures in the video: <T3>Sample text</T3>
+Shortening the sentences to fit in: : <T4>Sample text</T4>
+
+
+Below are the instructions for each aspect. 
+
+
+Contextual word.
+
+In the English language, each word covers a broad spectrum and multiple contexts. But when it come to telugu, with in the same spectrum that is covered by the english word there are multiple specific telugu words each one covering a specific part of the spectrum, and similarly in telugu there will be specific words for each context that is covered by a single word in English.
+
+While translating, the focus might be on the broader aspects of structure, essence, etc. But now I want you to focus at the detailed level and identify the places where the generic telugu  words are used instead of the spectrum or contextually relevant specific telugu words. And replace that generic telugu word with the specific contextual word that conveys the speaker's intention when he said this english word - in the context of this talk. 
+
+Example 1:
+
+English sentence:
+This is what we are trying to demonstrate in Isha… that thousands of people… simply working like fanatics… from outside, they look like that. But, they're at ease; they close their eyes... okay, world doesn't exist.
+
+Original Telugu sentence:
+ఈశాలో మేము <T1>నిరూపించడానికి ప్రయత్నిస్తున్నది </T1>ఇదే… వేలాది మంది ప్రజలు… <T1>పిచ్చివాళ్ళలా</T1> పనిచేస్తుంటారు… బయటి నుండి చూస్తే, వాళ్ళు అలా కనిపిస్తారు. కానీ, వాళ్ళు <T1>ప్రశాంతంగా </T1>ఉంటారు; వాళ్ళు కళ్ళు మూసుకుంటే... ఓకే, ఈ ప్రపంచం <T1>లేదు</T1>. 
+Improved telugu Sentence:
+ఈశాలో మేము <T1>ఆచరణలో చూపాలనుకుంటున్నది</T1> ఇదే… వేలాది మంది ప్రజలు…<T1> ఆవేశపరుల్లా </T1> పనిచేస్తుంటారు… బయటి నుండి చూస్తే, అలా కనిపిస్తారు. కానీ, వాళ్ళు<T1> నిశ్చింతగా </T1>ఉంటారు; కళ్ళు మూసుకుంటే... ఇక, ఈ ప్రపంచం <T1>ఉండదు</T1>. 
+
+Example 2:
+
+English sentence:
+Which is  <T1>better </T1>? What you want happened, is that better? Whatever happens, you're fine, that is that better? That's all. 
+
+
+Original Telugu sentence:
+ఏది  <T1>మంచిది </T1>? మీరు కోరుకున్నది జరగడం, అది మంచిదా? ఏది జరిగినా, మీరు బాగానే  <T1>ఉండటం </T1>, అది మంచిదా? అంతే. 
+Improved telugu Sentence:
+ఏది  <T1>శ్రేయస్కరమైనది? </T1> - మీరు కోరుకున్నది జరగడం, అది శ్రేయస్కరమా? లేక ఏది జరిగినా, మీరు బాగానే  <T1>ఉంటారు </T1>, అది శ్రేయస్కరమా? 
+
+Example 3:
+
+English sentence:
+If you're seeking fulfillment of life… then… it needs involvement. Devotion means… just unquestioned, <T1>unbridled</T1> involvement, that's all 
+
+Original Telugu sentence:
+ఒకవేళ మీరు జీవితంలో పరిపూర్ణత కోసం వెతుకుతుంటే… దానికి నిమగ్నత కావాలి. భక్తి అంటే… కేవలం ప్రశ్నించని, <T1>అదుపులేని</T1> నిమగ్నత, అంతే
+
+Improved telugu Sentence:
+ఒకవేళ మీరు జీవితంలో పరిపూర్ణత కోరుతుంటే … దానికి నిమగ్నత అవసరం. భక్తి అంటే… ప్రశ్నించని, <T1>అడ్డుకట్టలేని</T1> నిమగ్నత
+
+
+
+
+Example 4:
+English sentence:
+The reason why in this country… you know, marriages have been very stable, not always because two people are getting along great, not always; Because when they got married… a few thousand people got married along with them; Bride and the groom were a small aspect of the marriage; 
+
+There were so many other people <T1> involved</T1>; Now if you have to break it, you have to break it on all levels; you can't break it. 
+
+Original Telugu sentence:
+ఈ దేశంలో... తెలుసా, పెళ్ళిళ్ళు చాలా స్థిరంగా ఉండటానికి కారణం - ఎప్పుడూ ఆ ఇద్దరూ అద్భుతంగా కలిసిపోతున్నారని కాదు, అస్సలు కాదు; ఎందుకంటే వాళ్ళు పెళ్లి చేసుకున్నప్పుడు... వాళ్ళతో పాటు కొన్ని వేల మందికి పెళ్లయింది; పెళ్లికూతురు, పెళ్లికొడుకు ఆ పెళ్లిలో ఓ చిన్న పార్శ్వం మాత్రమే; 
+
+ఇంకెంతో మంది అందులో<T1> పాలుపంచుకున్నారు</T1>; ఇప్పుడు దాన్ని విడగొట్టాలంటే, అన్ని స్థాయిల్లోనూ తెంచాలి; తెంచలేరు; 
+
+Improved telugu Sentence:
+ఈ దేశంలో… పెళ్ళిళ్ళు చాలా స్థిరంగా ఉండటానికి కారణం - కేవలం ఆ ఇద్దరూ అద్భుతంగా కలిసిపోవడం కాదు, ప్రతిసారి కాదు! ఎందుకంటే వాళ్ళు పెళ్లి చేసుకున్నప్పుడు… వాళ్ళతో పాటు కొన్ని వేల మందికి పెళ్లయింది; ‘పెళ్లికూతురు, పెళ్లికొడుకు’ ఆ పెళ్లిలో ఓ చిన్న అంశం మాత్రమే;
+అందులో <T1>ముడిపడి ఉన్నవాళ్లు </T1>ఇంకా ఎంతో మంది ఉన్నారు; ఇప్పుడు దాన్ని విడగొట్టాలంటే, అన్ని స్థాయిల్లోనూ తెంచాలి; తెంచలేరు.
+
+
+
+
+Example 5:
+English sentence:
+But once you become human... now, either you evolve <T1>consciously</T1> or you stagnate; that's all the choice you have. 
+
+
+Original Telugu sentence:
+కానీ ఒకసారి మీరు మనిషి అయ్యాక... ఇప్పుడు, మీరు <T1>స్పృహతో</T1> పరిణామం చెందాలి లేదా అక్కడే నిలిచిపోవాలి; మీకు ఉన్న అవకాశం అంతే.
+
+Improved telugu Sentence:
+కానీ ఒకసారి మీరు మనిషి అయ్యాక... ఇప్పుడు, మీరు <T1>సంకల్పితంగా</T1> పరిణామం చెందాలి లేదా అక్కడే నిలిచిపోవాలి - మీకు ఉన్న అవకాశం అంతే.
+
+
+Example 6:
+English sentence:
+What is human is a flux; you can be anything you want - and this is the human being's struggle. Right now human beings are not suffering their bondage... they are suffering their freedom.
+
+Original Telugu sentence:
+ మానవమనేది <T1>ఒక ప్రవాహం</T1>; మీరు ఏమవ్వాలనుకుంటే అది కాగలరు - ఇదే మానవుని సంఘర్షణ. ప్రస్తుతం మానవులు తమ బంధనాల వల్ల బాధపడటం లేదు... వాళ్ళు తమ స్వేచ్ఛ వల్లే బాధపడుతున్నారు.
+
+Improved telugu Sentence:
+ ‘మనిషి’ అనేది ఒక <T1>నిరంతర చలనం</T1>; మీరు ఏమవ్వాలనుకుంటే అది కాగలరు - ఇదే మానవుని తపన. ప్రస్తుతం మానవులు తమ బంధనాల వల్ల బాధపడటం లేదు... వాళ్ళు తమ స్వేచ్ఛ వల్ల బాధపడుతున్నారు.
+
+
+Example 7:
+English sentence:
+If your life also was fixed as the animal life is fixed - “this is how you will be”..  you wouldn't be <T1>struggling</T1> so much; you wouldn't be experiencing as much pain and misery that human beings are experiencing right now, isn't it? 
+Original Telugu sentence:
+ఒకవేళ మీ జీవితం కూడా స్థిరంగా ఉండి ఉంటే - జంతువుల జీవితం స్థిరంగా ఉన్నట్టు - “మీరు ఇలాగే ఉంటారు” అన్నట్టుగా... మీరింతగా <T1>సంఘర్షణ</T1> పడరు; ప్రస్తుతం మానవులు అనుభవిస్తున్నంత బాధ, దుఃఖం మీరు అనుభవించరు, అవునా?
+
+Improved telugu Sentence:
+ఒకవేళ మీ జీవితం కూడా నిర్దేశించబడి ఉంటే - జంతువుల జీవితం నిర్దేశించబడినట్టు - “మీరు ఇలాగే ఉంటారు” అన్నట్టుగా ఉంటే... మీరింతగా <T1>మథనపడరు</T1>; ప్రస్తుతం మానవులు అనుభవిస్తున్నంత బాధ, దుఃఖం మీరు అనుభవించరు, అవునా?
+
+
+Example 8:
+English sentence:
+You will see there is a distinction between what is you - and what you have gathered;
+
+Original Telugu sentence:
+ఒక <T1>తేడా</T1> కనిపిస్తుంది -  ఏది మీరో దానికి, మీరు పోగుచేసుకున్న దానికి మధ్య!
+Improved telugu Sentence:
+ఒక <T1>వ్యత్యాసం</T1> కనిపిస్తుంది -  ఏది మీరో దానికి, మీరు పోగుచేసుకున్న దానికి మధ్య!
+
+Example 9:
+English sentence:
+
+Original Telugu sentence:
+ఎందుకంటే, వాళ్ళ శక్తులు సరళంగా ఉండవు, సహకరించవు;
+అందుకే, మనం అలాంటి వాళ్ళను చూసినప్పుడు - ప్రపంచంలో వాళ్ళు పనులు చేయగల సామర్థ్యం గానీ, లేదా ప్రపంచంలో వాళ్ళు సాధించే విజయం గానీ, వాళ్ళు కలిగివున్న ఇతర లక్షణాలకు తగినట్టుగా ఉండదు - అది శారీరక బలం కావచ్చు, లేదా చదువు, లేదా తెలివితేటలు, లేదా వాళ్ళకున్న ఇతర ప్రతిభలు కావచ్చు - కానీ అవి వ్యక్తమవ్వవు, ఎందుకంటే - వాళ్ళకి తగినంత శక్తి <T1>మద్దతు</T1> ఉండదు;
+
+Improved telugu Sentence:
+
+ఎందుకంటే, వాళ్ళ శక్తులు వశ్యతతో ఉండవు, సహకరించవు;
+అందుకే, మనం అలాంటి వాళ్ళను చూసినప్పుడు - ప్రపంచంలో వాళ్ళు పనులు చేయగల సామర్థ్యం గానీ, లేదా ప్రపంచంలో వాళ్ళు సాధించే విజయం గానీ, వాళ్ళు కలిగివున్న ఇతర లక్షణాలకు తగినట్టుగా ఉండదు! అది శారీరక బలం కావచ్చు, లేదా చదువు, లేదా తెలివితేటలు, లేదా ఇతర ప్రతిభలు ఉండొచ్చు - కానీ అవి వ్యక్తమవ్వవు; ఎందుకంటే - వాళ్ళకి తగినంత శక్తి <T1>తోడ్పాటు </T1>ఉండదు;
+Example 10:
+English sentence:
+Intelligence can become a very negative thing, if it does not  <T1>translate <T1> into some level of competence; 
+
+Original Telugu sentence:
+తెలివితేటలు చాలా ప్రతికూల విషయంగా మారవచ్చు, అది కొంత స్థాయి సామర్థ్యంగా  <T1>మారకపోతే </T1>; 
+
+Improved telugu Sentence:
+మేధస్సు చాలా ప్రతికూల అంశంగా మారగలదు  - అది కొంత స్థాయి సామర్థ్యంగా <T1>పరిణమించకపోతే</T1>
+
+
+
+
+Actual intention the speaker is trying to convey.
+
 
 Based on the context in which this sentence is occurring, and based on the picture that is being created before and after this sentence, identify the intention of the speaker. what he actually is trying to convey. Rather than just relying on the words and doing the word to word translation, grasp the intention based on the context and express it directly in telugu in a colloquial way. No need to follow the exact word to word based translation. The intention needs to be expressed here.
 
@@ -328,15 +481,15 @@ Example 1
 
 English:
  love is not profitable.
- It’s a… a very conscious, <Intention>loss making venture</Intention>; 
+ It’s a… a very conscious, <T2>loss making venture</T2>; 
 
 Telugu:
 ప్రేమ లాభ పడేందుకు కాదు
-అది స్పృహతో, <Intention>నష్ట పోయేందుకు చేసే ప్రయత్నం</Intention>
+అది స్పృహతో, <T2>నష్ట పోయేందుకు చేసే ప్రయత్నం</T2>
 
 Optimized:
 ప్రేమ లాభసాటి కాదు
-అది - <Intention>నష్టం తెచ్చేదని తెలిసి కూడా</Intention> కోరునే విషయం
+అది - <T2>నష్టం తెచ్చేదని తెలిసి కూడా</T2> కోరునే విషయం
 
 Description:
 Here the effort is not to make a loss. 
@@ -352,13 +505,13 @@ Example 2
 
 
 English:
-30 times the idiot shoots at you and misses you; I am so glad; I hope <Intention>they </Intention>keep missing like that.
+30 times the idiot shoots at you and misses you; I am so glad; I hope <T2>they </T2>keep missing like that.
 
 Telugu:
-<Intention>వాడలా </Intention>గురి తప్పాలనే కోరుకుంటున్నాను.
+<T2>వాడలా </T2>గురి తప్పాలనే కోరుకుంటున్నాను.
 
 Optimized:
-<Intention>వాళ్ళలానే </Intention>గురి తప్పాలని కోరుకుంటున్నాను.
+<T2>వాళ్ళలానే </T2>గురి తప్పాలని కోరుకుంటున్నాను.
 
 Description:
 Here sadhguru is not speaking about that single person who missed.
@@ -371,15 +524,15 @@ Example 3
 
 
 English:
-Yes sir, because uh… he is always wide open and waiting; it's the people who are <Intention>far away, in their own world.</Intention>
+Yes sir, because uh… he is always wide open and waiting; it's the people who are <T2>far away, in their own world.</T2>
 
 
 Telugu:
-ఉన్నాయండి, కానీ, ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా, తమ లోకంలో ఉన్నారు.</Intention>
+ఉన్నాయండి, కానీ, ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <T2>చాలా దూరంగా, తమ లోకంలో ఉన్నారు.</T2>
 
 Optimized:
 ఉన్నాయండి! 
-ఎందుకంటే ..  ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా ఉన్నారు … తమ సొంత లోకంలో!</Intention>
+ఎందుకంటే ..  ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <T2>చాలా దూరంగా ఉన్నారు … తమ సొంత లోకంలో!</T2>
 
 Description:
 Here we just made it into two clauses. As it is expressed as two details in English. 
@@ -391,13 +544,13 @@ Example 4
 
 
 English:
-"I do my Om Namo Shivaya jap <Intention>and everything</Intention>,
+"I do my Om Namo Shivaya jap <T2>and everything</T2>,
 
 Telugu:
- ఓం నమః శివాయ’’ <Intention>జపం లాంటివన్నీ</Intention> చేస్తాను
+ ఓం నమః శివాయ’’ <T2>జపం లాంటివన్నీ</T2> చేస్తాను
 
 Optimized:
- ఓం నమః శివాయ’’ <Intention>జపం మొదలైనవన్నీ</Intention> చేస్తాను
+ ఓం నమః శివాయ’’ <T2>జపం మొదలైనవన్నీ</T2> చేస్తాను
 
 Description:
 Here he is not saying that he is doing things that are alike to jap 
@@ -410,15 +563,15 @@ Example 5
 
 
 English:
-You take some fenugreek, boil it, and the decoction that comes out of it, you mix honey with it and you can drink it. Lot of people drink it like coffee, but you need special kind of <Intention>taste buds</Intention> or you need tremendous acceptance. 
+You take some fenugreek, boil it, and the decoction that comes out of it, you mix honey with it and you can drink it. Lot of people drink it like coffee, but you need special kind of <T2>taste buds</T2> or you need tremendous acceptance. 
 
 Telugu:
 మెంతులు ... మరిగించి... వడకట్టి... తేనె కలుపుకుని తాగొచ్చు; 
-చాలామంది దాన్ని కాఫీ లాగా తాగుతారు, కానీ దానికి ఓ ప్రత్యేకమైన <Intention>నాలుక </Intention>ఉండాలి, లేదా చాలా సహనం ఉండాలి. 
+చాలామంది దాన్ని కాఫీ లాగా తాగుతారు, కానీ దానికి ఓ ప్రత్యేకమైన <T2>నాలుక </T2>ఉండాలి, లేదా చాలా సహనం ఉండాలి. 
 
 
 Optimized:
-అలా తాగడాలంటే ఓ ప్రత్యేకమైన <Intention>అభిరుచి </Intention>ఉండాలి
+అలా తాగడాలంటే ఓ ప్రత్యేకమైన <T2>అభిరుచి </T2>ఉండాలి
 
 Description:
 Here he is not talking about the tongue literally, he is speaking about their preference and patience to take such coffee.
@@ -430,13 +583,13 @@ Example 6
 
 
 English:
- She said, "I hear that monks are looking for shelter in many homes; <Intention>why don't you come and stay in my house</Intention>?"
+ She said, "I hear that monks are looking for shelter in many homes; <T2>why don't you come and stay in my house</T2>?"
 
 Telugu:
-ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; <Intention>నువ్వెందుకు నా ఇంట్లో ఉండకూడదు</Intention>?" అంది. 
+ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; <T2>నువ్వెందుకు నా ఇంట్లో ఉండకూడదు</T2>?" అంది. 
 
 Optimized:
-ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; నువ్వు  <Intention>వచ్చి నా ఇంట్లో ఉండొచ్చు కదా?</Intention>" అంది. 
+ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; నువ్వు  <T2>వచ్చి నా ఇంట్లో ఉండొచ్చు కదా?</T2>" అంది. 
 
 Description:
 Here the translation was literal, like grammar based. 
@@ -449,13 +602,13 @@ Example 7
 
 
 English:
-Right now in the world, a whole lot of people think <Intention>only in misery you can be profound</Intention>;
+Right now in the world, a whole lot of people think <T2>only in misery you can be profound</T2>;
 
 Telugu:
-ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>బాధను మాత్రమే తీవ్రంగా అనుభవించగలమని అనుకుంటారు</Intention>;
+ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <T2>బాధను మాత్రమే తీవ్రంగా అనుభవించగలమని అనుకుంటారు</T2>;
 
 Optimized:
-ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>కేవలం బాధలో మాత్రమే ప్రగాఢత అనుభూతి చెందగలమనుకుంటారు;</Intention>
+ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <T2>కేవలం బాధలో మాత్రమే ప్రగాఢత అనుభూతి చెందగలమనుకుంటారు;</T2>
 
 Description:
 Here he is not talking about experiencing the pain profoundly. 
@@ -468,17 +621,17 @@ Example 8
 
 
 English:
-<Intention>Because</Intention> there is not much possibility, there is not much misery either.
+<T2>Because</T2> there is not much possibility, there is not much misery either.
 
 Telugu:
-<Intention>ఎందుకంటే </Intention>అక్కడ పెద్దగా అవకాశాలు లేవు కాబట్టి; అంత బాధ కూడా ఉండదు.
+<T2>ఎందుకంటే </T2>అక్కడ పెద్దగా అవకాశాలు లేవు కాబట్టి; అంత బాధ కూడా ఉండదు.
 
 Optimized:
-సంభావ్యతలు పెద్దగా లేవు <Intention>కాబట్టి</Intention>, బాధ కూడా అంతగా ఉండదు.
+సంభావ్యతలు పెద్దగా లేవు <T2>కాబట్టి</T2>, బాధ కూడా అంతగా ఉండదు.
 
 Description:
 Here he is conveying the point in cause and effect format. First he is telling the cause and then he is telling the effect.
-So the because at the beginning here indicates that this is the cause. Not to literally place <Intention>ఎందుకంటే </Intention>at the begining in the telugu also.
+So the because at the beginning here indicates that this is the cause. Not to literally place <T2>ఎందుకంటే </T2>at the begining in the telugu also.
 
 
 
@@ -487,14 +640,14 @@ Example 9
 
 
 English:
-You don't see other creatures of the planet suffering like human beings. Their suffering is purely physical. If they're physically harmed, <Intention>they are in pain. </Intention>
+You don't see other creatures of the planet suffering like human beings. Their suffering is purely physical. If they're physically harmed, <T2>they are in pain. </T2>
 
 Even in pain, they do not know the kind of suffering that a human being knows.
 
 
 
 Telugu:
-ఈ భూమి మీద ఉన్న ఇతర జీవులు మనుషుల్లా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>అవి బాధ పడతాయి. </Intention>
+ఈ భూమి మీద ఉన్న ఇతర జీవులు మనుషుల్లా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <T2>అవి బాధ పడతాయి. </T2>
 
 బాధ ఉన్నా కూడా, ఒక మనిషికి తెలిసినంత బాధ వాటికి తెలీదు.
 
@@ -502,7 +655,7 @@ Telugu:
 
 
 Optimized:
-ఈ భూమ్మీది ఇతర జీవులు మనుషులంతగా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>నొప్పికి గురవుతాయి.</Intention>
+ఈ భూమ్మీది ఇతర జీవులు మనుషులంతగా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <T2>నొప్పికి గురవుతాయి.</T2>
 
 నొప్పి విషయంలో కూడా, మనిషికి తెలిసినంతటి బాధ వాటికి తెలీదు.  
 
@@ -517,13 +670,13 @@ Example 10
 
 
 English:
-Human being knows this suffering<Intention> not because creation gave this suffering to you</Intention>; creation just gave you the freedom... to make whatever you wish to out of yourself.
+Human being knows this suffering<T2> not because creation gave this suffering to you</T2>; creation just gave you the freedom... to make whatever you wish to out of yourself.
 
 Telugu:
-మనిషికి బాధ ఉంది - <Intention>కానీ దాన్ని మీకు ఇచ్చింది సృష్టి కాదు</Intention>; సృష్టి కేవలం మీకు స్వేచ్ఛ నిచ్చింది... మిమ్మల్ని మీరు ఎలా కావాలంటే అలా మలుచుకోవడానికి. 
+మనిషికి బాధ ఉంది - <T2>కానీ దాన్ని మీకు ఇచ్చింది సృష్టి కాదు</T2>; సృష్టి కేవలం మీకు స్వేచ్ఛ నిచ్చింది... మిమ్మల్ని మీరు ఎలా కావాలంటే అలా మలుచుకోవడానికి. 
 
 Optimized:
-మనిషికి ఇంతటి బాధ తెలియడానికి కారణం - <Intention>సృష్టి ఆ బాధను మీకు ఇవ్వడం వల్ల కాదు</Intention> - సృష్టి మీకు స్వేచ్ఛని ఇచ్చింది - మిమ్మల్ని, మీకు ఎలా కావాలంటే అలా చేసుకునే స్వేచ్ఛనిచ్చింది! 
+మనిషికి ఇంతటి బాధ తెలియడానికి కారణం - <T2>సృష్టి ఆ బాధను మీకు ఇవ్వడం వల్ల కాదు</T2> - సృష్టి మీకు స్వేచ్ఛని ఇచ్చింది - మిమ్మల్ని, మీకు ఎలా కావాలంటే అలా చేసుకునే స్వేచ్ఛనిచ్చింది! 
 
 Description:
 Here he is not talking about whether it was given by creation or not. By using the phrase  ‘not because’ he is telling that it was not the cause.
@@ -534,15 +687,15 @@ Example 11
 
 
 English:
-we do the same things what the other animals do; It is just that all that the animal can do; we do the same things but we can do it consciously -<Intention> that's a big difference.</Intention>
+we do the same things what the other animals do; It is just that all that the animal can do; we do the same things but we can do it consciously -<T2> that's a big difference.</T2>
 
 Telugu:
-జంతువులు చేసే పనులే మనం కూడా చేస్తాం; కాకపోతే ఏంటంటే, జంతువు చేయగలిగినదంతా మనం కూడా చేస్తాం -  కానీ దాన్ని మనం స్పృహతో చేయగలం - <Intention>అదే మనకి వాటికీ ఉన్న పెద్ద తేడా.</Intention>
+జంతువులు చేసే పనులే మనం కూడా చేస్తాం; కాకపోతే ఏంటంటే, జంతువు చేయగలిగినదంతా మనం కూడా చేస్తాం -  కానీ దాన్ని మనం స్పృహతో చేయగలం - <T2>అదే మనకి వాటికీ ఉన్న పెద్ద తేడా.</T2>
 
 
 
 Optimized:
-<Intention>అది చాలా పెద్ద తేడా!</Intention>
+<T2>అది చాలా పెద్ద తేడా!</T2>
 
 
 Description:
@@ -555,16 +708,16 @@ Example 12
 
 
 English:
-<Intention>This is also a way, for me to demonstrate to people</Intention>; whatever life throws at us, it's not in our hands; what we make out of it is 100% in our hands. 
+<T2>This is also a way, for me to demonstrate to people</T2>; whatever life throws at us, it's not in our hands; what we make out of it is 100% in our hands. 
 
 
 Telugu:
-<Intention>ప్రజలకు చూపించడానికి ఇది కూడా ఒక మార్గం;</Intention> జీవితం మనపై ఏది వేస్తారనేది, అది మన చేతుల్లో లేదు; దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+<T2>ప్రజలకు చూపించడానికి ఇది కూడా ఒక మార్గం;</T2> జీవితం మనపై ఏది వేస్తారనేది, అది మన చేతుల్లో లేదు; దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
 
 
 
 Optimized:
-<Intention>ఇది ప్రజలకు ఆచరణాత్మకంగా చూపించేందుకు ఒక మార్గం కూడా</Intention>; అదేంటంటే - జీవితం మనపై ఏం విసురుతుందనేది మన చేతుల్లో ఉండదు; అయితే దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+<T2>ఇది ప్రజలకు ఆచరణాత్మకంగా చూపించేందుకు ఒక మార్గం కూడా</T2>; అదేంటంటే - జీవితం మనపై ఏం విసురుతుందనేది మన చేతుల్లో ఉండదు; అయితే దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
 
 
 
@@ -578,13 +731,13 @@ Example 13
 
 
 English:
-That is true; that is true. Uh, yeah, yeah, <Intention>you can never be cautious enough</Intention>, but I think, uh, you've just proven that if you keep your head about you, uh, all the time this is possible.
+That is true; that is true. Uh, yeah, yeah, <T2>you can never be cautious enough</T2>, but I think, uh, you've just proven that if you keep your head about you, uh, all the time this is possible.
 
 Telugu:
-అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>మనం ఎప్పటికీ తగినంత జాగ్రత్తగా ఉండలేం</Intention>, కానీ,  మీ బుర్ర మీ దగ్గరే పెట్టుకుంటే,  అన్ని వేళలా ఇది సాధ్యమేనని మీరు నిరూపించారనుకుంటున్నాను.
+అది నిజం; అది నిజం. ఆఁ, అవునవును, <T2>మనం ఎప్పటికీ తగినంత జాగ్రత్తగా ఉండలేం</T2>, కానీ,  మీ బుర్ర మీ దగ్గరే పెట్టుకుంటే,  అన్ని వేళలా ఇది సాధ్యమేనని మీరు నిరూపించారనుకుంటున్నాను.
 
 Optimized:
-అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>ఎంత శ్రద్ధ పెట్టినా అది సరిపోదు</Intention>; కానీ మీరిది నిరూపించారనుకుంటున్నాను - అప్రమత్తతో ఉంటే,  అన్ని వేళలా ఇది సాధ్యమేనని!
+అది నిజం; అది నిజం. ఆఁ, అవునవును, <T2>ఎంత శ్రద్ధ పెట్టినా అది సరిపోదు</T2>; కానీ మీరిది నిరూపించారనుకుంటున్నాను - అప్రమత్తతో ఉంటే,  అన్ని వేళలా ఇది సాధ్యమేనని!
 
 Description:
 It is translated literally. 
@@ -599,14 +752,14 @@ Example 14
 
 
 English:
-because, uh, <Intention>the altitude was not like this</Intention>, but, uh, the weather, was even worse than this actually, in many ways. 
+because, uh, <T2>the altitude was not like this</T2>, but, uh, the weather, was even worse than this actually, in many ways. 
 
 
 Telugu:
-ఎందుకంటే - <Intention>అక్కడ ఎత్తు ఇలా లేదు</Intention>; కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+ఎందుకంటే - <T2>అక్కడ ఎత్తు ఇలా లేదు</T2>; కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
 
 Optimized:
-ఎందుకంటే -<Intention> అది ఇంత ఎత్తైన ప్రదేశం కాదు</Intention> - కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+ఎందుకంటే -<T2> అది ఇంత ఎత్తైన ప్రదేశం కాదు</T2> - కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
 
 
 Description:
@@ -619,13 +772,13 @@ Example 15
 
 
 English:
-<Intention>Such a</Intention> lovely idea Guruji.
+<T2>Such a</T2> lovely idea Guruji.
 
 Telugu:
-<Intention>అలాంటి </Intention>ఒక చక్కని ఆలోచన గురూజీ
+<T2>అలాంటి </T2>ఒక చక్కని ఆలోచన గురూజీ
 
 Optimized:
-<Intention>భలే </Intention>చక్కని ఆలోచన గురూజీ
+<T2>భలే </T2>చక్కని ఆలోచన గురూజీ
 
 Description:
 Here the translation is literal. To convey the actual intention, literal word to word translation wont do justice. So first I grasped the intention, then I directly expressed that intention in Telugu - without referring to the words used in English.
@@ -638,26 +791,302 @@ Example 16
 
 
 English:
-Everything that we are right now - every breath that we take, every experience that we go through is <Intention>only valuable, because</Intention> we are on a limited lease of time;
+Everything that we are right now - every breath that we take, every experience that we go through is <T2>only valuable, because</T2> we are on a limited lease of time;
 
 Telugu:
-మనమిప్పుడున్న ప్రతిదీ - మనం తీసుకునే ప్రతి శ్వాస, మనం పొందే ప్రతి అనుభవం కేవలం<Intention> విలువైనదే, ఎందుకంటే </Intention>మనం పరిమిత కాలపు గడువుపై ఉన్నాం;
+మనమిప్పుడున్న ప్రతిదీ - మనం తీసుకునే ప్రతి శ్వాస, మనం పొందే ప్రతి అనుభవం కేవలం<T2> విలువైనదే, ఎందుకంటే </T2>మనం పరిమిత కాలపు గడువుపై ఉన్నాం;
 
 
 Optimized:
-ప్రస్తుతం మనకు సంబంధించిన ప్రతిదీ - తీసుకునే ప్రతీ శ్వాసా,  పొందే ప్రతీ అనుభవం <Intention>విలువైనవి కావడానికి కారణం - మన సమయం పరిమితం కాబట్టే! </Intention>
+ప్రస్తుతం మనకు సంబంధించిన ప్రతిదీ - తీసుకునే ప్రతీ శ్వాసా,  పొందే ప్రతీ అనుభవం <T2>విలువైనవి కావడానికి కారణం - మన సమయం పరిమితం కాబట్టే! </T2>
 
 Description:
  Here by using the combination of words, only and because, he is establishing a cause and effect. So we have optimised the translation also into a cause and effect format.
 
 
-Below are the instructions for the the tag <Gesture> </Gesture>:
-Nothing to do actually, just not that these phrases correspond to the gestures in the video.
+Matching the Audio and the gestures in the video.
+
+When dubbing is done, the gesture in the video and the corresponding telugu word should occur at the same time.
+ 
+For this, Where there are tags that indicate the gestures in the video, make sure in the translation also the corresponding word or phrase comes at the same timing within the sentence as in English. 
 
 
-Now give the output in the below format:
+Few Examples of how i optimized the sentence to match the gesture timing are below:
+Example 1
 
-For Each <Context> tag:
+
+English :
+Being in love… is very different from… <T3>I love you, you love me</T3>;
+
+Telugu :
+ప్రేమించడం అనేది <T3>‘నేను నిన్ను ప్రేమిస్తున్నాను, నువ్వు నన్ను ప్రేమించు’</T3> అనేదానికి చాలా భిన్నం;
+
+
+Optimized:
+ప్రేమలో ఉండడం వేరు;  <T3>‘నేను నిన్ను ప్రేమిస్తున్నాను, నువ్వు నన్ను ప్రేమించు’ </T3>అనేది వేరు;
+
+Description :
+As the phrase with gesture is in the second half of the sentence, have made the Telugu sentence also into two halves, and made the phrase with gesture come in the second half.
+
+
+
+
+Example 2
+
+
+English :
+that’s a transaction - <T3>I will love you, you love me</T3>.
+
+Telugu :
+‘<T3>నేను నిన్ను ప్రేమిస్తాను, నువ్వు నన్ను ప్రేమించు</T3>’ అనేదో లావాదేవీ.
+
+Optimized:
+ఇదో లావాదేవీ - ‘<T3>నేను నిన్ను ప్రేమిస్తాను, నువ్వు నన్ను ప్రేమించు</T3>’ అనేది!
+
+Description :
+As the phrase with gesture is in the second half of the sentence, have made the Telugu sentence also into two halves, and made the phrase with gesture come in the second half.
+
+
+
+
+Example 3
+
+
+English :
+Only those who do not know … the fulfillment of what it means to be in love… they are always thinking <T3>what will I get</T3>;
+
+Telugu :
+ప్రేమించడం లోని సంతృప్తి  తెలియని వారే, ఎప్పుడూ <T3>‘నాకేం లాభం?’</T3> అని ఆలోచిస్తుంటారు;
+
+Optimized:
+కేవలం ఇది తెలియని వారే - ప్రేమలో ఉండడంలోని సంతృప్తి  తెలియని వారే - ఎప్పుడూ <T3>‘నాకేం వస్తుంది’</T3> అని చూస్తుంటారు. 
+
+Description :
+The telugu sentence is too short, even though the gesture sentence came towards the end of the sentence, as the telugu sentence is short, when the dubbing is attached to the english video, the corresponding gesture phrase comes ahead of the actual gesture in the video. So we made the sentence long enough so that the gesture phrase and the gesture comes at the same time.
+
+
+
+
+
+Example 4
+
+
+English :
+So where is our world? Our world is in our body and in our mind.
+
+Telugu :
+మరి మన లోకం ఎక్కడుంది? మన లోకం మన శరీరంలో, మనసులో ఉంది. 
+
+Optimized:
+మరి మన లోకం ఎక్కడుంది? అది మన శరీరంలో, మనసులో ఉంది. 
+
+Description :
+Here there is no gesture issue, but the length is shortened to fit into the English video.
+
+
+
+
+
+Example 5
+
+
+English :
+People when they wake up in the morning …  do they say Shiva? No - they'll say <T3>stock market</T3> … they will say <T3>cinema</T3>.
+
+Telugu :
+జనం పొద్దున లేవగానే, శివా అంటారా? లేదు - వారు <T3>స్టాక్ మార్కెట్, సినిమా</T3> అంటారు.
+
+Optimized:
+ప్రజలు పొద్దున లేవగానే …  ‘శివా’ అంటారా? లేదు - <T3>‘స్టాక్ మార్కెట్</T3>’ అంటారు …  <T3> ‘సినిమా’</T3> అంటారు.
+
+Description :
+Here the gesture phrases came in two clauses, so we optimised the sentence also to contain two clauses - each with corresponding gestures phrase.
+
+
+
+
+
+Example 6
+
+
+English :
+So, it's important - that - there is an experience of <T3>exuberance, joy, profoundness.</T3>
+
+
+Telugu :
+కాబట్టి, <T3>ఉల్లాసం, ఆనందం, గాఢత</T3> యొక్క అనుభవం ఉండటం ముఖ్యం.
+
+Optimized:
+కాబట్టి ఇది ముఖ్యం -  అదేంటంటే, వీటిని అనుభూతి చెందాలి - <T3>ఉల్లాసం, ఆనందం ఇంకా ప్రగాఢతలను!</T3>
+
+
+Description :
+Here the gesture phrase came at the end of the dialogue. So we have first introduced the concept with a pronoun and then brought the actual nouns in the second half. Thus able to put the idea across, at the same time maintain the position of the gesture phrase.
+
+
+
+
+
+Example 7
+
+
+English :
+Sadhguru... if the creation is perfect and the creator has done such a good job on us - as you say; why is there so much suffering in the world? 
+
+Telugu :
+సద్గురు... సృష్టి పరిపూర్ణమైందైతే, సృష్టికర్త మనల్ని ఇంత అద్భుతంగా చేసి ఉంటే, మీరు చెప్పినట్టు; ఈ ప్రపంచంలో ఇంత బాధ ఎందుకుంది?
+
+Optimized:
+సద్గురు... మీరు చెప్పినట్టు - సృష్టి పరిపూర్ణమైందైతే, సృష్టికర్త మనల్ని ఇంత అద్భుతంగా చేసి ఉంటే, ఈ ప్రపంచంలో ఇంత బాధ ఎందుకుంది? 
+
+
+Description :
+Now here, there is no gesture in the sentence. And to maintain the same sequence of information, the telugu sentence is written in a bit unnatural way. Here what we have done is, we made it more natural telugu flow - as there is no restriction of gesture. At the same time me maintained the same length of the dialogue and the same pauses and segments structure.
+
+
+
+
+
+Example 8
+
+
+English :
+His mother asked, "Luke, did you really find it? … <T3>Are you sure?</T3>"
+
+Telugu :
+వాళ్ళ అమ్మ, "లూక్, అది నీకు నిజంగా దొరికిందా? <T3>నిజమేనా?</T3>" అని అడిగింది. 
+
+Optimized:
+వాళ్ళ అమ్మ, "లూక్, అది నీకు నిజంగా దొరికిందా? … <T3>నిజమేనా?</T3>" అని అడిగింది. 
+
+Description :
+Here, there is a pause before the gesture phrase. So we add the pause before the gesture phrase in the optimized version also. Otherwise the gesture phrase will come before the actual gesture in the video.
+
+
+
+
+
+Example 9
+
+
+English :
+That's not creation's fault; just gave you the freedom so that you could<T3> go beyond</T3>.
+
+Telugu :
+అది సృష్టి తప్పు కాదు; మీరు దాన్ని <T3>దాటి వెళ్లగలరనే</T3>, అది మీకు స్వేచ్ఛనిచ్చింది.
+
+Optimized:
+అది సృష్టి తప్పు కాదు; సృష్టి మీకు స్వేచ్ఛనిచ్చిందంతే - మీరు దాన్ని <T3>దాటి వెళ్లగలిగేలా</T3>!
+
+Description :
+Here the gesture came at the third segment of the dialogue. So we also optimized the sentence in such a way the corresponding gesture phrase comes in the third segment or third meaningful chunk. In such a way the gesture and the phrase comes at the same time.
+
+
+
+
+
+Example 10
+
+
+English :
+I don't know if you're aware of this Luke, you came early
+
+Telugu :
+లూక్, నీకు ఈ విషయం తెలుసో లేదో, నువ్వు చిన్నప్పుడే వచ్చావు.
+
+Optimized:
+లూక్, నీకిది తెలుసో లేదో, నువ్వు చిన్న వయసులోనే వచ్చావు.
+
+Description :
+Sadhguru spoke very fast here, so shortened the sentence to fit in the video
+
+
+
+
+
+Example 11
+
+
+English :
+Whoever talks to you, they say, 'how are you?' 'Hey, do you know about this galaxy which is a<T3> trillion light years away</T3>, which is BB whatever?' and you talk about it.
+
+Telugu :
+మీతో ఎవరు మాట్లాడినా, వాళ్ళు, ‘ఎలా ఉన్నారు?’ అనగానే, ‘హే, మీకు తెలుసా, <T3>కొన్ని కోట్ల కాంతి సంవత్సరాల దూరంలో ఒక గెలాక్సీ ఉంది</T3>, దాని పేరు బీబీ ఏదో ఒకటి?’ అని దాని గురించి మీరు మాట్లాడతారు; 
+
+Optimized:
+మీతో ఎవరు మాట్లాడినా, ‘ఎలా ఉన్నావ్?’ అనగానే, ‘హే, నీకీ గెలాక్సీ గురించి తెలుసా -<T3> కొన్ని కోట్ల కాంతి సంవత్సరాల దూరంలోనిది</T3>, పలానా ‘బీబీ..‘ పేరు గలది!’ ..  అని దాని గురించి మాట్లాడతారు.
+
+Description :
+Here the relative position of the gesture phrase is good enough in the initial telugu version. But the length is more. So the gesture phrase will come after the actual gesture happens in the video. For this we optimized the length , so that the gesture phrase and the gesture in the video comes at the same time.
+
+
+
+
+
+Example 12
+
+
+English :
+those days people had to set up manufacturing, <T3>this and that</T3> and make money which would take decades or generations. 
+
+Telugu :
+ఆ... ఆ రోజుల్లో ప్రజలు <T3>అదో, ఇదో</T3> తయారు చేసే పరిశ్రమలను స్థాపించాలి, డబ్బు సంపాదించాలి, దానికి దశాబ్దాలు లేదా తరాలు పట్టేది. 
+
+
+Optimized:
+ఆ రోజుల్లో ప్రజలు పరిశ్రమలను స్థాపించి <T3>ఇదో, అదో</T3> తయారు చేసి డబ్బు సంపాదించాలి, దానికి దశాబ్దాలు లేదా తరాలు పట్టేది. 
+
+
+Description :
+Moved the gesture phrase to the middle of the dialogue, as the gesture is occurring at the middle of the dialogue. At the same time reframed the dialogue segments or meaningful chunks in such a way the whole dialogue conveys the same idea and the same details - and matching the gesture too.
+
+Shortening the sentences to fit in.
+
+Sometimes sadhguru speaks very fastly. and sometimes because of language the telugu sentences become very lengthy. In such cases the sentence dubbing will overlap with the next sentence starting. so for such sentences we would like to shorten the length, while still conveying the entire same details and intention. Below I am giving a few examples of how I optimized the length. please note that this shortening is made keeping the context in which this sentence happens and the flow between the previous and later sentences is maintained. 
+
+
+
+
+
+Example 1
+English: <T4> Why did you have to do so much?</T4>
+Lengthy sentence: <T4> మీరు ఇంత చేయవలసిన అవసరం ఏముంది?</T4>
+Shortened sentence: <T4> మీరింత ఎందుకు చేసారు?</T4>
+
+Example 2
+English: <T4> Whatever you want to do, do it with full involvement.</T4>
+Lengthy sentence: <T4> మీరు ఏ పని చేయాలనుకున్నా, దానిని పూర్తి నిమగ్నతతో చేయండి.</T4>
+Shortened sentence: <T4> ఏది చేసినా పూర్తి నిమగ్నతతో చేయండి.</T4>
+
+Example 3
+English: <T4> The thing that you are searching for is right in front of you.</T4>
+Lengthy sentence: <T4> మీరు దేనికోసమైతే వెతుకుతున్నారో అది మీ కళ్ళ ముందే ఉంది.</T4>
+Shortened sentence: <T4> మీరు వెతికేది మీ ముందే ఉంది.</T4>
+
+Example 4
+English: <T4> There is no need to talk about this anymore.</T4>
+Lengthy sentence: <T4> ఈ విషయం గురించి ఇంక మాట్లాడవలసిన అవసరం లేదు.</T4>
+Shortened sentence: <T4> దీని గురించి ఇంక మాట్లాడక్కర్లేదు.</T4>
+
+Example 5
+English: <T4> From now on, it should not happen like this again.</T4>
+Lengthy sentence: <T4> ఇప్పటి నుంచి ఇంకెప్పుడూ ఈ విధంగా జరగకూడదు.</T4>
+Shortened sentence: <T4> ఇకపై ఇలా జరగకూడదు.</T4>
+
+Example 6:
+English:<T4> At a time, only one is accepted.</T4> 
+Lengthy sentence: <T4> ఒకసారి ఒకటి మాత్రమే తీసుకోబడుతుంది. </T4>
+Shortened sentence: <T4> ఒక్కొక్కటే తీసుకుంటారు. </T4>
+
+
+Result Format:
+Now please give the result in the below format:
+
+Please give the optimized telugu script. Bold the places where optimizing is done. Don't keep the tags, instead use bold so that i can identify visually easily.
+
+And also at the end of the script give the additional suggestions for each of the changes in the below format:
+
+For Each <T1> tag:
 
 Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase.
 Explain what this Word is conveying here in this context in English.
@@ -679,7 +1108,7 @@ The word "అంకితమైన" translates to "dedicated to." While grammati
 
 
 
-For Each <Intention> tag:
+For Each <T2> tag:
 
 Give the actual tagged Word/Phrase/Sentence as heading (no need to mention the tag itself). (No heading needed for points 2,3,4)
 Give the Word/Phrase/Sentence that actually expresses the intention of the speaker in natural Colloquial Telugu flow
@@ -695,9 +1124,37 @@ Example output:
 ఎందుకంటే మనుషులుగా మనం ఆ పరిమితులను దాటగలం...
 
 
-Give the results in the same order in which the tags appear in the script.
+Give the suggestions in the same order in which the tags appear in the script.
 
-Below are the English and Telugu scripts.
+For Each <T3> tag:
+Give the actual english sentence with the corresponding gesture word or phrase bolded.
+then give the optimized telugu version with the  corresponding gesture word or phrase bolded.
+Then give an alternate version which totally prioritizes matching gesture over any flow.
+
+
+Example output:
+His mother asked, "Luke, did you really find it? … Are you sure?"
+వాళ్ళ అమ్మ, "లూక్, అది నీకు నిజంగా దొరికిందా? … నిజమేనా?" అని అడిగింది. 
+వాళ్ళమ్మ ఇలా అడిగింది: "లూక్, అది నీకు నిజంగా దొరికిందా? … నిజమేనా?"
+
+
+
+For Each <T4> tag:
+Give the actual english sentence 
+then give the shortened telugu sentence.
+Then give an alternate shortened version
+
+Example output:
+From now on, it should not happen like this again.
+ఇకపై ఇలా జరగకూడదు.
+ఇంకెంప్పుడూ ఇది జరక్కూడదు.
+
+
+
+Below are the English and the tagged Telugu scripts.
+
+
+
 
 </script>
 
@@ -712,6 +1169,15 @@ Below are the English and Telugu scripts.
     console.error(`Prompt for step ${step} not found!`);
     return "";
   }
+  
+  function showMessage(msg) {
+    message.textContent = msg;
+    message.classList.add('show');
+    clearTimeout(showMessage.timeout);
+    showMessage.timeout = setTimeout(() => {
+      message.classList.remove('show');
+    }, 3000);
+  }
 
   function handleClear(step) {
     if (step === 5) {
@@ -723,84 +1189,130 @@ Below are the English and Telugu scripts.
     showMessage("🗑️ Cleared input boxes");
   }
 
-  function showMessage(msg) {
-    message.textContent = msg;
-    message.classList.add('show');
-    clearTimeout(showMessage.timeout);
-    showMessage.timeout = setTimeout(() => {
-      message.classList.remove('show');
-    }, 3000);
+  /**
+   * Wraps the user's current selection in the Telugu input box with a specified tag.
+   * This method creates an actual HTML element, which we make visible with CSS.
+   */
+  function wrapSelection(tagName) {
+    const teluguInputBox = document.getElementById('input5_2');
+    if (!teluguInputBox) return;
+
+    const selection = window.getSelection();
+    if (selection.rangeCount === 0 || selection.isCollapsed) {
+      showMessage("⚠️ Please select text in the Telugu box first.");
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+
+    // Check if the selection is within our target box
+    if (!teluguInputBox.contains(range.commonAncestorContainer)) {
+        showMessage("⚠️ Please select text inside the Telugu script box.");
+        return;
+    }
+
+    const newNode = document.createElement(tagName);
+    try {
+      // This preserves any formatting (like bold/italic) inside the selection
+      newNode.appendChild(range.extractContents()); 
+      range.insertNode(newNode);
+      selection.removeAllRanges(); // Deselect after wrapping
+    } catch (e) {
+      console.error("Failed to wrap selection:", e);
+      showMessage("❌ Error wrapping text. The selection might be too complex.");
+    }
   }
 
   /**
-   * Takes HTML with bold/italic formatting and converts it to a plain text
-   * string with <context> and <intention> tags.
+   * MODIFIED: Takes HTML and correctly converts it to a plain text string
+   * for the clipboard, preserving paragraphs and line breaks.
    */
   function transformTeluguHTMLForClipboard(html) {
     if (!html) return "";
 
-    // Preserve existing tags by replacing them with placeholders
-    html = html.replace(/<context>/gi, '§§C_START§§').replace(/<\/context>/gi, '§§C_END§§');
-    html = html.replace(/<intention>/gi, '§§I_START§§').replace(/<\/intention>/gi, '§§I_END§§');
+    let processedHtml = html;
+    
+    // --- NEW: Convert HTML line breaks to actual newline characters BEFORE other processing ---
+    // Browsers often use <div>s for new paragraphs in contenteditable.
+    processedHtml = processedHtml.replace(/<div>/gi, '\n'); 
+    processedHtml = processedHtml.replace(/<p>/gi, '\n');
+    processedHtml = processedHtml.replace(/<br\s*\/?>/gi, '\n');
+    // Clean up closing tags that are now redundant
+    processedHtml = processedHtml.replace(/<\/div>|<\/p>/gi, '');
+    // ---------------------------------------------------------------------------------------
 
-    // Convert formatting tags to placeholders
-    html = html.replace(/<(i|em)\b[^>]*>(.*?)<\/\1>/gi, '§§I_START§§$2§§I_END§§');
-    html = html.replace(/<span\b[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '§§I_START§§$1§§I_END§§');
-    html = html.replace(/<(b|strong)\b[^>]*>(.*?)<\/\1>/gi, '§§C_START§§$2§§C_END§§');
-    html = html.replace(/<span\b[^>]*font-weight:\s*(?:bold|700|800|900)[^>]*>(.*?)<\/span>/gi, '§§C_START§§$1§§C_END§§');
+    // Convert formatting tags to placeholders first
+    processedHtml = processedHtml.replace(/<(i|em)\b[^>]*>(.*?)<\/\1>/gi, '§§I_START§§$2§§I_END§§');
+    processedHtml = processedHtml.replace(/<span\b[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '§§I_START§§$1§§I_END§§');
+    
+    // Convert new T tags to placeholders
+    processedHtml = processedHtml.replace(/<T1\b[^>]*>(.*?)<\/T1>/gi, '§§T1_START§§$1§§T1_END§§');
+    processedHtml = processedHtml.replace(/<T2\b[^>]*>(.*?)<\/T2>/gi, '§§T2_START§§$1§§T2_END§§');
+    processedHtml = processedHtml.replace(/<T3\b[^>]*>(.*?)<\/T3>/gi, '§§T3_START§§$1§§T3_END§§');
+    processedHtml = processedHtml.replace(/<T4\b[^>]*>(.*?)<\/T4>/gi, '§§T4_START§§$1§§T4_END§§');
 
-    // Strip remaining HTML tags to get clean text
+    // Strip any remaining HTML tags to get clean text (newlines are already in the string)
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
+    tempDiv.innerHTML = processedHtml;
     let textContent = tempDiv.textContent || tempDiv.innerText;
 
-    // Convert placeholders back to final tags
+    // Convert placeholders back to the final tags
     textContent = textContent.replace(/§§I_START§§/g, '<intention>').replace(/§§I_END§§/g, '</intention>');
-    textContent = textContent.replace(/§§C_START§§/g, '<context>').replace(/§§C_END§§/g, '</context>');
+    textContent = textContent.replace(/§§T1_START§§/g, '<T1>').replace(/§§T1_END§§/g, '</T1>');
+    textContent = textContent.replace(/§§T2_START§§/g, '<T2>').replace(/§§T2_END§§/g, '</T2>');
+    textContent = textContent.replace(/§§T3_START§§/g, '<T3>').replace(/§§T3_END§§/g, '</T3>');
+    textContent = textContent.replace(/§§T4_START§§/g, '<T4>').replace(/§§T4_END§§/g, '</T4>');
 
-    return textContent.trim();
+    // Clean up potential multiple newlines to keep formatting clean
+    return textContent.replace(/\n\s*\n/g, '\n\n').trim();
   }
 
   /**
-   * Takes HTML with bold/italic formatting and converts it to HTML
-   * with green and yellow background highlights.
+   * Takes HTML with formatting and custom tags and converts it to HTML
+   * with corresponding colored background highlights for display.
    */
   function applyHighlighting(html) {
     if (!html) return "";
 
-    const greenColor = '#05fd05'; // For bold / <context>
-    const yellowColor = '#fbfb00'; // For italic / <intention>
+    const colors = {
+      intention: '#fff3cd', // Light yellow for italic/<intention>
+      T1: '#a3e9a4',        // Green
+      T2: '#fdfd96',        // Yellow
+      T3: '#a0c4ff',        // Blue
+      T4: '#c7b2de'         // Purple
+    };
 
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
+    
+    // Helper to replace a tag with a styled span
+    const replaceTagWithSpan = (selector, color) => {
+      tempDiv.querySelectorAll(selector).forEach(tag => {
+        const newSpan = document.createElement('span');
+        newSpan.style.backgroundColor = color;
+        newSpan.style.borderRadius = '4px';
+        newSpan.style.padding = '1px 4px';
+        newSpan.innerHTML = tag.innerHTML;
+        tag.parentNode.replaceChild(newSpan, tag);
+      });
+    };
 
-    // Process SPAN tags with style attributes
+    // Process SPAN tags with style attributes (e.g., from pasted content)
     tempDiv.querySelectorAll('span').forEach(span => {
-      if (span.style.fontWeight === 'bold' || parseInt(span.style.fontWeight) >= 700) {
-        span.style.fontWeight = 'normal';
-        span.style.backgroundColor = greenColor;
-      }
       if (span.style.fontStyle === 'italic') {
         span.style.fontStyle = 'normal';
-        span.style.backgroundColor = yellowColor;
+        span.style.backgroundColor = colors.intention;
       }
     });
-
-    // Process <b> and <strong> tags
-    tempDiv.querySelectorAll('b, strong').forEach(tag => {
-      const newSpan = document.createElement('span');
-      newSpan.style.backgroundColor = greenColor;
-      newSpan.innerHTML = tag.innerHTML;
-      tag.parentNode.replaceChild(newSpan, tag);
-    });
     
-    // Process <i> and <em> tags
-    tempDiv.querySelectorAll('i, em').forEach(tag => {
-      const newSpan = document.createElement('span');
-      newSpan.style.backgroundColor = yellowColor;
-      newSpan.innerHTML = tag.innerHTML;
-      tag.parentNode.replaceChild(newSpan, tag);
-    });
+    // Process standard formatting tags
+    replaceTagWithSpan('i, em', colors.intention);
+    
+    // Process our new custom tags
+    replaceTagWithSpan('T1', colors.T1);
+    replaceTagWithSpan('T2', colors.T2);
+    replaceTagWithSpan('T3', colors.T3);
+    replaceTagWithSpan('T4', colors.T4);
 
     return tempDiv.innerHTML;
   }
@@ -819,17 +1331,17 @@ Below are the English and Telugu scripts.
     // 1. Get original rich text HTML from the Telugu input box.
     const originalTeluguHTML = teluguInputBox.innerHTML;
 
-    // 2. Create a version for the clipboard with <context>/<intention> tags.
+    // 2. Create a version for the clipboard with all required tags.
     const textForClipboard = transformTeluguHTMLForClipboard(originalTeluguHTML);
     
-    // 3. Create a version for display with green/yellow highlights.
+    // 3. Create a version for display with background highlights.
     const highlightedHTMLForDisplay = applyHighlighting(originalTeluguHTML);
     
     // 4. Update the Telugu input box with the highlighted version.
     teluguInputBox.innerHTML = highlightedHTMLForDisplay;
     
     // 5. Construct the final text for the clipboard.
-    const englishText = englishInputBox.innerText.trim();
+    const englishText = englishInputBox.innerText.trim(); // .innerText preserves newlines from the English box
     const finalText =
       getPrompt(step) +
       "\n\nEnglish Script:\n" +
@@ -865,7 +1377,7 @@ Below are the English and Telugu scripts.
       textarea = `
         <div class="input-boxes-container">
             <div id="input5_1" class="editable" contenteditable="true" data-placeholder="Paste English script here..."></div>
-            <div id="input5_2" class="editable" contenteditable="true" data-placeholder="Paste Telugu script with bold/italic for tagging..."></div>
+            <div id="input5_2" class="editable" contenteditable="true" data-placeholder="Paste Telugu script, then select text to tag it..."></div>
         </div>
       `;
     }
@@ -874,9 +1386,16 @@ Below are the English and Telugu scripts.
     if (i === 5) {
       buttonGroup = `
         <div class="button-group">
-          <button class="copy-btn" onclick="handleCopy(${i})">📋 Generate & Copy Prompt</button> 
+          <button onclick="wrapSelection('T1')">Generic word</button>
+          <button onclick="wrapSelection('T2')">Literal Translation</button>
+          <button onclick="wrapSelection('T3')">Gesture</button>
+          <button onclick="wrapSelection('T4')">Lengthy Sentence</button>
+        </div>
+        <div class="button-group" style="margin-top: 16px; border-top: 1px solid #f0ebe4; padding-top: 16px;">
+          <button class="copy-btn" onclick="handleCopy(${i})">📋 Copy Prompt</button> 
           <button class="clear-btn" onclick="handleClear(${i})">🗑️ Clear</button>
-        </div>`;
+        </div>
+      `;
     }
 
     stepDiv.innerHTML = `
@@ -886,7 +1405,7 @@ Below are the English and Telugu scripts.
     return stepDiv;
   }
 
-  container.appendChild(createPart("Fine Tuning Tool", [5], "part4"));
+  container.appendChild(createPart("Review Tool", [5], "part4"));
 
   document.addEventListener('DOMContentLoaded', function() {
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
@@ -921,4 +1440,3 @@ Below are the English and Telugu scripts.
 
 </body>
 </html>
-
