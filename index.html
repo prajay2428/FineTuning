@@ -18,7 +18,7 @@
     }
 
     .container {
-      max-width: 1200px; /* Increased width from 1000px */
+      max-width: 1200px;
       margin: 0 auto;
       background: #ffffff;
       border-radius: 20px;
@@ -28,8 +28,7 @@
     }
 
     .editable {
-      /* MODIFIED: Changed min-height to height to fix the box size and enable scrolling */
-      height: 550px; 
+      height: 550px; /* Fixed height to ensure scrollbar appears */
       border: 1px solid #e0d5c7;
       border-radius: 12px;
       padding: 16px;
@@ -47,14 +46,13 @@
 
     /* ===== Style the custom tags to be visible before highlighting ===== */
     T1, T2, T3, T4 {
-      display: inline; /* Ensure they don't break lines */
+      display: inline;
     }
     T1::before, T2::before, T3::before, T4::before,
     T1::after, T2::after, T3::after, T4::after {
-      color: #b8a990; /* A subtle color that fits the theme */
+      color: #b8a990;
       font-size: 0.8em;
       font-weight: bold;
-      /* Prevent the user from selecting the pseudo-element text */
       user-select: none;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -138,19 +136,6 @@
       gap: 12px;
     }
 
-    .step-number {
-      background: #8b7057;
-      color: #ffffff;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
     .button-group {
       display: flex;
       flex-wrap: wrap;
@@ -158,18 +143,6 @@
       margin-top: 15px;
     }
 
-    .convert-btn {
-      border-color: #b8a990;
-      color: #8b7057;
-      background: #f7f5f3;
-    }
-
-    .convert-btn:hover {
-      background: #f2ede6;
-      border-color: #9d8670;
-    }
-
-    /* ======= New Part Section Styling ======= */
     .part-section {
       padding: 25px;
       border-radius: 16px;
@@ -226,31 +199,12 @@
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 15px;
-      }
-
-      .container {
-        padding: 25px;
-      }
-
-      .step {
-        padding: 20px;
-      }
-      
-      .input-boxes-container {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .button-group {
-        flex-direction: column;
-      }
-
-      button {
-        margin-right: 0;
-        width: 100%;
-      }
+      body { padding: 15px; }
+      .container { padding: 25px; }
+      .step { padding: 20px; }
+      .input-boxes-container { flex-direction: column; gap: 15px; }
+      .button-group { flex-direction: column; }
+      button { margin-right: 0; width: 100%; }
     }
 
     script[type="text/plain"] {
@@ -290,11 +244,6 @@
       background-color: #5d5043;
       transform: translateY(-3px);
       box-shadow: 0 8px 20px rgba(139, 112, 87, 0.4);
-    }
-
-    #scrollToTopBtn svg {
-      width: 24px;
-      height: 24px;
     }
   </style>
 </head>
@@ -1163,11 +1112,7 @@ Below are the English and the tagged Telugu scripts.
   
   function getPrompt(step) {
     const promptElement = document.getElementById(`prompt${step}`);
-    if (promptElement) {
-      return promptElement.textContent.trim();
-    }
-    console.error(`Prompt for step ${step} not found!`);
-    return "";
+    return promptElement ? promptElement.textContent.trim() : "";
   }
   
   function showMessage(msg) {
@@ -1181,111 +1126,91 @@ Below are the English and the tagged Telugu scripts.
 
   function handleClear(step) {
     if (step === 5) {
-      const box1 = document.getElementById('input5_1');
-      const box2 = document.getElementById('input5_2');
-      if (box1) box1.innerHTML = "";
-      if (box2) box2.innerHTML = "";
+      document.getElementById('input5_1').innerHTML = "";
+      document.getElementById('input5_2').innerHTML = "";
     }
     showMessage("🗑️ Cleared input boxes");
   }
 
-  /**
-   * Wraps the user's current selection in the Telugu input box with a specified tag.
-   * This method creates an actual HTML element, which we make visible with CSS.
-   */
   function wrapSelection(tagName) {
     const teluguInputBox = document.getElementById('input5_2');
-    if (!teluguInputBox) return;
-
     const selection = window.getSelection();
-    if (selection.rangeCount === 0 || selection.isCollapsed) {
+    if (!teluguInputBox || selection.rangeCount === 0 || selection.isCollapsed) {
       showMessage("⚠️ Please select text in the Telugu box first.");
       return;
     }
-
     const range = selection.getRangeAt(0);
-
-    // Check if the selection is within our target box
     if (!teluguInputBox.contains(range.commonAncestorContainer)) {
         showMessage("⚠️ Please select text inside the Telugu script box.");
         return;
     }
-
     const newNode = document.createElement(tagName);
     try {
-      // This preserves any formatting (like bold/italic) inside the selection
       newNode.appendChild(range.extractContents()); 
       range.insertNode(newNode);
-      selection.removeAllRanges(); // Deselect after wrapping
+      selection.removeAllRanges();
     } catch (e) {
       console.error("Failed to wrap selection:", e);
-      showMessage("❌ Error wrapping text. The selection might be too complex.");
+      showMessage("❌ Error wrapping text.");
     }
   }
 
   /**
-   * MODIFIED: Takes HTML and correctly converts it to a plain text string
-   * for the clipboard, preserving paragraphs and line breaks.
+   * REWRITTEN: Takes HTML with formatting and custom tags, and converts it to a plain text
+   * string for the clipboard, correctly preserving paragraphs and line breaks.
    */
   function transformTeluguHTMLForClipboard(html) {
     if (!html) return "";
 
-    let processedHtml = html;
-    
-    // --- NEW: Convert HTML line breaks to actual newline characters BEFORE other processing ---
-    // Browsers often use <div>s for new paragraphs in contenteditable.
-    processedHtml = processedHtml.replace(/<div>/gi, '\n'); 
-    processedHtml = processedHtml.replace(/<p>/gi, '\n');
-    processedHtml = processedHtml.replace(/<br\s*\/?>/gi, '\n');
-    // Clean up closing tags that are now redundant
-    processedHtml = processedHtml.replace(/<\/div>|<\/p>/gi, '');
-    // ---------------------------------------------------------------------------------------
+    let processedText = html;
 
-    // Convert formatting tags to placeholders first
-    processedHtml = processedHtml.replace(/<(i|em)\b[^>]*>(.*?)<\/\1>/gi, '§§I_START§§$2§§I_END§§');
-    processedHtml = processedHtml.replace(/<span\b[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '§§I_START§§$1§§I_END§§');
-    
-    // Convert new T tags to placeholders
-    processedHtml = processedHtml.replace(/<T1\b[^>]*>(.*?)<\/T1>/gi, '§§T1_START§§$1§§T1_END§§');
-    processedHtml = processedHtml.replace(/<T2\b[^>]*>(.*?)<\/T2>/gi, '§§T2_START§§$1§§T2_END§§');
-    processedHtml = processedHtml.replace(/<T3\b[^>]*>(.*?)<\/T3>/gi, '§§T3_START§§$1§§T3_END§§');
-    processedHtml = processedHtml.replace(/<T4\b[^>]*>(.*?)<\/T4>/gi, '§§T4_START§§$1§§T4_END§§');
+    // STAGE 1: Convert all semantic tags to placeholders to protect them
+    const tagMap = {
+      '<(i|em)\\b[^>]*>(.*?)<\\/\\1>': '§§I_START§§$2§§I_END§§',
+      '<span\\b[^>]*font-style:\\s*italic[^>]*>(.*?)<\\/span>': '§§I_START§§$1§§I_END§§',
+      '<T1\\b[^>]*>(.*?)<\\/T1>': '§§T1_START§§$1§§T1_END§§',
+      '<T2\\b[^>]*>(.*?)<\\/T2>': '§§T2_START§§$1§§T2_END§§',
+      '<T3\\b[^>]*>(.*?)<\\/T3>': '§§T3_START§§$1§§T3_END§§',
+      '<T4\\b[^>]*>(.*?)<\\/T4>': '§§T4_START§§$1§§T4_END§§',
+    };
+    for (const [regex, placeholder] of Object.entries(tagMap)) {
+      processedText = processedText.replace(new RegExp(regex, 'gi'), placeholder);
+    }
 
-    // Strip any remaining HTML tags to get clean text (newlines are already in the string)
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = processedHtml;
-    let textContent = tempDiv.textContent || tempDiv.innerText;
+    // STAGE 2: Convert structural HTML tags to newlines
+    processedText = processedText.replace(/<\/(div|p)>/gi, '\n\n'); // Paragraphs
+    processedText = processedText.replace(/<br\s*\/?>/gi, '\n'); // Line breaks
 
-    // Convert placeholders back to the final tags
-    textContent = textContent.replace(/§§I_START§§/g, '<intention>').replace(/§§I_END§§/g, '</intention>');
-    textContent = textContent.replace(/§§T1_START§§/g, '<T1>').replace(/§§T1_END§§/g, '</T1>');
-    textContent = textContent.replace(/§§T2_START§§/g, '<T2>').replace(/§§T2_END§§/g, '</T2>');
-    textContent = textContent.replace(/§§T3_START§§/g, '<T3>').replace(/§§T3_END§§/g, '</T3>');
-    textContent = textContent.replace(/§§T4_START§§/g, '<T4>').replace(/§§T4_END§§/g, '</T4>');
+    // STAGE 3: Strip any remaining HTML tags
+    processedText = processedText.replace(/<[^>]*>/g, '');
 
-    // Clean up potential multiple newlines to keep formatting clean
-    return textContent.replace(/\n\s*\n/g, '\n\n').trim();
+    // STAGE 4: Decode placeholders back to final text tags
+    const placeholderMap = {
+      '§§I_START§§': '<intention>', '§§I_END§§': '</intention>',
+      '§§T1_START§§': '<T1>', '§§T1_END§§': '</T1>',
+      '§§T2_START§§': '<T2>', '§§T2_END§§': '</T2>',
+      '§§T3_START§§': '<T3>', '§§T3_END§§': '</T3>',
+      '§§T4_START§§': '<T4>', '§§T4_END§§': '</T4>',
+    };
+    for (const [placeholder, tag] of Object.entries(placeholderMap)) {
+      processedText = processedText.replace(new RegExp(placeholder, 'g'), tag);
+    }
+
+    // STAGE 5: Clean up whitespace and HTML entities
+    processedText = processedText.replace(/&nbsp;/g, ' ');
+    return processedText.trim().replace(/\n{3,}/g, '\n\n');
   }
 
-  /**
-   * Takes HTML with formatting and custom tags and converts it to HTML
-   * with corresponding colored background highlights for display.
-   */
+
   function applyHighlighting(html) {
     if (!html) return "";
 
     const colors = {
-      intention: '#fff3cd', // Light yellow for italic/<intention>
-      T1: '#a3e9a4',        // Green
-      T2: '#fdfd96',        // Yellow
-      T3: '#a0c4ff',        // Blue
-      T4: '#c7b2de'         // Purple
+      intention: '#fff3cd', T1: '#a3e9a4', T2: '#fdfd96', T3: '#a0c4ff', T4: '#c7b2de'
     };
-
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
     
-    // Helper to replace a tag with a styled span
     const replaceTagWithSpan = (selector, color) => {
       tempDiv.querySelectorAll(selector).forEach(tag => {
         const newSpan = document.createElement('span');
@@ -1297,7 +1222,6 @@ Below are the English and the tagged Telugu scripts.
       });
     };
 
-    // Process SPAN tags with style attributes (e.g., from pasted content)
     tempDiv.querySelectorAll('span').forEach(span => {
       if (span.style.fontStyle === 'italic') {
         span.style.fontStyle = 'normal';
@@ -1305,10 +1229,7 @@ Below are the English and the tagged Telugu scripts.
       }
     });
     
-    // Process standard formatting tags
     replaceTagWithSpan('i, em', colors.intention);
-    
-    // Process our new custom tags
     replaceTagWithSpan('T1', colors.T1);
     replaceTagWithSpan('T2', colors.T2);
     replaceTagWithSpan('T3', colors.T3);
@@ -1323,25 +1244,15 @@ Below are the English and the tagged Telugu scripts.
     const englishInputBox = document.getElementById('input5_1');
     const teluguInputBox = document.getElementById('input5_2');
 
-    if (!englishInputBox || !teluguInputBox) {
-        console.error("Input boxes not found!");
-        return;
-    }
+    if (!englishInputBox || !teluguInputBox) { return; }
 
-    // 1. Get original rich text HTML from the Telugu input box.
     const originalTeluguHTML = teluguInputBox.innerHTML;
-
-    // 2. Create a version for the clipboard with all required tags.
     const textForClipboard = transformTeluguHTMLForClipboard(originalTeluguHTML);
-    
-    // 3. Create a version for display with background highlights.
     const highlightedHTMLForDisplay = applyHighlighting(originalTeluguHTML);
     
-    // 4. Update the Telugu input box with the highlighted version.
     teluguInputBox.innerHTML = highlightedHTMLForDisplay;
     
-    // 5. Construct the final text for the clipboard.
-    const englishText = englishInputBox.innerText.trim(); // .innerText preserves newlines from the English box
+    const englishText = englishInputBox.innerText;
     const finalText =
       getPrompt(step) +
       "\n\nEnglish Script:\n" +
@@ -1349,7 +1260,6 @@ Below are the English and the tagged Telugu scripts.
       "\n\nTagged Telugu Script:\n" +
       textForClipboard;
       
-    // 6. Copy to clipboard and show message.
     navigator.clipboard.writeText(finalText).then(() => {
       showMessage("✅ Highlights applied & prompt copied!");
     }).catch(err => {
@@ -1372,19 +1282,12 @@ Below are the English and the tagged Telugu scripts.
     const stepDiv = document.createElement('div');
     stepDiv.className = 'step';
 
-    let textarea = "";
     if (i === 5) {
-      textarea = `
+      stepDiv.innerHTML = `
         <div class="input-boxes-container">
             <div id="input5_1" class="editable" contenteditable="true" data-placeholder="Paste English script here..."></div>
             <div id="input5_2" class="editable" contenteditable="true" data-placeholder="Paste Telugu script, then select text to tag it..."></div>
         </div>
-      `;
-    }
-
-    let buttonGroup = "";
-    if (i === 5) {
-      buttonGroup = `
         <div class="button-group">
           <button onclick="wrapSelection('T1')">Generic word</button>
           <button onclick="wrapSelection('T2')">Literal Translation</button>
@@ -1397,46 +1300,30 @@ Below are the English and the tagged Telugu scripts.
         </div>
       `;
     }
-
-    stepDiv.innerHTML = `
-      ${textarea}
-      ${buttonGroup}
-    `;
     return stepDiv;
   }
 
-  container.appendChild(createPart("Review Tool", [5], "part4"));
+  container.appendChild(createPart("Fine Tuning Tool", [5], "part4"));
 
   document.addEventListener('DOMContentLoaded', function() {
-    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    const scrollToTopBtn = document.createElement('button');
+    scrollToTopBtn.id = 'scrollToTopBtn';
+    scrollToTopBtn.title = 'Scroll to Top';
+    scrollToTopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>`;
+    document.body.appendChild(scrollToTopBtn);
 
-    if (scrollToTopBtn) {
-      window.onscroll = function() {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-          scrollToTopBtn.classList.add("visible");
-        } else {
-          scrollToTopBtn.classList.remove("visible");
-        }
-      };
-
-      scrollToTopBtn.addEventListener('click', () => {
-        const firstPart = document.querySelector('.part4');
-        if (firstPart) {
-          firstPart.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    }
+    window.onscroll = () => {
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        scrollToTopBtn.classList.add("visible");
+      } else {
+        scrollToTopBtn.classList.remove("visible");
+      }
+    };
+    scrollToTopBtn.onclick = () => {
+      document.querySelector('.part4')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
   });
 </script>
-
-<button id="scrollToTopBtn" title="Scroll to Top">
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <polyline points="18 15 12 9 6 15"></polyline>
-  </svg>
-</button>
 
 </body>
 </html>
