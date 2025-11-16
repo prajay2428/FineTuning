@@ -2,261 +2,868 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Review Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprehensive Review Workflow</title>
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg-main: #f8f9fa;
+      --bg-container: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #fdfdfc;
+      --bg-input: #fdfdfb;
+      --border-light: #e9ecef;
+      --border-medium: #ced4da;
+      --border-dark: #adb5bd;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+      --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --shadow-medium: 0 10px 20px rgba(0, 0, 0, 0.07);
+      --shadow-hard: 0 12px 28px rgba(0, 0, 0, 0.1);
+      --accent-blue: #007bff;
+      --accent-purple: #6f42c1;
+      --accent-orange: #fd7e14;
+      --accent-green: #28a745;
+      --accent-red: #dc3545;
     }
 
+    * { box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding: 20px;
-      background: #faf9f7;
-      min-height: 100vh;
+      font-family: var(--font-sans);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      padding: 2rem;
       margin: 0;
       line-height: 1.6;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
-      background: #ffffff;
+      background: var(--bg-container);
       border-radius: 20px;
-      border: 1px solid #e8e5e0;
-      box-shadow: 0 10px 40px rgba(139, 112, 87, 0.08);
-      padding: 40px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-medium);
+      padding: 2rem 3rem;
     }
 
-    .editable {
-      height: 550px; /* Fixed height to ensure scrollbar appears */
-      border: 1px solid #e0d5c7;
-      border-radius: 12px;
-      padding: 16px;
-      font-family: 'SF Mono', Monaco, monospace;
-      background: #fefdfb;
-      white-space: pre-wrap;
-      overflow-y: auto;
-    }
-
-    /* Placeholder imitation */
-    .editable:empty:before {
-      content: attr(data-placeholder);
-      color: #aaa;
-    }
-
-    /* ===== Style the custom tags to be visible before highlighting ===== */
-    T1, T2, T3, T4 {
-      display: inline;
-    }
-    T1::before, T2::before, T3::before, T4::before,
-    T1::after, T2::after, T3::after, T4::after {
-      color: #b8a990;
-      font-size: 0.8em;
-      font-weight: bold;
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-    }
-    T1::before { content: '<T1>'; }
-    T1::after  { content: '</T1>'; }
-    T2::before { content: '<T2>'; }
-    T2::after  { content: '</T2>'; }
-    T3::before { content: '<T3>'; }
-    T3::after  { content: '</T3>'; }
-    T4::before { content: '<T4>'; }
-    T4::after  { content: '</T4>'; }
-    /* ===== END NEW STYLES ===== */
-
-    button {
-      padding: 10px 18px;
-      margin-right: 10px;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: 1px solid #e0d5c7;
-      border-radius: 10px;
-      transition: all 0.2s ease;
-      font-weight: 500;
-      background: #fefdfb;
-      color: #8b7057;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      background: #f7f5f3;
-      border-color: #c4a484;
-      box-shadow: 0 3px 10px rgba(139, 112, 87, 0.1);
-    }
-
-    .copy-btn {
-      border-color: #b8a990;
-      color: #8b7057;
-      background: #f7f5f3;
-    }
-
-    .copy-btn:hover {
-      background: #f2ede6;
-      border-color: #9d8670;
-    }
-
-    .clear-btn {
-      border-color: #d4c4a8;
-      color: #a0916d;
-      background: #faf9f7;
-    }
-
-    .clear-btn:hover {
-      background: #f5f2ee;
-      border-color: #b8a990;
-    }
-
-    .step {
-      background: #ffffff;
-      padding: 28px;
-      margin-bottom: 24px;
-      border-radius: 16px;
-      border: 1px solid #f0ebe4;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 12px rgba(139, 112, 87, 0.04);
-    }
-
-    .step:hover {
-      border-color: #e0d5c7;
-      background: #fefdfb;
-      box-shadow: 0 4px 20px rgba(139, 112, 87, 0.08);
-    }
-
-    .step h3 {
-      margin: 0 0 18px 0;
-      color: #5d5043;
-      font-size: 1.3rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 15px;
-    }
-
-    .part-section {
-      padding: 25px;
-      border-radius: 16px;
-      margin-bottom: 40px;
-    }
-
-    .part-section h3 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 25px;
+    .workflow-header {
       text-align: center;
-      border-bottom: 2px solid rgba(0,0,0,0.1);
-      padding-bottom: 10px;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .workflow-header h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .workflow-header p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .part4 { 
-      background: #f9f3ff; 
-      border-left: 5px solid #9b59b6; 
+    .clear-all-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #f8f9fa; color: var(--text-secondary); border: 1px solid var(--border-medium);
+      padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 12px; cursor: pointer;
+      transition: all 0.2s ease; font-weight: 600;
     }
+    .clear-all-btn:hover {
+      background-color: #e9ecef;
+      border-color: var(--border-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+      color: var(--text-primary);
+    }
+
+    .step-section {
+      background: var(--bg-card);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      border-left-width: 5px;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-soft);
+    }
+    .step-section:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-hard);
+      transform: translateY(-4px);
+    }
+    .step-section.blue { border-left-color: var(--accent-blue); }
+    .step-section.purple { border-left-color: var(--accent-purple); }
+    .step-section.orange { border-left-color: var(--accent-orange); }
+
+    .step-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 0 0 1.5rem 0; font-size: 1.5rem; font-weight: 600;
+    }
+    .step-number {
+      background: var(--text-secondary); color: white;
+      min-width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-section.blue .step-number { background: var(--accent-blue); }
+    .step-section.purple .step-number { background: var(--accent-purple); }
+    .step-section.orange .step-number { background: var(--accent-orange); }
+
+    .input-boxes-container { display: flex; gap: 20px; margin-bottom: 20px; }
+    .editable {
+      flex: 1; height: 450px; border: 1px solid var(--border-medium); border-radius: 12px;
+      padding: 1rem; font-family: var(--font-mono); font-size: 14px;
+      background: var(--bg-input); white-space: pre-wrap; overflow: auto; min-width: 0;
+      transition: all 0.2s ease;
+    }
+    .editable:focus {
+      outline: none; border-color: var(--accent-blue);
+      box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+      background-color: var(--bg-container);
+    }
+    .editable:empty:before { content: attr(data-placeholder); color: var(--border-dark); }
     
-    .part4 h3 { 
-      color: #9b59b6; 
+    T1, T2, T3, T4, T5 { display: inline; }
+    T1::before, T2::before, T3::before, T4::before, T5::before,
+    T1::after, T2::after, T3::after, T4::after, T5::after {
+      color: var(--text-secondary); font-size: 0.8em; font-weight: bold; user-select: none; opacity: 0.7;
     }
+    T1::before { content: '<T1>'; } T1::after { content: '</T1>'; }
+    T2::before { content: '<T2>'; } T2::after { content: '</T2>'; }
+    T3::before { content: '<T3>'; } T3::after { content: '</T3>'; }
+    T4::before { content: '<T4>'; } T4::after { content: '</T4>'; }
+    T5::before { content: '<T5>'; } T5::after { content: '</T5>'; }
+
+    .button-group { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 10px 18px; font-size: 0.9rem; cursor: pointer; border-radius: 10px;
+      transition: all 0.2s ease; font-weight: 500; border: 1px solid transparent;
+    }
+    .btn svg { width: 16px; height: 16px; }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+
+    .btn.btn-primary { background-color: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+    .btn.btn-primary:hover { background-color: #0069d9; border-color: #0062cc; }
+    
+    .btn.btn-secondary { background: var(--bg-input); color: var(--text-primary); border-color: var(--border-medium); }
+    .btn.btn-secondary:hover { background-color: #e9ecef; border-color: var(--border-dark); }
+    
+    .btn.btn-tag { background: #e7e3fc; color: #6f42c1; }
+    .btn.btn-tag:hover { background: #d7cff7; }
+    
+    #message { /* ... existing styles ... */ }
+    #scrollToTopBtn { /* ... existing styles ... */ }
 
     #message {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      background: #ffffff;
-      color: #5d5043;
-      padding: 14px 20px;
-      border-radius: 12px;
-      font-weight: 500;
-      border: 1px solid #e0d5c7;
-      box-shadow: 0 6px 20px rgba(139, 112, 87, 0.15);
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      z-index: 1000;
-      font-size: 0.9rem;
+      position: fixed; top: 24px; right: 24px; background: #343a40; color: white;
+      padding: 14px 20px; border-radius: 12px; font-weight: 500;
+      box-shadow: var(--shadow-hard); transform: translateX(450px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000;
+      display: flex; align-items: center; gap: 0.75rem;
     }
-
-    #message.show {
-      transform: translateX(0);
-    }
+    #message.show { transform: translateX(0); }
     
-    .input-boxes-container {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .input-boxes-container .editable {
-      flex: 1;
-    }
-
-    @media (max-width: 768px) {
-      body { padding: 15px; }
-      .container { padding: 25px; }
-      .step { padding: 20px; }
-      .input-boxes-container { flex-direction: column; gap: 15px; }
-      .button-group { flex-direction: column; }
-      button { margin-right: 0; width: 100%; }
-    }
-
-    script[type="text/plain"] {
-      display: none;
-    }
-
     #scrollToTopBtn {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 999;
-      border: none;
-      outline: none;
-      background-color: #8b7057;
-      color: white;
-      cursor: pointer;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 5px 15px rgba(139, 112, 87, 0.3);
-      transition: all 0.3s ease;
+      opacity: 0; visibility: hidden; pointer-events: none; position: fixed;
+      bottom: 30px; right: 30px; z-index: 999; border: none; outline: none;
+      background-color: var(--text-primary); color: white; cursor: pointer;
+      width: 50px; height: 50px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      box-shadow: var(--shadow-hard); transition: all 0.3s ease;
+    }
+    #scrollToTopBtn.visible { opacity: 1; visibility: visible; pointer-events: auto; }
+    #scrollToTopBtn:hover { transform: translateY(-3px) scale(1.05); background-color: var(--accent-blue); }
+
+    @media (max-width: 992px) {
+      .input-boxes-container { flex-direction: column; }
+      .editable { height: 350px; }
+    }
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .container { padding: 1.5rem; }
     }
 
-    #scrollToTopBtn.visible {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    #scrollToTopBtn:hover {
-      background-color: #5d5043;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(139, 112, 87, 0.4);
-    }
+    script[type="text/plain"] { display: none; }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="stepsContainer"></div>
+    <div class="workflow-header">
+      <h2>Multi-Step Review Workflow</h2>
+      <p>A streamlined pipeline for script translation, AI-powered review, and manual fine-tuning.</p>
+      <div style="margin-top: 1.5rem;">
+        <button class="clear-all-btn" onclick="clearAllInputs()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          Clear All Input Boxes
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 1: Breaking into Paragraphs -->
+    <div class="step-section blue">
+      <h3 class="step-header"><span class="step-number">1</span>Breaking into Paragraphs</h3>
+      <div class="input-boxes-container">
+          <div id="input_english_initial" class="editable" contenteditable="true" data-placeholder="Paste initial English script here..."></div>
+          <div id="input_telugu_initial" class="editable" contenteditable="true" data-placeholder="Paste initial Telugu script here..."></div>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="handleBreakParagraphsCopy()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy Prompt
+        </button>
+        <button class="btn btn-secondary" onclick="handleClear('initial')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: AI Review -->
+    <div class="step-section blue">
+      <h3 class="step-header"><span class="step-number">2</span>AI Review</h3>
+      <div class="input-boxes-container">
+        <div id="input_english_review" class="editable" contenteditable="true" data-placeholder="English script for review..."></div>
+        <div id="input_telugu_review" class="editable" contenteditable="true" data-placeholder="Paste AI's paragraph-formatted Telugu script here..."></div>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="handleAiReviewCopy()">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
+           Copy & Move to Next Step
+        </button>
+        <button class="btn btn-secondary" onclick="handleClear('review')">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+           Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Manual Review -->
+    <div class="step-section purple">
+        <h3 class="step-header"><span class="step-number">3</span>Manual Review & Fine-Tuning</h3>
+        <div class="input-boxes-container">
+            <div id="input_manual_first_ai" class="editable" contenteditable="true" data-placeholder="First AI translation appears here..."></div>
+            <div id="input_manual_reviewed_ai" class="editable" contenteditable="true" data-placeholder="Paste AI's reviewed translation here, then select text to tag it..."></div>
+        </div>
+        <div class="button-group">
+          <button class="btn btn-tag" onclick="wrapSelection('T1')">Generic word</button>
+          <button class="btn btn-tag" onclick="wrapSelection('T2')">Literal Translation</button>
+          <button class="btn btn-tag" onclick="wrapSelection('T3')">Gesture</button>
+          <button class="btn btn-tag" onclick="wrapSelection('T4')">Lengthy Sentence</button>
+          <button class="btn btn-tag" onclick="wrapSelection('T5')">No Flow</button>
+        </div>
+        <div class="button-group" style="margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
+          <button class="btn btn-primary" onclick="handleManualReviewCopy()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
+            Apply Highlights, Copy & Move
+          </button> 
+          <button class="btn btn-secondary" onclick="handleClear('manual')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Clear
+          </button>
+        </div>
+    </div>
+
+    <!-- Step 4: Comparison -->
+    <div class="step-section orange">
+      <h3 class="step-header"><span class="step-number">4</span>Final Comparison</h3>
+      <div class="input-boxes-container">
+        <div id="input_comparison_left" class="editable" contenteditable="true" data-placeholder="Manually reviewed script appears here..."></div>
+        <div id="input_comparison_right" class="editable" contenteditable="true" data-placeholder="Paste final version for comparison..."></div>
+      </div>
+       <div class="button-group">
+          <button class="btn btn-secondary" onclick="handleClear('comparison')">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Clear
+          </button>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem;">
+        <button class="clear-all-btn" onclick="clearAllInputs()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          Clear All Input Boxes
+        </button>
+    </div>
+
     <div id="message"></div>
   </div>
 
-  <!-- Prompts -->
-  <script type="text/plain" id="prompt5">
+  <button id="scrollToTopBtn" title="Go to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
 
-    Fine-tuning Telugu Translation
+  <script type="text/plain" id="prompt1">Please break the given video scripts into paragraphs: 
+    Keep continuous thoughts in one paragraph. 
+    
+    Break paragraphs: 
+    for each cause → effect shift 
+    at every example or story detail 
+    when a new point begins (tone shift) 
+    when a question occurs 
+    when speaker changes (if applicable)
+    
+    
+    Note: Please don't change any wording or punctuation. It is particularly created for a specific cause. Don't change any word or punctuation.
+    
+        The talk is made up of blocks of points.
+        Each point is made up of blocks of thoughts.
+        Each thought is made up of blocks of information.
+        
+        We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas.
+    
+    … indicates a pause in between the sentences.
+    , indicates a pause between meaningful chunks that make up the sentence.
+    ; indicates connected sentences.
+    - indicates additional/different aspect information related to the main idea of the sentence.
+    
+    Please break both the source (English/Tamil) Script and the Translation (Telugu) script.
+    
+    Video script for breaking into paragraphs:
+    
+    
+    
+    </script>
+  <script type="text/plain" id="prompt2">	
+    Below is the Transcript and its Telugu translation of an English Talk by sadhguru addressing the audience.
+
+    The talk is made up of blocks of points.
+    Each point is made up of blocks of thoughts.
+    Each thought is made up of blocks of information.
+    
+ We have used … , ; - . and ? to mark the boundaries of Information blocks, thoughts and ideas.
+
+… indicates a pause in between the sentences.
+, indicates a pause between meaningful chunks that make up the sentence.
+; indicates connected sentences.
+- indicates additional information related to the main idea of the sentence.
+
+Please preserve these punctuation markers as they are placed as hints to the dubbing artist, not necessarily just for grammatical purposes. Do not attempt to retranslate the whole thing. It is already translated keeping certain factors that are required for dubbing in mind.
+
+
+Now I want you to review the script at the most detail level in the below areas.
+
+Contextual word.
+
+In the English language, each word covers a broad spectrum and multiple contexts. But when it come to telugu, with in the same spectrum that is covered by the english word there are multiple specific telugu words each one covering a specific part of the spectrum, and similarly in telugu there will be specific words for each context that is covered by a single word in English.
+
+While translating, the focus might be on the broader aspects of structure, essence, etc. But now I want you to focus at the detailed level and identify the places where the generic telugu  words are used instead of the spectrum or contextually relevant specific telugu words. And replace that generic telugu word with the specific contextual word that conveys the speaker's intention when he said this english word - in the context of this talk. 
+
+Example 1:
+
+English sentence:
+This is what we are trying to demonstrate in Isha… that thousands of people… simply working like fanatics… from outside, they look like that. But, they're at ease; they close their eyes... okay, world doesn't exist.
+
+Original Telugu sentence:
+ఈశాలో మేము <Context>నిరూపించడానికి ప్రయత్నిస్తున్నది </Context>ఇదే… వేలాది మంది ప్రజలు… <Context>పిచ్చివాళ్ళలా</Context> పనిచేస్తుంటారు… బయటి నుండి చూస్తే, వాళ్ళు అలా కనిపిస్తారు. కానీ, వాళ్ళు <Context>ప్రశాంతంగా </Context>ఉంటారు; వాళ్ళు కళ్ళు మూసుకుంటే... ఓకే, ఈ ప్రపంచం <Context>లేదు</Context>. 
+Improved telugu Sentence:
+ఈశాలో మేము <Context>ఆచరణలో చూపాలనుకుంటున్నది</Context> ఇదే… వేలాది మంది ప్రజలు…<Context> ఆవేశపరుల్లా </Context> పనిచేస్తుంటారు… బయటి నుండి చూస్తే, అలా కనిపిస్తారు. కానీ, వాళ్ళు<Context> నిశ్చింతగా </Context>ఉంటారు; కళ్ళు మూసుకుంటే... ఇక, ఈ ప్రపంచం <Context>ఉండదు</Context>. 
+
+Example 2:
+
+English sentence:
+Which is  <Context>better </Context>? What you want happened, is that better? Whatever happens, you're fine, that is that better? That's all. 
+
+
+Original Telugu sentence:
+ఏది  <Context>మంచిది </Context>? మీరు కోరుకున్నది జరగడం, అది మంచిదా? ఏది జరిగినా, మీరు బాగానే  <Context>ఉండటం </Context>, అది మంచిదా? అంతే. 
+Improved telugu Sentence:
+ఏది  <Context>శ్రేయస్కరమైనది? </Context> - మీరు కోరుకున్నది జరగడం, అది శ్రేయస్కరమా? లేక ఏది జరిగినా, మీరు బాగానే  <Context>ఉంటారు </Context>, అది శ్రేయస్కరమా? 
+
+Example 3:
+
+English sentence:
+If you're seeking fulfillment of life… then… it needs involvement. Devotion means… just unquestioned, <Context>unbridled</Context> involvement, that's all 
+
+Original Telugu sentence:
+ఒకవేళ మీరు జీవితంలో పరిపూర్ణత కోసం వెతుకుతుంటే… దానికి నిమగ్నత కావాలి. భక్తి అంటే… కేవలం ప్రశ్నించని, <Context>అదుపులేని</Context> నిమగ్నత, అంతే
+
+Improved telugu Sentence:
+ఒకవేళ మీరు జీవితంలో పరిపూర్ణత కోరుతుంటే … దానికి నిమగ్నత అవసరం. భక్తి అంటే… ప్రశ్నించని, <Context>అడ్డుకట్టలేని</Context> నిమగ్నత
+
+
+
+
+Example 4:
+English sentence:
+The reason why in this country… you know, marriages have been very stable, not always because two people are getting along great, not always; Because when they got married… a few thousand people got married along with them; Bride and the groom were a small aspect of the marriage; 
+
+There were so many other people <Context> involved</Context>; Now if you have to break it, you have to break it on all levels; you can't break it. 
+
+Original Telugu sentence:
+ఈ దేశంలో... తెలుసా, పెళ్ళిళ్ళు చాలా స్థిరంగా ఉండటానికి కారణం - ఎప్పుడూ ఆ ఇద్దరూ అద్భుతంగా కలిసిపోతున్నారని కాదు, అస్సలు కాదు; ఎందుకంటే వాళ్ళు పెళ్లి చేసుకున్నప్పుడు... వాళ్ళతో పాటు కొన్ని వేల మందికి పెళ్లయింది; పెళ్లికూతురు, పెళ్లికొడుకు ఆ పెళ్లిలో ఓ చిన్న పార్శ్వం మాత్రమే; 
+
+ఇంకెంతో మంది అందులో<Context> పాలుపంచుకున్నారు</Context>; ఇప్పుడు దాన్ని విడగొట్టాలంటే, అన్ని స్థాయిల్లోనూ తెంచాలి; తెంచలేరు; 
+
+Improved telugu Sentence:
+ఈ దేశంలో… పెళ్ళిళ్ళు చాలా స్థిరంగా ఉండటానికి కారణం - కేవలం ఆ ఇద్దరూ అద్భుతంగా కలిసిపోవడం కాదు, ప్రతిసారి కాదు! ఎందుకంటే వాళ్ళు పెళ్లి చేసుకున్నప్పుడు… వాళ్ళతో పాటు కొన్ని వేల మందికి పెళ్లయింది; ‘పెళ్లికూతురు, పెళ్లికొడుకు’ ఆ పెళ్లిలో ఓ చిన్న అంశం మాత్రమే;
+అందులో <Context>ముడిపడి ఉన్నవాళ్లు </Context>ఇంకా ఎంతో మంది ఉన్నారు; ఇప్పుడు దాన్ని విడగొట్టాలంటే, అన్ని స్థాయిల్లోనూ తెంచాలి; తెంచలేరు.
+
+
+
+
+Example 5:
+English sentence:
+But once you become human... now, either you evolve <Context>consciously</Context> or you stagnate; that's all the choice you have. 
+
+
+Original Telugu sentence:
+కానీ ఒకసారి మీరు మనిషి అయ్యాక... ఇప్పుడు, మీరు <Context>స్పృహతో</Context> పరిణామం చెందాలి లేదా అక్కడే నిలిచిపోవాలి; మీకు ఉన్న అవకాశం అంతే.
+
+Improved telugu Sentence:
+కానీ ఒకసారి మీరు మనిషి అయ్యాక... ఇప్పుడు, మీరు <Context>సంకల్పితంగా</Context> పరిణామం చెందాలి లేదా అక్కడే నిలిచిపోవాలి - మీకు ఉన్న అవకాశం అంతే.
+
+
+Example 6:
+English sentence:
+What is human is a flux; you can be anything you want - and this is the human being's struggle. Right now human beings are not suffering their bondage... they are suffering their freedom.
+
+Original Telugu sentence:
+ మానవమనేది <Context>ఒక ప్రవాహం</Context>; మీరు ఏమవ్వాలనుకుంటే అది కాగలరు - ఇదే మానవుని సంఘర్షణ. ప్రస్తుతం మానవులు తమ బంధనాల వల్ల బాధపడటం లేదు... వాళ్ళు తమ స్వేచ్ఛ వల్లే బాధపడుతున్నారు.
+
+Improved telugu Sentence:
+ ‘మనిషి’ అనేది ఒక <Context>నిరంతర చలనం</Context>; మీరు ఏమవ్వాలనుకుంటే అది కాగలరు - ఇదే మానవుని తపన. ప్రస్తుతం మానవులు తమ బంధనాల వల్ల బాధపడటం లేదు... వాళ్ళు తమ స్వేచ్ఛ వల్ల బాధపడుతున్నారు.
+
+
+Example 7:
+English sentence:
+If your life also was fixed as the animal life is fixed - “this is how you will be”..  you wouldn't be <Context>struggling</Context> so much; you wouldn't be experiencing as much pain and misery that human beings are experiencing right now, isn't it? 
+Original Telugu sentence:
+ఒకవేళ మీ జీవితం కూడా స్థిరంగా ఉండి ఉంటే - జంతువుల జీవితం స్థిరంగా ఉన్నట్టు - “మీరు ఇలాగే ఉంటారు” అన్నట్టుగా... మీరింతగా <Context>సంఘర్షణ</Context> పడరు; ప్రస్తుతం మానవులు అనుభవిస్తున్నంత బాధ, దుఃఖం మీరు అనుభవించరు, అవునా?
+
+Improved telugu Sentence:
+ఒకవేళ మీ జీవితం కూడా నిర్దేశించబడి ఉంటే - జంతువుల జీవితం నిర్దేశించబడినట్టు - “మీరు ఇలాగే ఉంటారు” అన్నట్టుగా ఉంటే... మీరింతగా <Context>మథనపడరు</Context>; ప్రస్తుతం మానవులు అనుభవిస్తున్నంత బాధ, దుఃఖం మీరు అనుభవించరు, అవునా?
+
+
+Example 8:
+English sentence:
+You will see there is a distinction between what is you - and what you have gathered;
+
+Original Telugu sentence:
+ఒక <Context>తేడా</Context> కనిపిస్తుంది -  ఏది మీరో దానికి, మీరు పోగుచేసుకున్న దానికి మధ్య!
+Improved telugu Sentence:
+ఒక <Context>వ్యత్యాసం</Context> కనిపిస్తుంది -  ఏది మీరో దానికి, మీరు పోగుచేసుకున్న దానికి మధ్య!
+
+Example 9:
+English sentence:
+
+Original Telugu sentence:
+ఎందుకంటే, వాళ్ళ శక్తులు సరళంగా ఉండవు, సహకరించవు;
+అందుకే, మనం అలాంటి వాళ్ళను చూసినప్పుడు - ప్రపంచంలో వాళ్ళు పనులు చేయగల సామర్థ్యం గానీ, లేదా ప్రపంచంలో వాళ్ళు సాధించే విజయం గానీ, వాళ్ళు కలిగివున్న ఇతర లక్షణాలకు తగినట్టుగా ఉండదు - అది శారీరక బలం కావచ్చు, లేదా చదువు, లేదా తెలివితేటలు, లేదా వాళ్ళకున్న ఇతర ప్రతిభలు కావచ్చు - కానీ అవి వ్యక్తమవ్వవు, ఎందుకంటే - వాళ్ళకి తగినంత శక్తి <Context>మద్దతు</Context> ఉండదు;
+
+Improved telugu Sentence:
+
+ఎందుకంటే, వాళ్ళ శక్తులు వశ్యతతో ఉండవు, సహకరించవు;
+అందుకే, మనం అలాంటి వాళ్ళను చూసినప్పుడు - ప్రపంచంలో వాళ్ళు పనులు చేయగల సామర్థ్యం గానీ, లేదా ప్రపంచంలో వాళ్ళు సాధించే విజయం గానీ, వాళ్ళు కలిగివున్న ఇతర లక్షణాలకు తగినట్టుగా ఉండదు! అది శారీరక బలం కావచ్చు, లేదా చదువు, లేదా తెలివితేటలు, లేదా ఇతర ప్రతిభలు ఉండొచ్చు - కానీ అవి వ్యక్తమవ్వవు; ఎందుకంటే - వాళ్ళకి తగినంత శక్తి <Context>తోడ్పాటు </Context>ఉండదు;
+Example 10:
+English sentence:
+Intelligence can become a very negative thing, if it does not  <Context>translate <Context> into some level of competence; 
+
+Original Telugu sentence:
+తెలివితేటలు చాలా ప్రతికూల విషయంగా మారవచ్చు, అది కొంత స్థాయి సామర్థ్యంగా  <Context>మారకపోతే </Context>; 
+
+Improved telugu Sentence:
+మేధస్సు చాలా ప్రతికూల అంశంగా మారగలదు  - అది కొంత స్థాయి సామర్థ్యంగా <Context>పరిణమించకపోతే</Context>
+
+
+
+
+Intention:
+
+
+Based on the context in which this sentence is occurring, and based on the picture that is being created before and after this sentence, identify the intention of the speaker. what he actually is trying to convey. Rather than just relying on the words and doing the word to word translation, grasp the intention based on the context and express it directly in telugu in a colloquial way. No need to follow the exact word to word based translation. The intention needs to be expressed here.
+
+
+
+Below i am giving some Examples of identifying the intention:
+Example 1
+
+
+English:
+ love is not profitable.
+ It’s a… a very conscious, <Intention>loss making venture</Intention>; 
+
+Telugu:
+ప్రేమ లాభ పడేందుకు కాదు
+అది స్పృహతో, <Intention>నష్ట పోయేందుకు చేసే ప్రయత్నం</Intention>
+
+Optimized:
+ప్రేమ లాభసాటి కాదు
+అది - <Intention>నష్టం తెచ్చేదని తెలిసి కూడా</Intention> కోరునే విషయం
+
+Description:
+Here the effort is not to make a loss. 
+He is saying its nature is ‘loss making’, and still we choose it consciously.
+
+
+
+
+
+
+
+Example 2
+
+
+English:
+30 times the idiot shoots at you and misses you; I am so glad; I hope <Intention>they </Intention>keep missing like that.
+
+Telugu:
+<Intention>వాడలా </Intention>గురి తప్పాలనే కోరుకుంటున్నాను.
+
+Optimized:
+<Intention>వాళ్ళలానే </Intention>గురి తప్పాలని కోరుకుంటున్నాను.
+
+Description:
+Here sadhguru is not speaking about that single person who missed.
+He is speaking about the enemies  in general. So we made it into  plural 
+
+
+
+
+Example 3
+
+
+English:
+Yes sir, because uh… he is always wide open and waiting; it's the people who are <Intention>far away, in their own world.</Intention>
+
+
+Telugu:
+ఉన్నాయండి, కానీ, ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా, తమ లోకంలో ఉన్నారు.</Intention>
+
+Optimized:
+ఉన్నాయండి! 
+ఎందుకంటే ..  ఆయనెప్పుడూ చేతులు చాపి, ఎదురుచూస్తూనే ఉన్నాడు; మనుషులే <Intention>చాలా దూరంగా ఉన్నారు … తమ సొంత లోకంలో!</Intention>
+
+Description:
+Here we just made it into two clauses. As it is expressed as two details in English. 
+
+
+
+
+Example 4
+
+
+English:
+"I do my Om Namo Shivaya jap <Intention>and everything</Intention>,
+
+Telugu:
+ ఓం నమః శివాయ’’ <Intention>జపం లాంటివన్నీ</Intention> చేస్తాను
+
+Optimized:
+ ఓం నమః శివాయ’’ <Intention>జపం మొదలైనవన్నీ</Intention> చేస్తాను
+
+Description:
+Here he is not saying that he is doing things that are alike to jap 
+He is saying he is doing jap and things like that.
+
+
+
+
+Example 5
+
+
+English:
+You take some fenugreek, boil it, and the decoction that comes out of it, you mix honey with it and you can drink it. Lot of people drink it like coffee, but you need special kind of <Intention>taste buds</Intention> or you need tremendous acceptance. 
+
+Telugu:
+మెంతులు ... మరిగించి... వడకట్టి... తేనె కలుపుకుని తాగొచ్చు; 
+చాలామంది దాన్ని కాఫీ లాగా తాగుతారు, కానీ దానికి ఓ ప్రత్యేకమైన <Intention>నాలుక </Intention>ఉండాలి, లేదా చాలా సహనం ఉండాలి. 
+
+
+Optimized:
+అలా తాగడాలంటే ఓ ప్రత్యేకమైన <Intention>అభిరుచి </Intention>ఉండాలి
+
+Description:
+Here he is not talking about the tongue literally, he is speaking about their preference and patience to take such coffee.
+
+
+
+
+Example 6
+
+
+English:
+ She said, "I hear that monks are looking for shelter in many homes; <Intention>why don't you come and stay in my house</Intention>?"
+
+Telugu:
+ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; <Intention>నువ్వెందుకు నా ఇంట్లో ఉండకూడదు</Intention>?" అంది. 
+
+Optimized:
+ఆమె, "సన్యాసులు చాలా ఇళ్ళలో ఆశ్రయం కోసం చూస్తున్నారని విన్నాను; నువ్వు  <Intention>వచ్చి నా ఇంట్లో ఉండొచ్చు కదా?</Intention>" అంది. 
+
+Description:
+Here the translation was literal, like grammar based. 
+But in telugu the intention is conveyed differently, not in the same grammar syntax to syntax translation.
+
+
+
+
+Example 7
+
+
+English:
+Right now in the world, a whole lot of people think <Intention>only in misery you can be profound</Intention>;
+
+Telugu:
+ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>బాధను మాత్రమే తీవ్రంగా అనుభవించగలమని అనుకుంటారు</Intention>;
+
+Optimized:
+ప్రస్తుతం ప్రపంచంలో, చాలా మంది - <Intention>కేవలం బాధలో మాత్రమే ప్రగాఢత అనుభూతి చెందగలమనుకుంటారు;</Intention>
+
+Description:
+Here he is not talking about experiencing the pain profoundly. 
+He is saying about how we will go to profound intensity when it comes to pain.
+
+
+
+
+Example 8
+
+
+English:
+<Intention>Because</Intention> there is not much possibility, there is not much misery either.
+
+Telugu:
+<Intention>ఎందుకంటే </Intention>అక్కడ పెద్దగా అవకాశాలు లేవు కాబట్టి; అంత బాధ కూడా ఉండదు.
+
+Optimized:
+సంభావ్యతలు పెద్దగా లేవు <Intention>కాబట్టి</Intention>, బాధ కూడా అంతగా ఉండదు.
+
+Description:
+Here he is conveying the point in cause and effect format. First he is telling the cause and then he is telling the effect.
+So the because at the beginning here indicates that this is the cause. Not to literally place <Intention>ఎందుకంటే </Intention>at the begining in the telugu also.
+
+
+
+
+Example 9
+
+
+English:
+You don't see other creatures of the planet suffering like human beings. Their suffering is purely physical. If they're physically harmed, <Intention>they are in pain. </Intention>
+
+Even in pain, they do not know the kind of suffering that a human being knows.
+
+
+
+Telugu:
+ఈ భూమి మీద ఉన్న ఇతర జీవులు మనుషుల్లా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>అవి బాధ పడతాయి. </Intention>
+
+బాధ ఉన్నా కూడా, ఒక మనిషికి తెలిసినంత బాధ వాటికి తెలీదు.
+
+
+
+
+Optimized:
+ఈ భూమ్మీది ఇతర జీవులు మనుషులంతగా బాధపడటం మీరు చూడరు. వాటి బాధ కేవలం శారీరకమైనది. వాటికి శారీరకంగా హాని జరిగితే, <Intention>నొప్పికి గురవుతాయి.</Intention>
+
+నొప్పి విషయంలో కూడా, మనిషికి తెలిసినంతటి బాధ వాటికి తెలీదు.  
+
+
+Description:
+Here pain and suffering are different and he is using the word pain when he is referring to the physical pain. That is not caught in the translation. So we replaced బాధ పడతాయి with  నొప్పికి గురవుతాయి.
+
+
+
+
+Example 10
+
+
+English:
+Human being knows this suffering<Intention> not because creation gave this suffering to you</Intention>; creation just gave you the freedom... to make whatever you wish to out of yourself.
+
+Telugu:
+మనిషికి బాధ ఉంది - <Intention>కానీ దాన్ని మీకు ఇచ్చింది సృష్టి కాదు</Intention>; సృష్టి కేవలం మీకు స్వేచ్ఛ నిచ్చింది... మిమ్మల్ని మీరు ఎలా కావాలంటే అలా మలుచుకోవడానికి. 
+
+Optimized:
+మనిషికి ఇంతటి బాధ తెలియడానికి కారణం - <Intention>సృష్టి ఆ బాధను మీకు ఇవ్వడం వల్ల కాదు</Intention> - సృష్టి మీకు స్వేచ్ఛని ఇచ్చింది - మిమ్మల్ని, మీకు ఎలా కావాలంటే అలా చేసుకునే స్వేచ్ఛనిచ్చింది! 
+
+Description:
+Here he is not talking about whether it was given by creation or not. By using the phrase  ‘not because’ he is telling that it was not the cause.
+
+
+
+Example 11
+
+
+English:
+we do the same things what the other animals do; It is just that all that the animal can do; we do the same things but we can do it consciously -<Intention> that's a big difference.</Intention>
+
+Telugu:
+జంతువులు చేసే పనులే మనం కూడా చేస్తాం; కాకపోతే ఏంటంటే, జంతువు చేయగలిగినదంతా మనం కూడా చేస్తాం -  కానీ దాన్ని మనం స్పృహతో చేయగలం - <Intention>అదే మనకి వాటికీ ఉన్న పెద్ద తేడా.</Intention>
+
+
+
+Optimized:
+<Intention>అది చాలా పెద్ద తేడా!</Intention>
+
+
+Description:
+Here he is not talking about whether it is the big difference or not.
+He is talking about how big a difference it is.
+
+
+
+Example 12
+
+
+English:
+<Intention>This is also a way, for me to demonstrate to people</Intention>; whatever life throws at us, it's not in our hands; what we make out of it is 100% in our hands. 
+
+
+Telugu:
+<Intention>ప్రజలకు చూపించడానికి ఇది కూడా ఒక మార్గం;</Intention> జీవితం మనపై ఏది వేస్తారనేది, అది మన చేతుల్లో లేదు; దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+
+
+
+Optimized:
+<Intention>ఇది ప్రజలకు ఆచరణాత్మకంగా చూపించేందుకు ఒక మార్గం కూడా</Intention>; అదేంటంటే - జీవితం మనపై ఏం విసురుతుందనేది మన చేతుల్లో ఉండదు; అయితే దాన్ని మనం ఎలా మలచుకుంటామనేది 100% మన చేతుల్లోనే ఉంటుంది.
+
+
+
+Description:
+Here he is not telling that this is also a one more way to demonstrate to people.
+He is telling that, apart from other purposes that it serves, it also acts a way to demonstrate to people.
+
+
+
+Example 13
+
+
+English:
+That is true; that is true. Uh, yeah, yeah, <Intention>you can never be cautious enough</Intention>, but I think, uh, you've just proven that if you keep your head about you, uh, all the time this is possible.
+
+Telugu:
+అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>మనం ఎప్పటికీ తగినంత జాగ్రత్తగా ఉండలేం</Intention>, కానీ,  మీ బుర్ర మీ దగ్గరే పెట్టుకుంటే,  అన్ని వేళలా ఇది సాధ్యమేనని మీరు నిరూపించారనుకుంటున్నాను.
+
+Optimized:
+అది నిజం; అది నిజం. ఆఁ, అవునవును, <Intention>ఎంత శ్రద్ధ పెట్టినా అది సరిపోదు</Intention>; కానీ మీరిది నిరూపించారనుకుంటున్నాను - అప్రమత్తతో ఉంటే,  అన్ని వేళలా ఇది సాధ్యమేనని!
+
+Description:
+It is translated literally. 
+It is about whether we can be cautious or not. His intention is that we have to be very cautious as much as possible.
+
+
+
+
+
+
+Example 14
+
+
+English:
+because, uh, <Intention>the altitude was not like this</Intention>, but, uh, the weather, was even worse than this actually, in many ways. 
+
+
+Telugu:
+ఎందుకంటే - <Intention>అక్కడ ఎత్తు ఇలా లేదు</Intention>; కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+
+Optimized:
+ఎందుకంటే -<Intention> అది ఇంత ఎత్తైన ప్రదేశం కాదు</Intention> - కానీ, వాతావరణం మాత్రం, నిజానికి చాలా విధాలుగా దీనికంటే దారుణంగా ఉంది.
+
+
+Description:
+Here the translation is literal.
+While he used altitude as a subject here, in reality he was comparing the height of the place. So we wrote the actual intention instead of just literal translation.
+
+
+
+Example 15
+
+
+English:
+<Intention>Such a</Intention> lovely idea Guruji.
+
+Telugu:
+<Intention>అలాంటి </Intention>ఒక చక్కని ఆలోచన గురూజీ
+
+Optimized:
+<Intention>భలే </Intention>చక్కని ఆలోచన గురూజీ
+
+Description:
+Here the translation is literal. To convey the actual intention, literal word to word translation wont do justice. So first I grasped the intention, then I directly expressed that intention in Telugu - without referring to the words used in English.
+
+
+
+
+
+Example 16
+
+
+English:
+Everything that we are right now - every breath that we take, every experience that we go through is <Intention>only valuable, because</Intention> we are on a limited lease of time;
+
+Telugu:
+మనమిప్పుడున్న ప్రతిదీ - మనం తీసుకునే ప్రతి శ్వాస, మనం పొందే ప్రతి అనుభవం కేవలం<Intention> విలువైనదే, ఎందుకంటే </Intention>మనం పరిమిత కాలపు గడువుపై ఉన్నాం;
+
+
+Optimized:
+ప్రస్తుతం మనకు సంబంధించిన ప్రతిదీ - తీసుకునే ప్రతీ శ్వాసా,  పొందే ప్రతీ అనుభవం <Intention>విలువైనవి కావడానికి కారణం - మన సమయం పరిమితం కాబట్టే! </Intention>
+
+Description:
+ Here by using the combination of words, only and because, he is establishing a cause and effect. So we have optimised the translation also into a cause and effect format.
+
+
+
+
+Now give the output in the below format:
+
+Give the original telugu script followed by the improved telugu script. In each of them, bold the parts that are changed to improve the script, so that i can review them easily.
+
+Also at the end please give a suggestions section and For change made give the alternatives as instructed below:
+
+Now give the output in the below format:
+
+For Each <Context> tag:
+
+Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase.
+Explain what this Word is conveying here in this context in English.
+Also give 6 more closer words in addition to the best word.
+
+
+
+Example Output:
+అంకితమైన
+అధిదేవత 
+The word "అంకితమైన" translates to "dedicated to." While grammatically correct, it is a general term. In this specific context, Sadhguru is referring to Dhanvantri as the deity who presides over health and well-being. The Telugu word "అధిదేవత" more accurately conveys this idea of a "presiding deity" or the specific godhead responsible for a particular domain, making it a richer and more precise choice.
+ప్రతీకమైన - symbolic of
+కారకుడైన - the causal one for
+అధిపతి అయిన - the lord of
+ప్రసాదించే - the one who bestows
+సంరక్షకుడైన - the protector of
+బాధ్యత వహించే - the one responsible for
+
+
+
+
+For Each <Intention> tag:
+
+Give the actual tagged Word/Phrase/Sentence as heading (no need to mention the tag itself). (No heading needed for points 2,3,4)
+Give the Word/Phrase/Sentence that actually expresses the intention of the speaker in natural Colloquial Telugu flow
+Give another alternative which expresses the intention, but at the same time follows the sentence structure like length, number of clauses or meaningful chunks, number of segments in the sentence with gaps between them etc.
+Give a third alternative assuming that this tagged position is absent or lost and you have to bridge the gap based on the context that is going on and based on the previous sentences and the later sentences.
+
+
+
+Example output:
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉండాలి
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించారనేది నా ఉద్దేశం...
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉంటారని నేను భావిస్తున్నాను...
+ఎందుకంటే మనుషులుగా మనం ఆ పరిమితులను దాటగలం...
+
+Below are the english and the telugu scripts: 
+
+
+
+
+
+</script>
+  <script type="text/plain" id="prompt3">Fine-tuning Telugu Translation
 
    
     Below is the Transcript of an English Talk by sadhguru addressing Audience, and its Telugu Dubbing Script.
@@ -280,13 +887,15 @@ Contextual word.
 Actual intention the speaker is trying to convey.
 Matching the Audio and the gestures in the video.
 Shortening the sentences to fit in.
+Improving the flow
 
-These four i am tagging the needed text as below.
+These five i am tagging the needed text as below.
 
 Contextual word: <T1>Sample text</T1>
 Actual intention the speaker is trying to convey: <T2>Sample text</T2>
 Matching the Audio and the gestures in the video: <T3>Sample text</T3>
 Shortening the sentences to fit in: : <T4>Sample text</T4>
+Improving the flow: <T5>Sample text</T5>
 
 
 Below are the instructions for each aspect. 
@@ -996,7 +1605,6 @@ Sometimes sadhguru speaks very fastly. and sometimes because of language the tel
 
 
 
-
 Example 1
 English: <T4> Why did you have to do so much?</T4>
 Lengthy sentence: <T4> మీరు ఇంత చేయవలసిన అవసరం ఏముంది?</T4>
@@ -1028,6 +1636,26 @@ Lengthy sentence: <T4> ఒకసారి ఒకటి మాత్రమే త
 Shortened sentence: <T4> ఒక్కొక్కటే తీసుకుంటారు. </T4>
 
 
+
+Improving the flow:
+Some sentences seem fragmented and lack smooth flow between the parts of the idea being conveyed.  Make sentences tagged for this aspect smoother, either by adding the filler and connecting words to the fragments, or by re-arranging the order of the segments.
+
+Example:
+
+English: <T5> But... hope... acting like Rama... brings some elements of Rama into the actor... which will be wonderful for him.</T5>
+
+Telugu: <T5> కానీ... ఆశిస్తున్నా... రాముడిలా నటించడం... రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడాలని... అది అతనికి ఎంతో మేలు చేస్తుంది.</T5>
+
+Optimized Telugu:
+(More Integrated): This version gives a more compact continous and direct statement.
+<T5> "అయితే... రాముడిలా నటించడం అనేది, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడేలా చేస్తుందని ఆశిస్తున్నాను... అది అతనికి ఎంతో మేలు చేస్తుంది."</T5>
+
+
+
+
+
+
+
 Result Format:
 Now please give the result in the below format:
 
@@ -1037,9 +1665,9 @@ And also at the end of the script give the additional suggestions for each of th
 
 For Each <T1> tag:
 
-Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase.
+Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase used in the optimized script.
 Explain what this Word is conveying here in this context in English.
-Also give 6 more closer words in addition to the best word.
+Also give 6 more closer words/phrases in addition to the best word.
 
 
 
@@ -1060,7 +1688,7 @@ The word "అంకితమైన" translates to "dedicated to." While grammati
 For Each <T2> tag:
 
 Give the actual tagged Word/Phrase/Sentence as heading (no need to mention the tag itself). (No heading needed for points 2,3,4)
-Give the Word/Phrase/Sentence that actually expresses the intention of the speaker in natural Colloquial Telugu flow
+Give the optimised Word/Phrase/Sentence used in the optimized script that actually expresses the intention of the speaker in natural Colloquial Telugu flow
 Give another alternative which expresses the intention, but at the same time follows the sentence structure like length, number of clauses or meaningful chunks, number of segments in the sentence with gaps between them etc.
 Give a third alternative assuming that this tagged position is absent or lost and you have to bridge the gap based on the context that is going on and based on the previous sentences and the later sentences.
 
@@ -1091,7 +1719,7 @@ His mother asked, "Luke, did you really find it? … Are you sure?"
 
 For Each <T4> tag:
 Give the actual english sentence 
-then give the shortened telugu sentence.
+Then give the shortened telugu sentence.
 Then give an alternate shortened version
 
 Example output:
@@ -1100,49 +1728,96 @@ From now on, it should not happen like this again.
 ఇంకెంప్పుడూ ఇది జరక్కూడదు.
 
 
+For Each <T5> tag:
+Give the actual english sentence 
+Then give the alternative 1 (More Conversational) This version restructures the sentence in a very common conversational pattern.
+Then give the alternative 2 (More Structural match) This version uses connecting words like "వల్ల" (because of) and "అలా జరిగితే" (if that happens) to link the fragments into a single, coherent thought, which would be much smoother for a dubbing artist to deliver.
 
-Below are the English and the tagged Telugu scripts.
+
+
+Example output:
+But... hope... acting like Rama... brings some elements of Rama into the actor... which will be wonderful for him.
+
+కానీ నా ఆశ ఏంటంటే... రాముడిలా నటించడం ద్వారా, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడాలి... అదే జరిగితే, అతనికి ఎంతో మేలు జరుగుతుంది.
+
+"కానీ నేను ఆశిస్తున్నాను... రాముడిలా నటించడం వల్ల, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడతాయని... అలా జరిగితే అది అతనికి ఎంతో మేలు చేస్తుంది."
 
 
 
 
+
+Below are the English and the tagged Telugu scripts: 
 </script>
 
 <script>
   const message = document.getElementById('message');
   
-  function getPrompt(step) {
-    const promptElement = document.getElementById(`prompt${step}`);
-    return promptElement ? promptElement.textContent.trim() : "";
-  }
+  function getPrompt(step) { return document.getElementById(`prompt${step}`).textContent.trim(); }
   
-  function showMessage(msg) {
-    message.textContent = msg;
+  function showMessage(msg, type = 'success') {
+    const icons = { success: '✅', warning: '⚠️', error: '❌', info: '🗑️' };
+    message.innerHTML = `${icons[type] || '✅'} <span>${msg}</span>`;
     message.classList.add('show');
     clearTimeout(showMessage.timeout);
-    showMessage.timeout = setTimeout(() => {
-      message.classList.remove('show');
-    }, 3000);
+    showMessage.timeout = setTimeout(() => message.classList.remove('show'), 3500);
   }
 
-  function handleClear(step) {
-    if (step === 5) {
-      document.getElementById('input5_1').innerHTML = "";
-      document.getElementById('input5_2').innerHTML = "";
+  function clearAllInputs() {
+    document.querySelectorAll('.editable').forEach(box => box.innerHTML = "");
+    showMessage("All input boxes have been cleared!", 'info');
+  }
+
+  function handleClear(section) {
+    const ids = {
+      initial: ['input_english_initial', 'input_telugu_initial'],
+      review: ['input_english_review', 'input_telugu_review'],
+      manual: ['input_manual_first_ai', 'input_manual_reviewed_ai'],
+      comparison: ['input_comparison_left', 'input_comparison_right'],
+    };
+    if (ids[section]) {
+      ids[section].forEach(id => document.getElementById(id).innerHTML = "");
+      showMessage(`Cleared boxes in '${section}' section`, 'info');
     }
-    showMessage("🗑️ Cleared input boxes");
+  }
+  
+  function handleBreakParagraphsCopy() {
+  const englishText = document.getElementById('input_english_initial').innerText;
+  const teluguText = document.getElementById('input_telugu_initial').innerText;
+  if (!englishText.trim() && !teluguText.trim()) {
+      showMessage("Please enter scripts in the boxes first.", 'warning');
+      return;
+  }
+  const finalText = `${getPrompt(1)}\n\nEnglish Script:\n${englishText}\n\nTelugu Script:\n${teluguText}`;
+  
+  // The line that automatically moved the script has been removed from here.
+  
+  navigator.clipboard.writeText(finalText).then(() => showMessage("Prompt 1 copied successfully!"));
+}
+
+  function handleAiReviewCopy() {
+    const englishText = document.getElementById('input_english_review').innerText;
+    const teluguText = document.getElementById('input_telugu_review').innerText;
+     if (!teluguText.trim()) {
+        showMessage("Please paste the paragraph-formatted Telugu script first.", 'warning');
+        return;
+    }
+    const finalText = `${getPrompt(2)}\n\nEnglish Script:\n${englishText}\n\nTelugu Script:\n${teluguText}`;
+    navigator.clipboard.writeText(finalText).then(() => {
+      document.getElementById('input_manual_first_ai').innerHTML = document.getElementById('input_telugu_review').innerHTML;
+      showMessage("Prompt 2 copied & Telugu script moved to Manual Review.");
+    }).catch(err => showMessage("Copy failed.", 'error'));
   }
 
   function wrapSelection(tagName) {
-    const teluguInputBox = document.getElementById('input5_2');
+    const targetBox = document.getElementById('input_manual_reviewed_ai');
     const selection = window.getSelection();
-    if (!teluguInputBox || selection.rangeCount === 0 || selection.isCollapsed) {
-      showMessage("⚠️ Please select text in the Telugu box first.");
+    if (!targetBox || selection.rangeCount === 0 || selection.isCollapsed) {
+      showMessage("Please select text in the right-hand 'Manual Review' box first.", 'warning');
       return;
     }
     const range = selection.getRangeAt(0);
-    if (!teluguInputBox.contains(range.commonAncestorContainer)) {
-        showMessage("⚠️ Please select text inside the Telugu script box.");
+    if (!targetBox.contains(range.commonAncestorContainer)) {
+        showMessage("Please select text inside the correct box.", 'warning');
         return;
     }
     const newNode = document.createElement(tagName);
@@ -1151,180 +1826,85 @@ Below are the English and the tagged Telugu scripts.
       range.insertNode(newNode);
       selection.removeAllRanges();
     } catch (e) {
-      console.error("Failed to wrap selection:", e);
-      showMessage("❌ Error wrapping text.");
+      showMessage("Error wrapping text.", 'error');
     }
   }
 
-  /**
-   * REWRITTEN: Takes HTML with formatting and custom tags, and converts it to a plain text
-   * string for the clipboard, correctly preserving paragraphs and line breaks.
-   */
   function transformTeluguHTMLForClipboard(html) {
     if (!html) return "";
-
-    let processedText = html;
-
-    // STAGE 1: Convert all semantic tags to placeholders to protect them
+    let p = html;
     const tagMap = {
-      '<(i|em)\\b[^>]*>(.*?)<\\/\\1>': '§§I_START§§$2§§I_END§§',
-      '<span\\b[^>]*font-style:\\s*italic[^>]*>(.*?)<\\/span>': '§§I_START§§$1§§I_END§§',
       '<T1\\b[^>]*>(.*?)<\\/T1>': '§§T1_START§§$1§§T1_END§§',
       '<T2\\b[^>]*>(.*?)<\\/T2>': '§§T2_START§§$1§§T2_END§§',
       '<T3\\b[^>]*>(.*?)<\\/T3>': '§§T3_START§§$1§§T3_END§§',
       '<T4\\b[^>]*>(.*?)<\\/T4>': '§§T4_START§§$1§§T4_END§§',
+      '<T5\\b[^>]*>(.*?)<\\/T5>': '§§T5_START§§$1§§T5_END§§',
     };
-    for (const [regex, placeholder] of Object.entries(tagMap)) {
-      processedText = processedText.replace(new RegExp(regex, 'gi'), placeholder);
-    }
-
-    // STAGE 2: Convert structural HTML tags to newlines
-    processedText = processedText.replace(/<\/(div|p)>/gi, '\n\n'); // Paragraphs
-    processedText = processedText.replace(/<br\s*\/?>/gi, '\n'); // Line breaks
-
-    // STAGE 3: Strip any remaining HTML tags
-    processedText = processedText.replace(/<[^>]*>/g, '');
-
-    // STAGE 4: Decode placeholders back to final text tags
+    for (const [re, pl] of Object.entries(tagMap)) { p = p.replace(new RegExp(re, 'gi'), pl); }
+    p = p.replace(/<\/(div|p)>/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '');
     const placeholderMap = {
-      '§§I_START§§': '<intention>', '§§I_END§§': '</intention>',
       '§§T1_START§§': '<T1>', '§§T1_END§§': '</T1>',
       '§§T2_START§§': '<T2>', '§§T2_END§§': '</T2>',
       '§§T3_START§§': '<T3>', '§§T3_END§§': '</T3>',
       '§§T4_START§§': '<T4>', '§§T4_END§§': '</T4>',
+      '§§T5_START§§': '<T5>', '§§T5_END§§': '</T5>',
     };
-    for (const [placeholder, tag] of Object.entries(placeholderMap)) {
-      processedText = processedText.replace(new RegExp(placeholder, 'g'), tag);
-    }
-
-    // STAGE 5: Clean up whitespace and HTML entities
-    processedText = processedText.replace(/&nbsp;/g, ' ');
-    return processedText.trim().replace(/\n{3,}/g, '\n\n');
+    for (const [pl, tag] of Object.entries(placeholderMap)) { p = p.replace(new RegExp(pl, 'g'), tag); }
+    return p.replace(/&nbsp;/g, ' ').trim().replace(/\n{3,}/g, '\n\n');
   }
-
 
   function applyHighlighting(html) {
     if (!html) return "";
-
-    const colors = {
-      intention: '#fff3cd', T1: '#a3e9a4', T2: '#fdfd96', T3: '#a0c4ff', T4: '#c7b2de'
-    };
+    const colors = { T1: '#a3e9a4', T2: '#fdfd96', T3: '#a0c4ff', T4: '#c7b2de', T5: '#ffadad' };
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
-    
     const replaceTagWithSpan = (selector, color) => {
       tempDiv.querySelectorAll(selector).forEach(tag => {
-        const newSpan = document.createElement('span');
-        newSpan.style.backgroundColor = color;
-        newSpan.style.borderRadius = '4px';
-        newSpan.style.padding = '1px 4px';
-        newSpan.innerHTML = tag.innerHTML;
-        tag.parentNode.replaceChild(newSpan, tag);
+        const span = document.createElement('span');
+        span.style.backgroundColor = color;
+        span.style.borderRadius = '4px';
+        span.style.padding = '1px 4px';
+        span.innerHTML = tag.innerHTML;
+        tag.parentNode.replaceChild(span, tag);
       });
     };
-
-    tempDiv.querySelectorAll('span').forEach(span => {
-      if (span.style.fontStyle === 'italic') {
-        span.style.fontStyle = 'normal';
-        span.style.backgroundColor = colors.intention;
-      }
-    });
-    
-    replaceTagWithSpan('i, em', colors.intention);
-    replaceTagWithSpan('T1', colors.T1);
-    replaceTagWithSpan('T2', colors.T2);
-    replaceTagWithSpan('T3', colors.T3);
-    replaceTagWithSpan('T4', colors.T4);
-
+    for(const tag in colors) { replaceTagWithSpan(tag, colors[tag]); }
     return tempDiv.innerHTML;
   }
 
-  function handleCopy(step) {
-    if (step !== 5) return;
-
-    const englishInputBox = document.getElementById('input5_1');
-    const teluguInputBox = document.getElementById('input5_2');
-
-    if (!englishInputBox || !teluguInputBox) { return; }
-
+  function handleManualReviewCopy() {
+    const englishInputBox = document.getElementById('input_english_review');
+    const teluguInputBox = document.getElementById('input_manual_reviewed_ai');
+    if (!teluguInputBox.innerText.trim()) {
+        showMessage("Please add the reviewed Telugu script before copying.", 'warning');
+        return;
+    }
     const originalTeluguHTML = teluguInputBox.innerHTML;
     const textForClipboard = transformTeluguHTMLForClipboard(originalTeluguHTML);
     const highlightedHTMLForDisplay = applyHighlighting(originalTeluguHTML);
     
     teluguInputBox.innerHTML = highlightedHTMLForDisplay;
-    
-    const englishText = englishInputBox.innerText;
-    const finalText =
-      getPrompt(step) +
-      "\n\nEnglish Script:\n" +
-      englishText +
-      "\n\nTagged Telugu Script:\n" +
-      textForClipboard;
+    const finalText = `${getPrompt(3)}\n\nEnglish Script:\n${englishInputBox.innerText}\n\nTagged Telugu Script:\n${textForClipboard}`;
       
     navigator.clipboard.writeText(finalText).then(() => {
-      showMessage("✅ Highlights applied & prompt copied!");
-    }).catch(err => {
-        console.error("Failed to copy:", err);
-        showMessage("❌ Failed to copy prompt.");
-    });
+      document.getElementById('input_comparison_left').innerHTML = highlightedHTMLForDisplay;
+      showMessage("Highlights applied, Prompt 3 copied & script moved to Comparison!");
+    }).catch(err => showMessage("Copy failed.", 'error'));
   }
-
-  const container = document.getElementById('stepsContainer');
-
-  function createPart(title, steps, className) {
-    const partDiv = document.createElement('div');
-    partDiv.className = `part-section ${className}`;
-    partDiv.innerHTML = `<h3>${title}</h3>`;
-    steps.forEach(i => partDiv.appendChild(createStep(i)));
-    return partDiv;
-  }
-
-  function createStep(i) {
-    const stepDiv = document.createElement('div');
-    stepDiv.className = 'step';
-
-    if (i === 5) {
-      stepDiv.innerHTML = `
-        <div class="input-boxes-container">
-            <div id="input5_1" class="editable" contenteditable="true" data-placeholder="Paste English script here..."></div>
-            <div id="input5_2" class="editable" contenteditable="true" data-placeholder="Paste Telugu script, then select text to tag it..."></div>
-        </div>
-        <div class="button-group">
-          <button onclick="wrapSelection('T1')">Generic word</button>
-          <button onclick="wrapSelection('T2')">Literal Translation</button>
-          <button onclick="wrapSelection('T3')">Gesture</button>
-          <button onclick="wrapSelection('T4')">Lengthy Sentence</button>
-        </div>
-        <div class="button-group" style="margin-top: 16px; border-top: 1px solid #f0ebe4; padding-top: 16px;">
-          <button class="copy-btn" onclick="handleCopy(${i})">📋 Copy Prompt</button> 
-          <button class="clear-btn" onclick="handleClear(${i})">🗑️ Clear</button>
-        </div>
-      `;
-    }
-    return stepDiv;
-  }
-
-  container.appendChild(createPart("Fine Tuning Tool", [5], "part4"));
 
   document.addEventListener('DOMContentLoaded', function() {
-    const scrollToTopBtn = document.createElement('button');
-    scrollToTopBtn.id = 'scrollToTopBtn';
-    scrollToTopBtn.title = 'Scroll to Top';
-    scrollToTopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>`;
-    document.body.appendChild(scrollToTopBtn);
-
-    window.onscroll = () => {
-      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-        scrollToTopBtn.classList.add("visible");
-      } else {
-        scrollToTopBtn.classList.remove("visible");
-      }
-    };
-    scrollToTopBtn.onclick = () => {
-      document.querySelector('.part4')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (scrollToTopBtn) {
+      window.onscroll = () => {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+          scrollToTopBtn.classList.add("visible");
+        } else {
+          scrollToTopBtn.classList.remove("visible");
+        }
+      };
+      scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
   });
 </script>
-
 </body>
 </html>
