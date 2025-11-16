@@ -26,6 +26,8 @@
       --accent-orange: #fd7e14;
       --accent-green: #28a745;
       --accent-red: #dc3545;
+      --accent-teal: #20c997;
+      --accent-gold: #fff0b3; /* A pleasant gold for highlighting */
     }
 
     * { box-sizing: border-box; }
@@ -157,8 +159,8 @@
     .btn.btn-tag { background: #e7e3fc; color: #6f42c1; }
     .btn.btn-tag:hover { background: #d7cff7; }
     
-    #message { /* ... existing styles ... */ }
-    #scrollToTopBtn { /* ... existing styles ... */ }
+    .btn.btn-format { background-color: #e8f9f5; color: var(--accent-teal); margin-left: auto; }
+    .btn.btn-format:hover { background-color: #d1f3e9; }
 
     #message {
       position: fixed; top: 24px; right: 24px; background: #343a40; color: white;
@@ -188,7 +190,6 @@
       body { padding: 1rem; }
       .container { padding: 1.5rem; }
     }
-
     script[type="text/plain"] { display: none; }
   </style>
 </head>
@@ -228,13 +229,13 @@
     <div class="step-section blue">
       <h3 class="step-header"><span class="step-number">2</span>AI Review</h3>
       <div class="input-boxes-container">
-        <div id="input_english_review" class="editable" contenteditable="true" data-placeholder="English script for review..."></div>
+        <div id="input_english_review" class="editable" contenteditable="true" data-placeholder="Paste English script for review..."></div>
         <div id="input_telugu_review" class="editable" contenteditable="true" data-placeholder="Paste AI's paragraph-formatted Telugu script here..."></div>
       </div>
       <div class="button-group">
         <button class="btn btn-primary" onclick="handleAiReviewCopy()">
-           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
-           Copy & Move to Next Step
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+           Copy Prompt
         </button>
         <button class="btn btn-secondary" onclick="handleClear('review')">
            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -247,8 +248,8 @@
     <div class="step-section purple">
         <h3 class="step-header"><span class="step-number">3</span>Manual Review & Fine-Tuning</h3>
         <div class="input-boxes-container">
-            <div id="input_manual_first_ai" class="editable" contenteditable="true" data-placeholder="First AI translation appears here..."></div>
-            <div id="input_manual_reviewed_ai" class="editable" contenteditable="true" data-placeholder="Paste AI's reviewed translation here, then select text to tag it..."></div>
+            <div id="input_manual_first_ai" class="editable" contenteditable="true" data-placeholder="Paste AI's reviewed script here..."></div>
+            <div id="input_manual_reviewed_ai" class="editable" contenteditable="true" data-placeholder="Make manual corrections here, then select text to tag it..."></div>
         </div>
         <div class="button-group">
           <button class="btn btn-tag" onclick="wrapSelection('T1')">Generic word</button>
@@ -266,6 +267,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             Clear
           </button>
+          <button class="btn btn-format" onclick="formatBoldTextStep3()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5H9.5a2.5 2.5 0 0 0 0 5H12"></path><path d="M15 5h-2.5a2.5 2.5 0 0 0 0 5H15"></path><path d="M4 14h16"></path><path d="M18 20l-2.5-2.5"></path><path d="M6 20l2.5-2.5"></path></svg>
+            Format Bold
+          </button>
         </div>
     </div>
 
@@ -281,6 +286,10 @@
              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             Clear
           </button>
+          <button class="btn btn-format" onclick="formatBoldTextStep4()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5H9.5a2.5 2.5 0 0 0 0 5H12"></path><path d="M15 5h-2.5a2.5 2.5 0 0 0 0 5H15"></path><path d="M4 14h16"></path><path d="M18 20l-2.5-2.5"></path><path d="M6 20l2.5-2.5"></path></svg>
+            Format Bold
+          </button>
         </div>
     </div>
     
@@ -290,7 +299,6 @@
           Clear All Input Boxes
         </button>
     </div>
-
     <div id="message"></div>
   </div>
 
@@ -329,7 +337,7 @@
     
     
     </script>
-  <script type="text/plain" id="prompt2">	
+  <script type="text/plain" id="prompt2">T	
     Below is the Transcript and its Telugu translation of an English Talk by sadhguru addressing the audience.
 
     The talk is made up of blocks of points.
@@ -1755,7 +1763,7 @@ Below are the English and the tagged Telugu scripts:
   function getPrompt(step) { return document.getElementById(`prompt${step}`).textContent.trim(); }
   
   function showMessage(msg, type = 'success') {
-    const icons = { success: '✅', warning: '⚠️', error: '❌', info: '🗑️' };
+    const icons = { success: '✅', warning: '⚠️', error: '❌', info: '🗑️', format: '🎨' };
     message.innerHTML = `${icons[type] || '✅'} <span>${msg}</span>`;
     message.classList.add('show');
     clearTimeout(showMessage.timeout);
@@ -1781,72 +1789,49 @@ Below are the English and the tagged Telugu scripts:
   }
   
   function handleBreakParagraphsCopy() {
-  const englishText = document.getElementById('input_english_initial').innerText;
-  const teluguText = document.getElementById('input_telugu_initial').innerText;
-  if (!englishText.trim() && !teluguText.trim()) {
-      showMessage("Please enter scripts in the boxes first.", 'warning');
-      return;
+    const englishText = document.getElementById('input_english_initial').innerText;
+    const teluguText = document.getElementById('input_telugu_initial').innerText;
+    if (!englishText.trim() && !teluguText.trim()) { return showMessage("Please enter scripts in the boxes first.", 'warning'); }
+    const finalText = `${getPrompt(1)}\n\nEnglish Script:\n${englishText}\n\nTelugu Script:\n${teluguText}`;
+    navigator.clipboard.writeText(finalText).then(() => showMessage("Prompt 1 copied successfully!"));
   }
-  const finalText = `${getPrompt(1)}\n\nEnglish Script:\n${englishText}\n\nTelugu Script:\n${teluguText}`;
-  
-  // The line that automatically moved the script has been removed from here.
-  
-  navigator.clipboard.writeText(finalText).then(() => showMessage("Prompt 1 copied successfully!"));
-}
 
   function handleAiReviewCopy() {
     const englishText = document.getElementById('input_english_review').innerText;
     const teluguText = document.getElementById('input_telugu_review').innerText;
-     if (!teluguText.trim()) {
-        showMessage("Please paste the paragraph-formatted Telugu script first.", 'warning');
-        return;
-    }
+     if (!teluguText.trim()) { return showMessage("Please paste the paragraph-formatted Telugu script first.", 'warning'); }
     const finalText = `${getPrompt(2)}\n\nEnglish Script:\n${englishText}\n\nTelugu Script:\n${teluguText}`;
     navigator.clipboard.writeText(finalText).then(() => {
-      document.getElementById('input_manual_first_ai').innerHTML = document.getElementById('input_telugu_review').innerHTML;
-      showMessage("Prompt 2 copied & Telugu script moved to Manual Review.");
+      showMessage("Prompt 2 copied successfully!");
     }).catch(err => showMessage("Copy failed.", 'error'));
   }
 
   function wrapSelection(tagName) {
     const targetBox = document.getElementById('input_manual_reviewed_ai');
     const selection = window.getSelection();
-    if (!targetBox || selection.rangeCount === 0 || selection.isCollapsed) {
-      showMessage("Please select text in the right-hand 'Manual Review' box first.", 'warning');
-      return;
-    }
+    if (!targetBox || selection.rangeCount === 0 || selection.isCollapsed) { return showMessage("Please select text in the right-hand 'Manual Review' box first.", 'warning'); }
     const range = selection.getRangeAt(0);
-    if (!targetBox.contains(range.commonAncestorContainer)) {
-        showMessage("Please select text inside the correct box.", 'warning');
-        return;
-    }
+    if (!targetBox.contains(range.commonAncestorContainer)) { return showMessage("Please select text inside the correct box.", 'warning'); }
     const newNode = document.createElement(tagName);
     try {
       newNode.appendChild(range.extractContents()); 
       range.insertNode(newNode);
       selection.removeAllRanges();
-    } catch (e) {
-      showMessage("Error wrapping text.", 'error');
-    }
+    } catch (e) { showMessage("Error wrapping text.", 'error'); }
   }
 
   function transformTeluguHTMLForClipboard(html) {
-    if (!html) return "";
-    let p = html;
+    if (!html) return ""; let p = html;
     const tagMap = {
-      '<T1\\b[^>]*>(.*?)<\\/T1>': '§§T1_START§§$1§§T1_END§§',
-      '<T2\\b[^>]*>(.*?)<\\/T2>': '§§T2_START§§$1§§T2_END§§',
-      '<T3\\b[^>]*>(.*?)<\\/T3>': '§§T3_START§§$1§§T3_END§§',
-      '<T4\\b[^>]*>(.*?)<\\/T4>': '§§T4_START§§$1§§T4_END§§',
+      '<T1\\b[^>]*>(.*?)<\\/T1>': '§§T1_START§§$1§§T1_END§§', '<T2\\b[^>]*>(.*?)<\\/T2>': '§§T2_START§§$1§§T2_END§§',
+      '<T3\\b[^>]*>(.*?)<\\/T3>': '§§T3_START§§$1§§T3_END§§', '<T4\\b[^>]*>(.*?)<\\/T4>': '§§T4_START§§$1§§T4_END§§',
       '<T5\\b[^>]*>(.*?)<\\/T5>': '§§T5_START§§$1§§T5_END§§',
     };
     for (const [re, pl] of Object.entries(tagMap)) { p = p.replace(new RegExp(re, 'gi'), pl); }
     p = p.replace(/<\/(div|p)>/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '');
     const placeholderMap = {
-      '§§T1_START§§': '<T1>', '§§T1_END§§': '</T1>',
-      '§§T2_START§§': '<T2>', '§§T2_END§§': '</T2>',
-      '§§T3_START§§': '<T3>', '§§T3_END§§': '</T3>',
-      '§§T4_START§§': '<T4>', '§§T4_END§§': '</T4>',
+      '§§T1_START§§': '<T1>', '§§T1_END§§': '</T1>', '§§T2_START§§': '<T2>', '§§T2_END§§': '</T2>',
+      '§§T3_START§§': '<T3>', '§§T3_END§§': '</T3>', '§§T4_START§§': '<T4>', '§§T4_END§§': '</T4>',
       '§§T5_START§§': '<T5>', '§§T5_END§§': '</T5>',
     };
     for (const [pl, tag] of Object.entries(placeholderMap)) { p = p.replace(new RegExp(pl, 'g'), tag); }
@@ -1856,55 +1841,119 @@ Below are the English and the tagged Telugu scripts:
   function applyHighlighting(html) {
     if (!html) return "";
     const colors = { T1: '#a3e9a4', T2: '#fdfd96', T3: '#a0c4ff', T4: '#c7b2de', T5: '#ffadad' };
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
+    const tempDiv = document.createElement('div'); tempDiv.innerHTML = html;
     const replaceTagWithSpan = (selector, color) => {
       tempDiv.querySelectorAll(selector).forEach(tag => {
         const span = document.createElement('span');
-        span.style.backgroundColor = color;
-        span.style.borderRadius = '4px';
-        span.style.padding = '1px 4px';
-        span.innerHTML = tag.innerHTML;
-        tag.parentNode.replaceChild(span, tag);
+        span.style.backgroundColor = color; span.style.borderRadius = '4px'; span.style.padding = '1px 4px';
+        span.innerHTML = tag.innerHTML; tag.parentNode.replaceChild(span, tag);
       });
     };
     for(const tag in colors) { replaceTagWithSpan(tag, colors[tag]); }
     return tempDiv.innerHTML;
   }
-
+  
   function handleManualReviewCopy() {
-    const englishInputBox = document.getElementById('input_english_review');
     const teluguInputBox = document.getElementById('input_manual_reviewed_ai');
-    if (!teluguInputBox.innerText.trim()) {
-        showMessage("Please add the reviewed Telugu script before copying.", 'warning');
-        return;
-    }
+    if (!teluguInputBox.innerText.trim()) { return showMessage("Please add the reviewed Telugu script before copying.", 'warning'); }
     const originalTeluguHTML = teluguInputBox.innerHTML;
     const textForClipboard = transformTeluguHTMLForClipboard(originalTeluguHTML);
-    const highlightedHTMLForDisplay = applyHighlighting(originalTeluguHTML);
-    
-    teluguInputBox.innerHTML = highlightedHTMLForDisplay;
-    const finalText = `${getPrompt(3)}\n\nEnglish Script:\n${englishInputBox.innerText}\n\nTagged Telugu Script:\n${textForClipboard}`;
-      
+    const highlightedHTML = applyHighlighting(originalTeluguHTML);
+    teluguInputBox.innerHTML = highlightedHTML;
+    const finalText = `${getPrompt(3)}\n\nEnglish Script:\n${document.getElementById('input_english_review').innerText}\n\nTagged Telugu Script:\n${textForClipboard}`;
     navigator.clipboard.writeText(finalText).then(() => {
-      document.getElementById('input_comparison_left').innerHTML = highlightedHTMLForDisplay;
+      document.getElementById('input_comparison_left').innerHTML = highlightedHTML;
       showMessage("Highlights applied, Prompt 3 copied & script moved to Comparison!");
     }).catch(err => showMessage("Copy failed.", 'error'));
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
+  function formatBoldText(targetIds, color) {
+    let changedCount = 0;
+    targetIds.forEach(id => {
+        const box = document.getElementById(id);
+        if (box) {
+            const boldElements = box.querySelectorAll('b, strong');
+            boldElements.forEach(el => {
+                // CORRECTED: Apply background color for a true highlight effect
+                el.style.backgroundColor = color;
+                el.style.color = 'inherit'; // Ensure text color doesn't change
+                changedCount++;
+            });
+        }
+    });
+    if (changedCount > 0) {
+        showMessage(`Highlighted ${changedCount} bold item(s).`, 'format');
+    } else {
+        showMessage("No bold items found to highlight.", 'warning');
+    }
+}
+
+function formatBoldTextStep3() {
+    formatBoldText(['input_manual_first_ai', 'input_manual_reviewed_ai'], 'var(--accent-gold)');
+}
+
+function formatBoldTextStep4() {
+    formatBoldText(['input_comparison_right'], 'var(--accent-gold)');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Setup Scroll-to-Top button (existing logic)
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     if (scrollToTopBtn) {
-      window.onscroll = () => {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-          scrollToTopBtn.classList.add("visible");
-        } else {
-          scrollToTopBtn.classList.remove("visible");
-        }
-      };
-      scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        window.onscroll = () => { scrollToTopBtn.classList.toggle("visible", document.body.scrollTop > 200 || document.documentElement.scrollTop > 200); };
+        scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
-  });
+
+    // 2. Setup NEW & IMPROVED Smart Paste Handler
+    document.querySelectorAll('.editable').forEach(box => {
+        box.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const clipboardData = e.clipboardData || window.clipboardData;
+            let pastedHtml = clipboardData.getData('text/html');
+            const pastedText = clipboardData.getData('text/plain');
+
+            if (!pastedHtml) {
+                document.execCommand('insertText', false, pastedText);
+                return;
+            }
+
+            // --- The New Sanitization Logic ---
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = pastedHtml;
+
+            // PASS 1: Intelligently convert styled bold elements (like from Gemini) into simple <b> tags.
+            const allElements = tempDiv.querySelectorAll('*');
+            allElements.forEach(el => {
+                const fontWeight = el.style.fontWeight;
+                if (fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900') {
+                    // This element is styled to be bold. We'll wrap its contents in a <b> tag.
+                    const boldTag = document.createElement('b');
+                    while (el.firstChild) {
+                        boldTag.appendChild(el.firstChild);
+                    }
+                    // Replace the original styled element with our clean <b> tag.
+                    el.parentNode.replaceChild(boldTag, el);
+                }
+            });
+            
+            // PASS 2: Now that bold is preserved, aggressively strip ALL attributes (style, class, etc.) from every tag.
+            // This removes backgrounds and all other junk, leaving only pure tags like <p>, <div>, and our new <b> tags.
+            tempDiv.querySelectorAll('*').forEach(el => {
+                // Don't strip attributes from our precious custom tags if they somehow get pasted in
+                if (!['T1', 'T2', 'T3', 'T4', 'T5'].includes(el.tagName)) {
+                   while (el.attributes.length > 0) {
+                       el.removeAttribute(el.attributes[0].name);
+                   }
+                }
+            });
+
+            const sanitizedHtml = tempDiv.innerHTML;
+            document.execCommand('insertHTML', false, sanitizedHtml);
+
+            showMessage("Pasted content has been sanitized.", "format");
+        });
+    });
+});
 </script>
 </body>
 </html>
