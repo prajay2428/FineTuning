@@ -117,12 +117,21 @@
     .step-section.orange .step-number { background: var(--accent-orange); }
 
     .input-boxes-container { display: flex; gap: 20px; margin-bottom: 20px; }
-    .editable {
-      flex: 1; height: 450px; border: 1px solid var(--border-medium); border-radius: 12px;
-      padding: 1rem; font-family: var(--font-mono); font-size: 14px;
-      background: var(--bg-input); white-space: pre-wrap; overflow: auto; min-width: 0;
-      transition: all 0.2s ease;
-    }
+    /* --- REPLACE the existing .editable rule with this --- */
+/* --- REPLACE the existing .editable rule with this --- */
+.editable {
+  flex: 1; height: 450px; border: 1px solid var(--border-medium); border-radius: 12px;
+  padding: 1rem; font-family: var(--font-sans);; font-size: 14px;
+  background: var(--bg-input); white-space: pre-wrap; overflow: auto; min-width: 0;
+  transition: all 0.2s ease;
+  font-weight: 400; /* Standard, readable weight for normal text */
+}
+
+/* --- ADD this rule right after it --- */
+.editable b, 
+.editable strong {
+  font-weight: 700; /* A standard, strong bold weight */
+}
     .editable:focus {
       outline: none; border-color: var(--accent-blue);
       box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
@@ -1867,93 +1876,138 @@ Below are the English and the tagged Telugu scripts:
     }).catch(err => showMessage("Copy failed.", 'error'));
   }
 
+  // --- START: FINAL, WORKING SOLUTION ---
+
   function formatBoldText(targetIds, color) {
     let changedCount = 0;
     targetIds.forEach(id => {
         const box = document.getElementById(id);
         if (box) {
+            // Find all bold elements
             const boldElements = box.querySelectorAll('b, strong');
-            boldElements.forEach(el => {
-                // CORRECTED: Apply background color for a true highlight effect
-                el.style.backgroundColor = color;
-                el.style.color = 'inherit'; // Ensure text color doesn't change
+            
+            boldElements.forEach(boldEl => {
+                // Create a new span to replace the bold tag
+                const span = document.createElement('span');
+                
+                // Move the content from the bold tag to the new span
+                span.innerHTML = boldEl.innerHTML;
+                
+                // Apply the highlight style to the new span
+                span.style.backgroundColor = color;
+                
+                // Replace the old bold tag with the new highlighted span
+                boldEl.parentNode.replaceChild(span, boldEl);
+                
                 changedCount++;
             });
         }
     });
+
     if (changedCount > 0) {
-        showMessage(`Highlighted ${changedCount} bold item(s).`, 'format');
+        showMessage(`Highlighted and normalized ${changedCount} bold item(s).`, 'format');
     } else {
         showMessage("No bold items found to highlight.", 'warning');
     }
 }
 
-function formatBoldTextStep3() {
+  function formatBoldTextStep3() {
     formatBoldText(['input_manual_first_ai', 'input_manual_reviewed_ai'], 'var(--accent-gold)');
-}
+  }
 
-function formatBoldTextStep4() {
+  function formatBoldTextStep4() {
     formatBoldText(['input_comparison_right'], 'var(--accent-gold)');
-}
+  }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Setup Scroll-to-Top button (existing logic)
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Setup Scroll-to-Top button
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     if (scrollToTopBtn) {
         window.onscroll = () => { scrollToTopBtn.classList.toggle("visible", document.body.scrollTop > 200 || document.documentElement.scrollTop > 200); };
         scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
-    // 2. Setup NEW & IMPROVED Smart Paste Handler
+    // 2. Setup the Definitive Smart Paste Handler
     document.querySelectorAll('.editable').forEach(box => {
         box.addEventListener('paste', function(e) {
             e.preventDefault();
             const clipboardData = e.clipboardData || window.clipboardData;
-            let pastedHtml = clipboardData.getData('text/html');
+            const pastedHtml = clipboardData.getData('text/html');
             const pastedText = clipboardData.getData('text/plain');
 
+            // Fallback for plain text
             if (!pastedHtml) {
                 document.execCommand('insertText', false, pastedText);
                 return;
             }
 
-            // --- The New Sanitization Logic ---
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = pastedHtml;
-
-            // PASS 1: Intelligently convert styled bold elements (like from Gemini) into simple <b> tags.
-            const allElements = tempDiv.querySelectorAll('*');
-            allElements.forEach(el => {
-                const fontWeight = el.style.fontWeight;
-                if (fontWeight === 'bold' || fontWeight === '700' || fontWeight === '800' || fontWeight === '900') {
-                    // This element is styled to be bold. We'll wrap its contents in a <b> tag.
-                    const boldTag = document.createElement('b');
-                    while (el.firstChild) {
-                        boldTag.appendChild(el.firstChild);
-                    }
-                    // Replace the original styled element with our clean <b> tag.
-                    el.parentNode.replaceChild(boldTag, el);
-                }
-            });
+            // Create a temporary, off-screen div to let the browser render the pasted content.
+            const tempRenderDiv = document.createElement('div');
+            tempRenderDiv.contentEditable = true;
+            tempRenderDiv.style.position = 'absolute';
+            tempRenderDiv.style.left = '-9999px';
+            document.body.appendChild(tempRenderDiv);
             
-            // PASS 2: Now that bold is preserved, aggressively strip ALL attributes (style, class, etc.) from every tag.
-            // This removes backgrounds and all other junk, leaving only pure tags like <p>, <div>, and our new <b> tags.
-            tempDiv.querySelectorAll('*').forEach(el => {
-                // Don't strip attributes from our precious custom tags if they somehow get pasted in
-                if (!['T1', 'T2', 'T3', 'T4', 'T5'].includes(el.tagName)) {
-                   while (el.attributes.length > 0) {
-                       el.removeAttribute(el.attributes[0].name);
-                   }
+            // Paste the HTML into this temporary div. The browser will parse it.
+            tempRenderDiv.innerHTML = pastedHtml;
+
+            // This function now reads the BROWSER-RENDERED structure and rebuilds it cleanly.
+            function rebuildClean(node) {
+                if (node.nodeType === 3) { // Text node
+                    return document.createTextNode(node.textContent);
                 }
-            });
 
-            const sanitizedHtml = tempDiv.innerHTML;
-            document.execCommand('insertHTML', false, sanitizedHtml);
+                if (node.nodeType === 1) { // Element node
+                    const style = window.getComputedStyle(node);
+                    const isBold = parseInt(style.fontWeight) >= 700;
+                    
+                    let element;
+                    // If the element is computed as bold, create a <b> tag.
+                    if (isBold) {
+                        element = document.createElement('b');
+                    } else {
+                        // Otherwise, create a fragment to hold its children without an extra tag.
+                        element = document.createDocumentFragment();
+                    }
 
-            showMessage("Pasted content has been sanitized.", "format");
+                    // Recursively process all children and append them to our new element/fragment.
+                    Array.from(node.childNodes).forEach(child => {
+                        element.appendChild(rebuildClean(child));
+                    });
+
+                    // If the original node was a block, wrap the result in a <div> to keep the line break.
+                    if (style.display === 'block' && node.tagName.toLowerCase() !== 'body') {
+                        const blockWrapper = document.createElement('div');
+                        blockWrapper.appendChild(element);
+                        return blockWrapper;
+                    }
+
+                    return element;
+                }
+                return document.createDocumentFragment(); // Return an empty fragment for other node types
+            }
+            
+            const cleanFragment = rebuildClean(tempRenderDiv);
+
+            // Clean up the temporary div from the DOM
+            document.body.removeChild(tempRenderDiv);
+            
+            // Insert the fully rebuilt, clean content into the actual editor.
+            const selection = window.getSelection();
+            if (selection.rangeCount) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(cleanFragment);
+                // Move the cursor to the end of the pasted content.
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+
+            showMessage("Pasted content sanitized.", "format");
         });
     });
-});
+  });
 </script>
 </body>
 </html>
