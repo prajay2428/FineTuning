@@ -1152,7 +1152,6 @@ Column 4: Other Alternatives (full sentences in case of tags 3,4,5; bold the tag
 
 
 Below are the English and the tagged Telugu scripts: 
-
 </script>
   <script type="text/plain" id="prompt3">	
     Below is the Transcript and its Telugu translation of an English Talk by sadhguru addressing the audience.
@@ -1703,7 +1702,7 @@ Below are the english and the telugu scripts:
 
  </script>
 
-<script>
+ <script>
   const message = document.getElementById('message');
   
   function getPrompt(id) { return document.getElementById(id).textContent.trim(); }
@@ -1838,7 +1837,8 @@ Below are the english and the telugu scripts:
   // --- 3. Copy AI Review Prompt (Prompt 2) ---
   function handleAiPromptCopy() {
     const sourceText = document.getElementById('input_source').innerText;
-    const targetText = document.getElementById('input_editor').innerText; 
+    const editorBox = document.getElementById('input_editor'); 
+    const targetText = editorBox.innerText; 
     
     if (!targetText.trim()) { return showMessage("Please ensure script is in the editor box.", 'warning'); }
     
@@ -1849,36 +1849,79 @@ Below are the english and the telugu scripts:
     }).catch(err => showMessage("Copy failed.", 'error'));
   }
 
-  // --- Format Bold Logic (Updated for Suggestions & Light Green) ---
+  // --- UPDATED: Format Bold (Green) & Brackets (Yellow + Remove Brackets) ---
   function formatBoldText() {
-    // Added 'input_suggestions' to target list
     const targetIds = ['input_source', 'input_editor', 'input_suggestions'];
-    // Changed color to Light Green
-    const color = '#5CE65C'; 
+    const boldColor = '#5CE65C'; // Light Green
+    const bracketColor = '#fff9c4'; // Light Yellow
     let changedCount = 0;
 
     targetIds.forEach(id => {
         const box = document.getElementById(id);
-        if (box) {
-            const boldElements = box.querySelectorAll('b, strong');
-            boldElements.forEach(boldEl => {
-                if (boldEl.closest('table')) return; 
-                
-                if(boldEl.parentElement.tagName === 'SPAN' && boldEl.parentElement.style.backgroundColor) return;
+        if (!box) return;
 
-                const span = document.createElement('span');
-                span.innerHTML = boldEl.innerHTML;
-                span.style.backgroundColor = color;
-                boldEl.parentNode.replaceChild(span, boldEl);
-                changedCount++;
-            });
-        }
+        // 1. Process Bold Tags -> Green
+        const boldElements = box.querySelectorAll('b, strong');
+        boldElements.forEach(boldEl => {
+            if (boldEl.closest('table')) return; 
+            if(boldEl.parentElement.tagName === 'SPAN' && boldEl.parentElement.style.backgroundColor) return;
+
+            const span = document.createElement('span');
+            span.innerHTML = boldEl.innerHTML;
+            span.style.backgroundColor = boldColor;
+            boldEl.parentNode.replaceChild(span, boldEl);
+            changedCount++;
+        });
+
+        // 2. Process Square Brackets [text] -> Yellow Background, REMOVE brackets
+        const treeWalker = document.createTreeWalker(box, NodeFilter.SHOW_TEXT, null, false);
+        const textNodes = [];
+        while(treeWalker.nextNode()) textNodes.push(treeWalker.currentNode);
+
+        textNodes.forEach(node => {
+            if (node.parentNode.closest('table')) return;
+            if (node.parentNode.tagName === 'SPAN' && node.parentNode.style.backgroundColor) return;
+
+            const text = node.nodeValue;
+            // Regex to find content inside brackets
+            const regex = /\[(.*?)\]/g; 
+
+            if (regex.test(text)) {
+                const fragment = document.createDocumentFragment();
+                let lastIndex = 0;
+                regex.lastIndex = 0;
+                let match;
+
+                while ((match = regex.exec(text)) !== null) {
+                   // Text before the bracket
+                   if (match.index > lastIndex) {
+                       fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+                   }
+                   
+                   // Highlight ONLY the inner text (match[1]), ignoring the brackets (match[0])
+                   const span = document.createElement('span');
+                   span.style.backgroundColor = bracketColor;
+                   span.textContent = match[1]; // Using match[1] removes the brackets
+                   fragment.appendChild(span);
+                   
+                   lastIndex = regex.lastIndex;
+                   changedCount++;
+                }
+                
+                // Remaining text
+                if (lastIndex < text.length) {
+                    fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+                }
+                
+                node.parentNode.replaceChild(fragment, node);
+            }
+        });
     });
 
     if (changedCount > 0) {
-        showMessage(`Highlighted ${changedCount} bold item(s) in light green.`, 'format');
+        showMessage(`Formatted ${changedCount} item(s) (Bold & Brackets).`, 'format');
     } else {
-        showMessage("No new bold items found.", 'info');
+        showMessage("No new items found to format.", 'info');
     }
   }
 
