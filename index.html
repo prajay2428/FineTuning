@@ -259,7 +259,7 @@
   </div>
 
   <!-- Prompts (Hidden) -->
-  <script type="text/plain" id="prompt2">   Fine-tuning Telugu Translation
+  <script type="text/plain" id="prompt2">  Fine-tuning Telugu Translation
 
    
     Below is the Transcript of an English Talk by sadhguru addressing Audience, and its Telugu Dubbing Script.
@@ -1849,7 +1849,7 @@ Below are the english and the telugu scripts:
     }).catch(err => showMessage("Copy failed.", 'error'));
   }
 
-  // --- UPDATED: Format Bold (Green) & Brackets (Yellow + Remove Brackets) ---
+  // --- Format Bold (Green) & Brackets (Yellow + Remove Brackets) ---
   function formatBoldText() {
     const targetIds = ['input_source', 'input_editor', 'input_suggestions'];
     const boldColor = '#5CE65C'; // Light Green
@@ -1883,7 +1883,6 @@ Below are the english and the telugu scripts:
             if (node.parentNode.tagName === 'SPAN' && node.parentNode.style.backgroundColor) return;
 
             const text = node.nodeValue;
-            // Regex to find content inside brackets
             const regex = /\[(.*?)\]/g; 
 
             if (regex.test(text)) {
@@ -1893,22 +1892,17 @@ Below are the english and the telugu scripts:
                 let match;
 
                 while ((match = regex.exec(text)) !== null) {
-                   // Text before the bracket
                    if (match.index > lastIndex) {
                        fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
                    }
-                   
-                   // Highlight ONLY the inner text (match[1]), ignoring the brackets (match[0])
                    const span = document.createElement('span');
                    span.style.backgroundColor = bracketColor;
-                   span.textContent = match[1]; // Using match[1] removes the brackets
+                   span.textContent = match[1]; 
                    fragment.appendChild(span);
-                   
                    lastIndex = regex.lastIndex;
                    changedCount++;
                 }
                 
-                // Remaining text
                 if (lastIndex < text.length) {
                     fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
                 }
@@ -1925,9 +1919,56 @@ Below are the english and the telugu scripts:
     }
   }
 
-  // --- Paste Sanitization ---
+  // --- Initializing Event Listeners ---
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.editable').forEach(box => {
+        
+        // --- FIX #2: Prevent Sticky Bold Typing ---
+        box.addEventListener('keydown', function(e) {
+            // Listen for Space key
+            if (e.key === ' ' && !e.shiftKey && !e.ctrlKey) {
+                const sel = window.getSelection();
+                if (!sel.rangeCount) return;
+                
+                const range = sel.getRangeAt(0);
+                const node = range.startContainer;
+                
+                // Determine if we are inside a Bold tag (B, STRONG)
+                let boldParent = (node.nodeType === 3) ? node.parentNode : node;
+                if (boldParent.tagName !== 'B' && boldParent.tagName !== 'STRONG') {
+                    boldParent = boldParent.closest('b, strong');
+                }
+
+                // If inside bold, check if cursor is at the very end
+                if (boldParent) {
+                    // This is a simple check: if we are at the end of the text content of the bold node
+                    // and that text node is the last child of the bold element.
+                    const isAtEnd = (range.endOffset === node.textContent.length);
+                    
+                    if (isAtEnd) {
+                        e.preventDefault(); // Stop standard space insertion
+                        
+                        // Insert a plain space AFTER the bold element
+                        const space = document.createTextNode(' ');
+                        
+                        if (boldParent.nextSibling) {
+                            boldParent.parentNode.insertBefore(space, boldParent.nextSibling);
+                        } else {
+                            boldParent.parentNode.appendChild(space);
+                        }
+                        
+                        // Move cursor to after the space we just created
+                        const newRange = document.createRange();
+                        newRange.setStart(space, 1); // After the space
+                        newRange.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(newRange);
+                    }
+                }
+            }
+        });
+
+        // --- FIX #1: Better Paste Sanitization (Keeps Bold) ---
         box.addEventListener('paste', function(e) {
             e.preventDefault();
             const clipboardData = e.clipboardData || window.clipboardData;
@@ -1939,15 +1980,21 @@ Below are the english and the telugu scripts:
                 return;
             }
 
+            // Create temporary container AND attach to body (hidden)
+            // Attaching to body is crucial for getComputedStyle to detect Bold weights correctly
             const tempRenderDiv = document.createElement('div');
+            tempRenderDiv.style.position = 'absolute';
+            tempRenderDiv.style.left = '-9999px';
             tempRenderDiv.innerHTML = pastedHtml;
+            document.body.appendChild(tempRenderDiv);
 
             function rebuildClean(node) {
-                if (node.nodeType === 3) return document.createTextNode(node.textContent);
-                if (node.nodeType === 1) {
+                if (node.nodeType === 3) return document.createTextNode(node.textContent); // Text node
+                if (node.nodeType === 1) { // Element node
                     const tagName = node.tagName.toLowerCase();
                     const style = window.getComputedStyle(node);
                     
+                    // Keep Tables structure
                     if (['table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td'].includes(tagName)) {
                         const newEl = document.createElement(tagName);
                         if (node.hasAttribute('colspan')) newEl.setAttribute('colspan', node.getAttribute('colspan'));
@@ -1956,30 +2003,50 @@ Below are the english and the telugu scripts:
                         return newEl;
                     }
 
+                    // Detect Bold (Tag name or CSS weight)
                     const isBold = (tagName === 'b' || tagName === 'strong' || parseInt(style.fontWeight) >= 700);
+                    
+                    // Process Children
                     const childFragment = document.createDocumentFragment();
-                    let hasBlock = false;
+                    let hasBlockChildren = false;
                     
                     Array.from(node.childNodes).forEach(child => {
                         const rebuilt = rebuildClean(child);
-                        if (rebuilt.nodeType === 1 && ['div','p'].includes(rebuilt.tagName.toLowerCase())) hasBlock = true;
+                        if (rebuilt.nodeType === 1 && ['div','p','table'].includes(rebuilt.tagName.toLowerCase())) {
+                            hasBlockChildren = true;
+                        }
                         childFragment.appendChild(rebuilt);
                     });
 
-                    if (isBold && !hasBlock) {
+                    // If it was bold, wrap in <b>
+                    if (isBold && !hasBlockChildren) {
                         const b = document.createElement('b');
                         b.appendChild(childFragment);
                         return b;
                     }
 
-                    const container = (style.display === 'block' || tagName === 'p' || tagName === 'div') ? document.createElement('div') : document.createDocumentFragment();
-                    container.appendChild(childFragment);
-                    return container;
+                    // Handle Blocks vs Inline
+                    const isBlock = (style.display === 'block' || tagName === 'p' || tagName === 'div' || tagName === 'br');
+                    
+                    if (tagName === 'br') return document.createElement('br');
+
+                    if (isBlock) {
+                        const div = document.createElement('div');
+                        div.appendChild(childFragment);
+                        return div;
+                    }
+
+                    // Return plain fragment for spans/others
+                    return childFragment;
                 }
                 return document.createDocumentFragment();
             }
 
             const cleanFragment = rebuildClean(tempRenderDiv);
+            
+            // Cleanup
+            document.body.removeChild(tempRenderDiv);
+
             const selection = window.getSelection();
             if (selection.rangeCount) {
                 const range = selection.getRangeAt(0);
