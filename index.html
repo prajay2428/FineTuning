@@ -1768,7 +1768,7 @@ Below are the english and the telugu scripts:
     const rawHTML = editorBox.innerHTML;
     const formattedScript = transformTeluguHTMLForClipboard(rawHTML);
     
-    const finalText = `${getPrompt('prompt3')}\n\nEnglish Script:\n${sourceText}\n\nTagged Telugu Script:\n${formattedScript}`;
+    const finalText = `${getPrompt('prompt2')}\n\nEnglish Script:\n${sourceText}\n\nTagged Telugu Script:\n${formattedScript}`;
     
     navigator.clipboard.writeText(finalText).then(() => {
       showMessage("Manual Review Prompt copied! (No visual changes applied)");
@@ -1818,7 +1818,7 @@ Below are the english and the telugu scripts:
     
     if (!targetText.trim()) { return showMessage("Please ensure script is in the editor box.", 'warning'); }
     
-    const finalText = `${getPrompt('prompt2')}\n\nEnglish Script:\n${sourceText}\n\nTelugu Script:\n${targetText}`;
+    const finalText = `${getPrompt('prompt3')}\n\nEnglish Script:\n${sourceText}\n\nTelugu Script:\n${targetText}`;
     
     navigator.clipboard.writeText(finalText).then(() => {
       showMessage("AI Review Prompt copied successfully!");
