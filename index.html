@@ -227,13 +227,7 @@
         <div class="divider"></div>
 
         <!-- Secondary Action: AI Review Prompt -->
-        <div class="button-group">
-             <button class="btn btn-secondary" onclick="handleAiPromptCopy()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                Copy AI Review Prompt (Uses current input)
-             </button>
-        </div>
-    </div>
+        
 
     <!-- SECTION 2: Suggestions -->
     <div class="step-section green">
@@ -262,7 +256,7 @@
   <script type="text/plain" id="prompt2">Fine-tuning Telugu Translation
 
    
-    Below is the Transcript of an English Talk by sadhguru addressing Audience, and its Telugu Dubbing Script.
+    Below is the Transcript of an English Talk by Sadhguru addressing Audience, and its Telugu Dubbing Script.
 
     The talk is made up of blocks of points.
     Each point is made up of blocks of thoughts.
@@ -1055,103 +1049,92 @@ Optimized Telugu:
 Result Format:
 Now please give the result in the below format:
 
-Please give the optimized telugu script. Bold the places where optimizing is done. Don't keep the tags, instead use bold so that i can identify visually easily. after every paragraph, in the optimized script insert an empty line
+Please give the optimized telugu script. Bold Every single place where optimizing is done. Don't keep the tags, instead use bold so that i can identify visually easily. Also after each optimization give alternatives in the optimized script itself. The way to give alternatives and examples are shoen below. But I want the alternatives to be appearing in the script itself, not as a separate section at the end.
 
+Also after every paragraph, in the optimized script insert an empty line
 
-And also at the end of the script give the additional suggestions for each of the changes in the below format:
 
 For Each <T1> tag:
-
-Give the actual tagged word/Phrase as heading (no need to mention the tag itself). (No heading needed for points 2,3,4) Give the best contextual Telugu word/Phrase used in the optimized script.
-Explain what this Word is conveying here in this context in English.
-Also give 6 more closer words/phrases in addition to the best word.
+optimized version of word/phrase/sentence with the optimized portion in bold [ original tagged portion of the sentence | Type of optimization |  Alternative 1 for tagged portion | Alternative 2 for tagged portion| Alternative 3 for tagged portion| Alternative 4 for tagged portion|  Alternative 5 for tagged portion]
 
 
+Example English sentence: This deity is about wellbeing. She is <T1>dedicated</T1> to that.
 
 Example Output:
-అంకితమైన
-అధిదేవత 
-The word "అంకితమైన" translates to "dedicated to." While grammatically correct, it is a general term. In this specific context, Sadhguru is referring to Dhanvantri as the deity who presides over health and well-being. The Telugu word "అధిదేవత" more accurately conveys this idea of a "presiding deity" or the specific godhead responsible for a particular domain, making it a richer and more precise choice.
-ప్రతీకమైన - symbolic of
-కారకుడైన - the causal one for
-అధిపతి అయిన - the lord of
-ప్రసాదించే - the one who bestows
-సంరక్షకుడైన - the protector of
-బాధ్యత వహించే - the one responsible for
+ఈ దేవత శ్రేయస్సు గురించి, ఆమె శ్రేయస్సుకు <Bold >అధిదేవత </Bold > [ అంకితమైన దేవత | Context Word: ప్రతీకమైన - symbolic of | కారకుడైన - the causal one for | అధిపతి అయిన - the lord of | ప్రసాదించే - the one who bestows | సంరక్షకుడైన - the protector of |బాధ్యత వహించే - the one responsible for ]
+
+
 
 
 
 
 For Each <T2> tag:
 
-Give the actual tagged Word/Phrase/Sentence as heading (no need to mention the tag itself). (No heading needed for points 2,3,4)
-Give the optimised Word/Phrase/Sentence used in the optimized script that actually expresses the intention of the speaker in natural Colloquial Telugu flow
-Give another alternative which expresses the intention, but at the same time follows the sentence structure like length, number of clauses or meaningful chunks, number of segments in the sentence with gaps between them etc.
-Give a third alternative assuming that this tagged position is absent or lost and you have to bridge the gap based on the context that is going on and based on the previous sentences and the later sentences.
+optimized version of word/phrase/sentence in bold [ original text | Type of optimization |  An alternative which expresses the intention, but at the same time follows the sentence structure like length, number of clauses or meaningful chunks, number of segments in the sentence with gaps between them etc. | Another alternative assuming that this tagged position is absent or lost and you have to bridge the gap based on the context that is going on and based on the previous sentences and the later sentences.]
 
 
 
+Example English Sentence: <T2>You are supposed to overcome your biological instincts… </T2>
 Example output:
-మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉండాలి
-మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించారనేది నా ఉద్దేశం...
-మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉంటారని నేను భావిస్తున్నాను...
-ఎందుకంటే మనుషులుగా మనం ఆ పరిమితులను దాటగలం...
+మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించారనేది నా ఉద్దేశం … [మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉండాలి …  | Intention: మీరు మీ జీవసంబంధమైన ప్రవృత్తులను అధిగమించి ఉంటారని నేను భావిస్తున్నాను … | ఎందుకంటే మనుషులుగా మనం ఆ పరిమితులను దాటగలం...] 
 
 
-Give the suggestions in the same order in which the tags appear in the script.
 
 For Each <T3> tag:
-Give the actual english sentence with the corresponding gesture word or phrase bolded.
-Then give the optimized telugu sentence used in the optimized script with the corresponding gesture word or phrase bolded.
-Then give an alternate version which tries to balance both ‘gesture matching’ and ‘flow’.
+
+optimized version of word/phrase/sentence with the portion corresponding to the gesture in bold [ original sentence with the portion corresponding to the gesture in bold  | Type of optimization | an alternate version which tries to balance both ‘gesture matching’ and ‘flow’.]
 
 
+Example English Sentence:That's not creation's fault; just gave you the freedom so that you could<T3> go beyond</T3>.
 Example output:
-His mother asked, "Luke, did you really find it? … Are you sure?"
-వాళ్ళమ్మ ఇలా అడిగింది: "లూక్, అది నీకు నిజంగా దొరికిందా? … నిజమేనా?"
-వాళ్ళ అమ్మ, "లూక్, అది నీకు నిజంగా దొరికిందా? … నిజమేనా?" అని అడిగింది. 
+అది సృష్టి తప్పు కాదు; సృష్టి మీకు స్వేచ్ఛనిచ్చిందంతే - మీరు దాన్ని <Bold> దాటి వెళ్లగలిగేలా</Bold> [అది సృష్టి తప్పు కాదు; మీరు దాన్ని <Bold >దాటి వెళ్లగలరనే</Bold>, అది మీకు స్వేచ్ఛనిచ్చింది | Gesture Matching | అది సృష్టి తప్పు కాదు; సృష్టి మీకు దాటి వెళ్లే స్వేచ్ఛనిచ్చిందంతే - దాన్ని <Bold>దాటి వెళ్ళే స్వేచ్ఛని </Bold> ]
+
+
+
+
 
 
 
 
 For Each <T4> tag:
-Give the actual english sentence 
-Then give the shortened telugu sentence.
-Then give an alternate shortened version
+optimized version of word/phrase/sentence [ Original sentence  | Type of optimization | Alternative 1 | Alternative 2.]
 
+Example English Sentence:<T4> From now on, it should not happen like this again. </T4>.
 Example output:
-From now on, it should not happen like this again.
-ఇకపై ఇలా జరగకూడదు.
-ఇంకెంప్పుడూ ఇది జరక్కూడదు.
+ఇకపై ఇలా జరగకూడదు [ఇప్పటినుండి, ఇలా మళ్ళీ ఎప్పుడూ జరగకూడదు | Shortening | ఇంకెంప్పుడూ ఇది జరక్కూడదు | ఇకపై ఇది జరగకూడదు]
+
 
 
 For Each <T5> tag:
-Give the actual english sentence 
-Then give the alternative 1 (More Conversational) This version restructures the sentence in a very common conversational pattern.
-Then give the alternative 2 (More Structural match) This version uses connecting words like "వల్ల" (because of) and "అలా జరిగితే" (if that happens) to link the fragments into a single, coherent thought, which would be much smoother for a dubbing artist to deliver.
+
+optimized version of word/phrase/sentence [ Original sentence  | Type of optimization | alternative 1 (More Conversational) This version restructures the sentence in a very common conversational pattern | alternative 2 (More Structural match) This version uses connecting words like "వల్ల" (because of) and "అలా జరిగితే" (if that happens) to link the fragments into a single, coherent thought, which would be much smoother for a dubbing artist to deliver]
 
 
 
-Example output:
+Example English Sentence:
 But... hope... acting like Rama... brings some elements of Rama into the actor... which will be wonderful for him.
 
-కానీ నా ఆశ ఏంటంటే... రాముడిలా నటించడం ద్వారా, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడాలి... అదే జరిగితే, అతనికి ఎంతో మేలు జరుగుతుంది.
-
-"కానీ నేను ఆశిస్తున్నాను... రాముడిలా నటించడం వల్ల, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడతాయని... అలా జరిగితే అది అతనికి ఎంతో మేలు చేస్తుంది."
+Example output:
 
 
+<Bold>కానీ నా ఆశ ఏంటంటే... రాముడిలా నటించడం ద్వారా, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడాలి... అదే జరిగితే, అతనికి ఎంతో మేలు జరుగుతుంది </Bold> [ కానీ … ఆశిద్దాం … రాముడిలా నటించడం … రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి తెస్తుందని .. అది అతనికి అద్భుతం | Flow |కానీ ‘రాముడిలా నటించడం’ రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడేలా చేస్తుందని ఆశిద్దాం ... అది అతనికి ఎంతో మేలు చేస్తుంది.|  కానీ నేను ఆశిస్తున్నాను... రాముడిలా నటించడం వల్ల, రాముడిలోని కొన్ని లక్షణాలైనా ఆ నటుడికి అలవడతాయని... అలా జరిగితే అది అతనికి ఎంతో మేలు చేస్తుంది.] 
 
 
-Note:
-can you give the suggestions section in a table. Do not use any line breaks or list formatting inside table.
-
-column 1: English (full sentences in case of tags 3,4,5; bold the tagged portion in case of tag 3)
-Column 2: Original (full sentences in case of tags 3,4,5; bold the tagged portion in case of tag 3)
-Column 3: Optimized version (full sentences in case of tags 3,4,5; bold the tagged portion in case of tag 3)
-Column 4: Other Alternatives (full sentences in case of tags 3,4,5; bold the tagged portion in case of tag 3)
 
 
-Below are the English and the tagged Telugu scripts: </script>
+The <Bold> </Bold> tags are used here to let you know what portion needs to be bolded in the output. no need to keep these tags in the output.
+
+I see you gave the alternative section at the end of the paragraph. I want the alternatives to happen immediately after the optimized portion.
+
+Note: below i am giving the English and the Telugu scripts.
+
+
+
+English script:
+
+Telugu Script:
+
+ </script>
   <script type="text/plain" id="prompt3"> Below is the Transcript and its Telugu translation of an English Talk by sadhguru addressing the audience.
 
     The talk is made up of blocks of points.
