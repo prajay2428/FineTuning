@@ -242,7 +242,7 @@
         <div id="input_suggestions" class="editable full-width-box" contenteditable="true" data-placeholder="Enter specific suggestions or additional context here..."></div>
       </div>
        <div class="button-group">
-          <!-- New Format Bold Button for Suggestions -->
+          <!-- Format Bold Button for Suggestions -->
           <button class="btn btn-format" onclick="formatBoldText()">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>
             Format Bold
@@ -259,7 +259,7 @@
   </div>
 
   <!-- Prompts (Hidden) -->
-  <script type="text/plain" id="prompt2">  Fine-tuning Telugu Translation
+  <script type="text/plain" id="prompt2"> Fine-tuning Telugu Translation
 
    
     Below is the Transcript of an English Talk by sadhguru addressing Audience, and its Telugu Dubbing Script.
@@ -1699,7 +1699,6 @@ Below are the english and the telugu scripts:
 
 
 
-
  </script>
 
  <script>
@@ -1921,9 +1920,10 @@ Below are the english and the telugu scripts:
 
   // --- Initializing Event Listeners ---
   document.addEventListener('DOMContentLoaded', function() {
+    // Select all editable boxes (including source, editor, and SUGGESTIONS)
     document.querySelectorAll('.editable').forEach(box => {
         
-        // --- FIX #2: Prevent Sticky Bold Typing ---
+        // --- FIX #2 & #3: Prevent Sticky Bold AND Sticky Highlights (Universal Smart Escape) ---
         box.addEventListener('keydown', function(e) {
             // Listen for Space key
             if (e.key === ' ' && !e.shiftKey && !e.ctrlKey) {
@@ -1933,31 +1933,46 @@ Below are the english and the telugu scripts:
                 const range = sel.getRangeAt(0);
                 const node = range.startContainer;
                 
-                // Determine if we are inside a Bold tag (B, STRONG)
-                let boldParent = (node.nodeType === 3) ? node.parentNode : node;
-                if (boldParent.tagName !== 'B' && boldParent.tagName !== 'STRONG') {
-                    boldParent = boldParent.closest('b, strong');
+                // Determine the parent element to check if we are inside formatting
+                let parent = (node.nodeType === 3) ? node.parentNode : node;
+                
+                // Helper to check if element is our "Bold" or "Highlighted" type
+                // 1. Tag is B or STRONG
+                // 2. Tag is SPAN and has a background color (Green Bold or Yellow Suggestion)
+                const isFormatted = (el) => {
+                    if (!el) return false;
+                    const tag = el.tagName;
+                    if (tag === 'B' || tag === 'STRONG') return true;
+                    if (tag === 'SPAN' && el.style.backgroundColor) return true;
+                    return false;
+                };
+
+                // Find nearest formatted parent
+                let formattedParent = null;
+                if (isFormatted(parent)) {
+                    formattedParent = parent;
+                } else {
+                    formattedParent = parent.closest('b, strong, span[style*="background-color"]');
                 }
 
-                // If inside bold, check if cursor is at the very end
-                if (boldParent) {
-                    // This is a simple check: if we are at the end of the text content of the bold node
-                    // and that text node is the last child of the bold element.
+                // If inside formatting, check if cursor is at the very end
+                if (formattedParent && isFormatted(formattedParent)) {
+                    // Check if we are at the end of the text content of this node
                     const isAtEnd = (range.endOffset === node.textContent.length);
                     
                     if (isAtEnd) {
-                        e.preventDefault(); // Stop standard space insertion
+                        e.preventDefault(); // Stop standard space insertion inside the tag
                         
-                        // Insert a plain space AFTER the bold element
+                        // Insert a plain space AFTER the formatted element
                         const space = document.createTextNode(' ');
                         
-                        if (boldParent.nextSibling) {
-                            boldParent.parentNode.insertBefore(space, boldParent.nextSibling);
+                        if (formattedParent.nextSibling) {
+                            formattedParent.parentNode.insertBefore(space, formattedParent.nextSibling);
                         } else {
-                            boldParent.parentNode.appendChild(space);
+                            formattedParent.parentNode.appendChild(space);
                         }
                         
-                        // Move cursor to after the space we just created
+                        // Move cursor to after the space we just created (outside the bold/yellow/green)
                         const newRange = document.createRange();
                         newRange.setStart(space, 1); // After the space
                         newRange.collapse(true);
@@ -1981,7 +1996,6 @@ Below are the english and the telugu scripts:
             }
 
             // Create temporary container AND attach to body (hidden)
-            // Attaching to body is crucial for getComputedStyle to detect Bold weights correctly
             const tempRenderDiv = document.createElement('div');
             tempRenderDiv.style.position = 'absolute';
             tempRenderDiv.style.left = '-9999px';
